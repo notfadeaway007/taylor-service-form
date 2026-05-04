@@ -11,11 +11,11 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
   --navy: #0B1829; --navy-mid: #142236; --blue: #1A5FA8;
-  --amber: #D98C20; --amber-light: #F0A830;
+  --amber: #0193cf; --amber-light: #0ab0f0;
   --white: #FFFFFF; --off: #F7F8FA;
   --gray-100: #EEF0F2; --gray-200: #D8DCE1;
   --gray-400: #94A0AE; --gray-600: #5A6876;
-  --red: #C0392B; --green: #27AE60;
+  --red: #e6aa4b; --green: #27AE60;
   --display: 'Barlow Condensed', sans-serif;
   --body: 'Barlow', sans-serif;
 }
@@ -141,8 +141,8 @@ main { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
   font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
   padding: 2px 7px; border-radius: 2px; background: var(--gray-100); color: var(--gray-400);
 }
-.priority-opt.emergency input:checked + .priority-label { border-color: var(--red); background: #FEF2F2; color: var(--red); }
-.priority-opt.emergency input:checked + .priority-label .priority-tag { background: #FECACA; color: var(--red); }
+.priority-opt.emergency input:checked + .priority-label { border-color: var(--red); background: #FFF8ED; color: var(--red); }
+.priority-opt.emergency input:checked + .priority-label .priority-tag { background: #FFE4A0; color: var(--red); }
 .priority-opt.urgent input:checked + .priority-label { border-color: #E67E22; background: #FFF7ED; color: #C05621; }
 .priority-opt.urgent input:checked + .priority-label .priority-tag { background: #FED7AA; color: #C05621; }
 .priority-opt.standard input:checked + .priority-label { border-color: var(--green); background: #F0FDF4; color: #166534; }
@@ -168,7 +168,7 @@ main { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
 
 /* ── ERROR / SUCCESS ── */
 .error-bar {
-  display: none; background: #FEF2F2; border: 1px solid #FECACA;
+  display: none; background: #FFF8ED; border: 1px solid #FFE4A0;
   border-radius: 4px; padding: 11px 16px; margin: 12px 32px 0;
   font-size: 13px; color: var(--red);
 }

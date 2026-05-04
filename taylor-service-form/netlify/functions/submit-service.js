@@ -10,8 +10,8 @@ function generatePDF(data) {
     doc.on('end', () => resolve(Buffer.concat(chunks)));
     doc.on('error', reject);
 
-    const navy='#0B1829', amber='#D98C20', blue='#1A5FA8';
-    const gray='#5A6876', lgray='#F2F4F6', red='#C0392B', white='#FFFFFF';
+    const navy='#0B1829', amber='#0193cf', blue='#1A5FA8';
+    const gray='#5A6876', lgray='#F2F4F6', red='#e6aa4b', white='#FFFFFF';
     const ML=36, W=540, COL2=W/2, COL3=W/3;
 
     const priColor=(data.priority||'').includes('EMERGENCY')?red
@@ -98,7 +98,7 @@ function generatePDF(data) {
          .text('SITE ACCESS NOTES',ML,y,{characterSpacing:0.3,lineBreak:false});
       y+=9;
       const accH=36;
-      doc.rect(ML,y,W,accH).fill('#FFFBF2');
+      doc.rect(ML,y,W,accH).fill('#EFF8FD');
       doc.rect(ML,y,3,accH).fill(amber);
       doc.fontSize(8).font('Helvetica').fillColor(navy)
          .text(data.access_notes,ML+8,y+5,{width:W-14,height:accH-8,ellipsis:true});
@@ -143,11 +143,11 @@ exports.handler = async (event) => {
       html:`<div style="font-family:Arial,sans-serif;max-width:580px;margin:0 auto;">
         <div style="background:#0B1829;padding:20px 28px;border-radius:6px 6px 0 0;">
           <h2 style="color:#fff;margin:0;font-size:18px;letter-spacing:2px;">TAYLOR UPSTATE</h2>
-          <p style="color:#D98C20;margin:4px 0 0;font-size:10px;letter-spacing:3px;">NEW SERVICE REQUEST</p>
+          <p style="color:#0193cf;margin:4px 0 0;font-size:10px;letter-spacing:3px;">NEW SERVICE REQUEST</p>
         </div>
         <div style="background:#f7f8fa;padding:20px 28px;border:1px solid #e0e0e0;border-top:none;border-radius:0 0 6px 6px;">
           <table style="width:100%;border-collapse:collapse;font-size:13px;">
-            <tr><td style="padding:5px 0;color:#5A6876;width:38%;">Priority</td><td style="padding:5px 0;font-weight:bold;color:#C0392B;">${data.priority}</td></tr>
+            <tr><td style="padding:5px 0;color:#5A6876;width:38%;">Priority</td><td style="padding:5px 0;font-weight:bold;color:#e6aa4b;">${data.priority}</td></tr>
             <tr><td style="padding:5px 0;color:#5A6876;">Name</td><td style="padding:5px 0;">${data.first_name} ${data.last_name}</td></tr>
             <tr><td style="padding:5px 0;color:#5A6876;">Business</td><td style="padding:5px 0;">${data.company}</td></tr>
             <tr><td style="padding:5px 0;color:#5A6876;">Phone</td><td style="padding:5px 0;"><a href="tel:${data.phone}">${data.phone}</a></td></tr>
@@ -161,7 +161,7 @@ exports.handler = async (event) => {
             <p style="margin:0 0 5px;font-size:10px;color:#5A6876;text-transform:uppercase;letter-spacing:1px;">Problem Description</p>
             <p style="margin:0;font-size:13px;color:#0B1829;line-height:1.6;">${data.problem_description}</p>
           </div>
-          ${data.access_notes?`<div style="margin-top:8px;padding:12px;background:#fff;border-left:3px solid #D98C20;border-radius:0 4px 4px 0;"><p style="margin:0 0 5px;font-size:10px;color:#5A6876;text-transform:uppercase;letter-spacing:1px;">Site Access Notes</p><p style="margin:0;font-size:13px;color:#0B1829;">${data.access_notes}</p></div>`:''}
+          ${data.access_notes?`<div style="margin-top:8px;padding:12px;background:#fff;border-left:3px solid #0193cf;border-radius:0 4px 4px 0;"><p style="margin:0 0 5px;font-size:10px;color:#5A6876;text-transform:uppercase;letter-spacing:1px;">Site Access Notes</p><p style="margin:0;font-size:13px;color:#0B1829;">${data.access_notes}</p></div>`:''}
           <p style="margin-top:16px;font-size:11px;color:#94A0AE;">Single-page PDF attached · Reply-to: ${data.email}</p>
         </div>
       </div>`,

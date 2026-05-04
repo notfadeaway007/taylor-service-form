@@ -1,0 +1,9 @@
+{
+  "name": "taylor-upstate-service-form",
+  "version": "1.0.0",
+  "description": "Taylor Upstate service request form with PDF email delivery",
+  "dependencies": {
+    "pdfkit": "^0.15.0",
+    "resend": "^3.2.0"
+  }
+}

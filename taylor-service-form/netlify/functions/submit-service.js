@@ -137,7 +137,7 @@ exports.handler = async (event) => {
 
     await resend.emails.send({
       from:`${process.env.FROM_NAME||'Taylor Upstate Service'} <${process.env.FROM_EMAIL||'onboarding@resend.dev'}>`,
-      to:[process.env.TO_EMAIL||'estewart@taylorupstate.com'],
+      to: (process.env.TO_EMAIL || 'estewart@taylorupstate.com').split(',').map(e => e.trim()),
       reply_to:data.email,
       subject:`${priEmoji} Service Request — ${data.priority} — ${data.company} (${data.county})`,
       html:`<div style="font-family:Arial,sans-serif;max-width:580px;margin:0 auto;">

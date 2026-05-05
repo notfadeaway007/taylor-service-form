@@ -2,6 +2,41 @@
 const PDFDocument = require('pdfkit');
 const { Resend } = require('resend');
 
+// ── PRIORITY HELPERS ──────────────────────────────────────────────────────────
+function getPriorityProps(priority) {
+  const p = priority || '';
+  if (p.includes('EMERGENCY')) return {
+    emoji:   '🔴',
+    color:   '#C0392B',
+    label:   'EMERGENCY — EQUIPMENT DOWN',
+    bgLight: '#FEF2F2',
+    tag:     'Equipment Down'
+  };
+  if (p.includes('Urgent')) return {
+    emoji:   '🟡',
+    color:   '#C47D0E',
+    label:   'URGENT — WITHIN 48 HOURS',
+    bgLight: '#FFFBEB',
+    tag:     'Within 48 Hours'
+  };
+  if (p.includes('Standard')) return {
+    emoji:   '🟢',
+    color:   '#27AE60',
+    label:   'FLEXIBLE',
+    bgLight: '#F0FDF4',
+    tag:     'Flexible'
+  };
+  // PM Visit
+  return {
+    emoji:   '🔵',
+    color:   '#1A5FA8',
+    label:   'PREVENTIVE MAINTENANCE VISIT',
+    bgLight: '#EFF6FF',
+    tag:     'Scheduled PM'
+  };
+}
+
+// ── PDF GENERATION ────────────────────────────────────────────────────────────
 function generatePDF(data) {
   return new Promise((resolve, reject) => {
     const doc = new PDFDocument({ margin: 0, size: 'letter' });
@@ -10,24 +45,23 @@ function generatePDF(data) {
     doc.on('end', () => resolve(Buffer.concat(chunks)));
     doc.on('error', reject);
 
-    const navy='#0B1829', amber='#0193cf', blue='#1A5FA8';
-    const gray='#5A6876', lgray='#F2F4F6', red='#e6aa4b', white='#FFFFFF';
+    const navy='#0B1829', blue='#1A5FA8';
+    const gray='#5A6876', lgray='#F2F4F6', white='#FFFFFF';
     const ML=36, W=540, COL2=W/2, COL3=W/3;
 
-    const priColor=(data.priority||'').includes('EMERGENCY')?red
-      :(data.priority||'').includes('Urgent')?'#C05621':blue;
+    const pri = getPriorityProps(data.priority);
 
     // HEADER
     doc.rect(0,0,612,58).fill(navy);
     doc.fontSize(18).font('Helvetica-Bold').fillColor(white)
        .text('TAYLOR UPSTATE',ML,12,{characterSpacing:2,lineBreak:false});
-    doc.fontSize(7.5).font('Helvetica').fillColor(amber)
+    doc.fontSize(7.5).font('Helvetica').fillColor('#0193cf')
        .text('AUTHORIZED SERVICE REQUEST',ML,34,{characterSpacing:2.5,lineBreak:false});
-    doc.roundedRect(420,10,156,38,3).fill(priColor);
+    doc.roundedRect(420,10,156,38,3).fill(pri.color);
     doc.fontSize(6.5).font('Helvetica-Bold').fillColor(white)
        .text('PRIORITY',428,16,{characterSpacing:1.5,lineBreak:false});
-    doc.fontSize(8).font('Helvetica-Bold').fillColor(white)
-       .text((data.priority||'Standard').toUpperCase(),428,27,{width:140,lineBreak:false});
+    doc.fontSize(7.5).font('Helvetica-Bold').fillColor(white)
+       .text(pri.label,428,27,{width:140,lineBreak:false});
 
     const refNum='TU-'+new Date().getFullYear()+'-'+Math.floor(Math.random()*90000+10000);
     const submitted=new Date().toLocaleString('en-US',{timeZone:'America/New_York',
@@ -75,14 +109,18 @@ function generatePDF(data) {
 
     // SECTION 3
     sectionBar('03  SERVICE REQUEST DETAILS');
-    doc.rect(ML,y,W,14).fill(priColor+'18');
-    doc.rect(ML,y,3,14).fill(priColor);
-    doc.fontSize(8).font('Helvetica-Bold').fillColor(priColor)
-       .text((data.priority||'Standard').toUpperCase(),ML+8,y+3,{characterSpacing:0.5,lineBreak:false});
-    y+=18;
+
+    // Priority highlight — color-coded background + left bar
+    doc.rect(ML,y,W,16).fill(pri.bgLight);
+    doc.rect(ML,y,3,16).fill(pri.color);
+    doc.fontSize(8.5).font('Helvetica-Bold').fillColor(pri.color)
+       .text(pri.label,ML+8,y+4,{characterSpacing:0.5,lineBreak:false});
+    y+=20;
+
     row2('Issue Type',data.issue_type,'Preferred Service Date',data.preferred_date||'—');
     divider();
 
+    // Problem description
     doc.fontSize(6).font('Helvetica-Bold').fillColor(gray)
        .text('PROBLEM DESCRIPTION',ML,y,{characterSpacing:0.3,lineBreak:false});
     y+=9;
@@ -93,21 +131,22 @@ function generatePDF(data) {
        .text(data.problem_description||'—',ML+8,y+5,{width:W-14,height:descH-10,ellipsis:true});
     y+=descH+5;
 
+    // Access notes
     if(data.access_notes&&data.access_notes.trim()){
       doc.fontSize(6).font('Helvetica-Bold').fillColor(gray)
          .text('SITE ACCESS NOTES',ML,y,{characterSpacing:0.3,lineBreak:false});
       y+=9;
       const accH=36;
       doc.rect(ML,y,W,accH).fill('#EFF8FD');
-      doc.rect(ML,y,3,accH).fill(amber);
+      doc.rect(ML,y,3,accH).fill('#0193cf');
       doc.fontSize(8).font('Helvetica').fillColor(navy)
          .text(data.access_notes,ML+8,y+5,{width:W-14,height:accH-8,ellipsis:true});
       y+=accH+5;
     }
 
-    // FOOTER anchored to bottom
+    // FOOTER
     doc.rect(0,752,612,40).fill(navy);
-    doc.fontSize(7).font('Helvetica-Bold').fillColor(amber)
+    doc.fontSize(7).font('Helvetica-Bold').fillColor('#0193cf')
        .text('TAYLOR UPSTATE',ML,760,{characterSpacing:1.5,lineBreak:false});
     doc.fontSize(6.5).font('Helvetica').fillColor('rgba(255,255,255,0.55)')
        .text('800-678-2956  ·  dispatch@taylorupstate.com  ·  Marcellus & Troy, NY  ·  taylor-upstate.com',ML,772,{lineBreak:false});
@@ -118,6 +157,7 @@ function generatePDF(data) {
   });
 }
 
+// ── MAIN HANDLER ──────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
   if(event.httpMethod!=='POST') return {statusCode:405,body:'Method Not Allowed'};
 
@@ -131,40 +171,48 @@ exports.handler = async (event) => {
   if(missing.length) return {statusCode:400,body:JSON.stringify({error:`Missing: ${missing.join(', ')}`})};
 
   try {
-    const pdfBuffer=await generatePDF(data);
-    const resend=new Resend(process.env.RESEND_API_KEY);
-    const priEmoji=(data.priority||'').includes('EMERGENCY')?'🔴':(data.priority||'').includes('Urgent')?'🟡':'🟢';
+    const pdfBuffer = await generatePDF(data);
+    const resend    = new Resend(process.env.RESEND_API_KEY);
+    const pri       = getPriorityProps(data.priority);
 
     await resend.emails.send({
-      from:`${process.env.FROM_NAME||'Taylor Upstate Service'} <${process.env.FROM_EMAIL||'onboarding@resend.dev'}>`,
-     to: ['estewart@taylorupstate.com', 'dispatch@taylorupstate.com'],
-      reply_to:data.email,
-      subject:`${priEmoji} Service Request — ${data.priority} — ${data.company} (${data.county})`,
-      html:`<div style="font-family:Arial,sans-serif;max-width:580px;margin:0 auto;">
-        <div style="background:#0B1829;padding:20px 28px;border-radius:6px 6px 0 0;">
-          <h2 style="color:#fff;margin:0;font-size:18px;letter-spacing:2px;">TAYLOR UPSTATE</h2>
-          <p style="color:#0193cf;margin:4px 0 0;font-size:10px;letter-spacing:3px;">NEW SERVICE REQUEST</p>
-        </div>
-        <div style="background:#f7f8fa;padding:20px 28px;border:1px solid #e0e0e0;border-top:none;border-radius:0 0 6px 6px;">
-          <table style="width:100%;border-collapse:collapse;font-size:13px;">
-            <tr><td style="padding:5px 0;color:#5A6876;width:38%;">Priority</td><td style="padding:5px 0;font-weight:bold;color:#e6aa4b;">${data.priority}</td></tr>
-            <tr><td style="padding:5px 0;color:#5A6876;">Name</td><td style="padding:5px 0;">${data.first_name} ${data.last_name}</td></tr>
-            <tr><td style="padding:5px 0;color:#5A6876;">Business</td><td style="padding:5px 0;">${data.company}</td></tr>
-            <tr><td style="padding:5px 0;color:#5A6876;">Phone</td><td style="padding:5px 0;"><a href="tel:${data.phone}">${data.phone}</a></td></tr>
-            <tr><td style="padding:5px 0;color:#5A6876;">Email</td><td style="padding:5px 0;"><a href="mailto:${data.email}">${data.email}</a></td></tr>
-            <tr><td style="padding:5px 0;color:#5A6876;">Location</td><td style="padding:5px 0;">${data.service_address}, ${data.county}</td></tr>
-            <tr><td style="padding:5px 0;color:#5A6876;">Equipment</td><td style="padding:5px 0;font-weight:bold;">${data.equipment_brand}${data.model_number?' — '+data.model_number:''}</td></tr>
-            <tr><td style="padding:5px 0;color:#5A6876;">Issue</td><td style="padding:5px 0;">${data.issue_type}</td></tr>
-            <tr><td style="padding:5px 0;color:#5A6876;">Best Time</td><td style="padding:5px 0;">${data.best_time||'Any time'}</td></tr>
-          </table>
-          <div style="margin-top:14px;padding:12px;background:#fff;border-left:3px solid #1A5FA8;border-radius:0 4px 4px 0;">
-            <p style="margin:0 0 5px;font-size:10px;color:#5A6876;text-transform:uppercase;letter-spacing:1px;">Problem Description</p>
-            <p style="margin:0;font-size:13px;color:#0B1829;line-height:1.6;">${data.problem_description}</p>
+      from: `${process.env.FROM_NAME||'Taylor Upstate Service'} <${process.env.FROM_EMAIL||'onboarding@resend.dev'}>`,
+      to:   ['estewart@taylorupstate.com','dispatch@taylorupstate.com'],
+      reply_to: data.email,
+      subject:  `${pri.emoji} Service Request — ${pri.label} — ${data.company} (${data.county})`,
+      html: `
+        <div style="font-family:Arial,sans-serif;max-width:580px;margin:0 auto;">
+          <div style="background:#0B1829;padding:20px 28px;border-radius:6px 6px 0 0;">
+            <h2 style="color:#fff;margin:0;font-size:18px;letter-spacing:2px;">TAYLOR UPSTATE</h2>
+            <p style="color:#0193cf;margin:4px 0 0;font-size:10px;letter-spacing:3px;">NEW SERVICE REQUEST</p>
           </div>
-          ${data.access_notes?`<div style="margin-top:8px;padding:12px;background:#fff;border-left:3px solid #0193cf;border-radius:0 4px 4px 0;"><p style="margin:0 0 5px;font-size:10px;color:#5A6876;text-transform:uppercase;letter-spacing:1px;">Site Access Notes</p><p style="margin:0;font-size:13px;color:#0B1829;">${data.access_notes}</p></div>`:''}
-          <p style="margin-top:16px;font-size:11px;color:#94A0AE;">Single-page PDF attached · Reply-to: ${data.email}</p>
-        </div>
-      </div>`,
+          <div style="background:#f7f8fa;padding:20px 28px;border:1px solid #e0e0e0;border-top:none;border-radius:0 0 6px 6px;">
+
+            <!-- Priority banner -->
+            <div style="background:${pri.bgLight};border-left:4px solid ${pri.color};padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:16px;">
+              <span style="font-weight:bold;color:${pri.color};font-size:13px;">${pri.emoji} ${pri.label}</span>
+              <span style="color:#5A6876;font-size:12px;margin-left:10px;">${pri.tag}</span>
+            </div>
+
+            <table style="width:100%;border-collapse:collapse;font-size:13px;">
+              <tr><td style="padding:5px 0;color:#5A6876;width:38%;">Name</td><td style="padding:5px 0;">${data.first_name} ${data.last_name}</td></tr>
+              <tr><td style="padding:5px 0;color:#5A6876;">Business</td><td style="padding:5px 0;">${data.company}</td></tr>
+              <tr><td style="padding:5px 0;color:#5A6876;">Phone</td><td style="padding:5px 0;"><a href="tel:${data.phone}">${data.phone}</a></td></tr>
+              <tr><td style="padding:5px 0;color:#5A6876;">Email</td><td style="padding:5px 0;"><a href="mailto:${data.email}">${data.email}</a></td></tr>
+              <tr><td style="padding:5px 0;color:#5A6876;">Location</td><td style="padding:5px 0;">${data.service_address}, ${data.county}</td></tr>
+              <tr><td style="padding:5px 0;color:#5A6876;">Equipment</td><td style="padding:5px 0;font-weight:bold;">${data.equipment_brand}${data.model_number?' — '+data.model_number:''}</td></tr>
+              <tr><td style="padding:5px 0;color:#5A6876;">Issue</td><td style="padding:5px 0;">${data.issue_type}</td></tr>
+              <tr><td style="padding:5px 0;color:#5A6876;">Best Time</td><td style="padding:5px 0;">${data.best_time||'Any time'}</td></tr>
+            </table>
+
+            <div style="margin-top:14px;padding:12px;background:#fff;border-left:3px solid #1A5FA8;border-radius:0 4px 4px 0;">
+              <p style="margin:0 0 5px;font-size:10px;color:#5A6876;text-transform:uppercase;letter-spacing:1px;">Problem Description</p>
+              <p style="margin:0;font-size:13px;color:#0B1829;line-height:1.6;">${data.problem_description}</p>
+            </div>
+            ${data.access_notes?`<div style="margin-top:8px;padding:12px;background:#fff;border-left:3px solid #0193cf;border-radius:0 4px 4px 0;"><p style="margin:0 0 5px;font-size:10px;color:#5A6876;text-transform:uppercase;letter-spacing:1px;">Site Access Notes</p><p style="margin:0;font-size:13px;color:#0B1829;">${data.access_notes}</p></div>`:''}
+            <p style="margin-top:16px;font-size:11px;color:#94A0AE;">Single-page PDF attached · Reply-to: ${data.email}</p>
+          </div>
+        </div>`,
       attachments:[{
         filename:`TaylorUpstate-${data.company.replace(/[^a-zA-Z0-9]/g,'-')}.pdf`,
         content:pdfBuffer.toString('base64')

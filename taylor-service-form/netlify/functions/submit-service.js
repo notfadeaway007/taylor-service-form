@@ -234,7 +234,7 @@ exports.handler = async (event) => {
       ]);
       const territory = EASTERN.has(data.county) ? 'Eastern' : 'Western';
 
-      const atRes = await fetch(`https://api.airtable.com/v0/${atBaseId}/Service%20Requests`, {
+      const atRes = await fetch(`https://api.airtable.com/v0/${atBaseId}/tblV2Kc9oZ4UfcLwi`, {
         method:  'POST',
         headers: { 'Authorization': `Bearer ${atToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({

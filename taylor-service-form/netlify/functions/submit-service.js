@@ -218,7 +218,59 @@ exports.handler = async (event) => {
         content:pdfBuffer.toString('base64')
       }]
     });
+// ── LOG TO AIRTABLE ────────────────────────────────────────────────────
+    const atToken  = process.env.AIRTABLE_TOKEN;
+    const atBaseId = process.env.AIRTABLE_BASE_ID;
 
+    if (atToken && atBaseId) {
+      const EASTERN = new Set([
+        'Albany County','Clinton County','Columbia County','Delaware County',
+        'Dutchess County','Essex County','Franklin County','Fulton County',
+        'Greene County','Hamilton County','Herkimer County','Montgomery County',
+        'Orange County','Otsego County','Putnam County','Rensselaer County',
+        'Saint Lawrence County','Saratoga County','Schenectady County',
+        'Schoharie County','Sullivan County','Ulster County','Warren County',
+        'Washington County'
+      ]);
+      const territory = EASTERN.has(data.county) ? 'Eastern' : 'Western';
+
+      const atRes = await fetch(`https://api.airtable.com/v0/${atBaseId}/Service%20Requests`, {
+        method:  'POST',
+        headers: { 'Authorization': `Bearer ${atToken}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fields: {
+            'First Name':         data.first_name,
+            'Last Name':          data.last_name,
+            'Business Name':      data.company,
+            'Role':               data.role          || '',
+            'Phone':              data.phone,
+            'Email':              data.email,
+            'Address':            data.service_address,
+            'County':             data.county,
+            'Territory':          territory,
+            'Best Time':          data.best_time      || '',
+            'Equipment Brand':    data.equipment_brand,
+            'Model Number':       data.model_number   || '',
+            'Serial Number':      data.serial_number  || '',
+            'Equipment Age':      data.equipment_age  || '',
+            'Warranty Status':    data.warranty_status|| '',
+            'Last Service Date':  data.last_service_date || '',
+            'Priority':           data.priority,
+            'Nature of Problem':  data.issue_type,
+            'Preferred Date':     data.preferred_date || '',
+            'Problem Description':data.problem_description,
+            'Site Access Notes':  data.access_notes   || '',
+            'Status':             'New',
+            'Submitted At':       new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
+          }
+        })
+      });
+      if (!atRes.ok) {
+        const atErr = await atRes.json();
+        console.error('Airtable error:', JSON.stringify(atErr));
+      }
+    }
+    // ── END AIRTABLE ───────────────────────────────────────────────────────
     return {statusCode:200,headers:{'Content-Type':'application/json'},body:JSON.stringify({success:true})};
   } catch(err){
     console.error('Error:',err);

@@ -33,6 +33,48 @@ body { font-family: var(--body); background: var(--off); color: var(--navy); min
 .emergency-bar a { color: var(--amber-light); text-decoration: none; font-weight: 900; }
 .emergency-bar a:hover { text-decoration: underline; }
 
+/* ── SITE NAV BAR ── */
+.site-nav {
+  background: var(--navy-mid);
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  padding: 7px 16px;
+  border-radius: 4px;
+  transition: background .15s, color .15s;
+}
+.site-nav a.nav-home {
+  background: rgba(1,147,207,0.15);
+  border: 1px solid rgba(1,147,207,0.35);
+  color: var(--amber-light);
+}
+.site-nav a.nav-home:hover {
+  background: rgba(1,147,207,0.28);
+  color: #fff;
+}
+.site-nav a.nav-secondary {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.55);
+}
+.site-nav a.nav-secondary:hover {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.85);
+}
+
 /* ── HEADER ── */
 header {
   background: var(--navy); padding: 48px 24px 56px;
@@ -188,6 +230,29 @@ main { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
 .success-state p { color: var(--gray-400); font-size: 15px; line-height: 1.6; max-width: 460px; margin: 0 auto; }
 .success-ref { margin-top: 18px; font-family: var(--display); font-size: 13px; color: var(--amber-light); letter-spacing: 1px; }
 
+/* ── SUCCESS NAV BUTTONS ── */
+.success-nav {
+  display: flex; justify-content: center; gap: 12px;
+  flex-wrap: wrap; margin-top: 28px;
+}
+.success-nav a {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--display); font-weight: 700; font-size: 14px;
+  letter-spacing: 0.5px; text-decoration: none;
+  padding: 10px 22px; border-radius: 4px;
+  transition: background .15s, color .15s;
+}
+.success-nav a.btn-home {
+  background: var(--amber); color: var(--navy);
+}
+.success-nav a.btn-home:hover { background: var(--amber-light); }
+.success-nav a.btn-videos {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.7);
+}
+.success-nav a.btn-videos:hover { background: rgba(255,255,255,0.14); color: #fff; }
+
 /* ── FOOTER ── */
 footer { background: var(--navy); padding: 28px 24px; text-align: center; }
 footer p { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.8; }
@@ -203,6 +268,8 @@ footer a:hover { text-decoration: underline; }
   .submit-section { padding: 22px 18px; }
   .submit-row { flex-direction: column; align-items: stretch; }
   .error-bar { margin: 12px 18px 0; }
+  .site-nav { padding: 8px 16px; gap: 8px; }
+  .site-nav a { font-size: 12px; padding: 6px 12px; }
 }
 </style>
 </head>
@@ -212,6 +279,12 @@ footer a:hover { text-decoration: underline; }
 <div class="emergency-bar">
   🔴 Equipment down? Call now: <a href="tel:18006782956">1-800-678-2956</a> — 24 hours / 7 days
 </div>
+
+<!-- SITE NAV -->
+<nav class="site-nav">
+  <a href="https://www.taylor-upstate.com" class="nav-home">← taylor-upstate.com</a>
+  <a href="https://www.taylor-upstate.com/training-videos" class="nav-secondary">▶ Training Videos</a>
+</nav>
 
 <!-- HEADER -->
 <header>
@@ -241,7 +314,7 @@ footer a:hover { text-decoration: underline; }
 
     <form id="service-form" novalidate>
 
-      <!-- ═══════ SECTION 1: CONTACT ═══════ -->
+      <!-- SECTION 1: CONTACT -->
       <div class="form-section">
         <div class="section-title"><span class="section-num">1</span>Contact Information</div>
         <div class="grid-2">
@@ -317,7 +390,7 @@ footer a:hover { text-decoration: underline; }
         </div>
       </div>
 
-      <!-- ═══════ SECTION 2: EQUIPMENT ═══════ -->
+      <!-- SECTION 2: EQUIPMENT -->
       <div class="form-section">
         <div class="section-title"><span class="section-num">2</span>Equipment Information</div>
         <div class="grid-2">
@@ -385,49 +458,42 @@ footer a:hover { text-decoration: underline; }
         </div>
       </div>
 
-      <!-- ═══════ SECTION 3: SERVICE DETAILS ═══════ -->
+      <!-- SECTION 3: SERVICE DETAILS -->
       <div class="form-section">
         <div class="section-title"><span class="section-num">3</span>Service Request Details</div>
-
-        <!-- Priority -->
         <div class="field" style="margin-bottom:20px;">
           <label class="label">Service Priority <span class="req">*</span></label>
           <div class="priority-grid">
             <div class="priority-opt emergency">
               <input type="radio" name="priority" id="p-emergency" value="EMERGENCY — Equipment Down">
               <label class="priority-label" for="p-emergency">
-                <span class="priority-icon">🔴</span>
-                Emergency
+                <span class="priority-icon">🔴</span>Emergency
                 <span class="priority-tag">Equipment Down</span>
               </label>
             </div>
             <div class="priority-opt urgent">
               <input type="radio" name="priority" id="p-urgent" value="Urgent — Within 48 Hours">
               <label class="priority-label" for="p-urgent">
-                <span class="priority-icon">🟡</span>
-                Urgent
+                <span class="priority-icon">🟡</span>Urgent
                 <span class="priority-tag">Within 48 Hrs</span>
               </label>
             </div>
             <div class="priority-opt standard">
               <input type="radio" name="priority" id="p-standard" value="Standard — Schedule at Convenience">
               <label class="priority-label" for="p-standard">
-                <span class="priority-icon">🟢</span>
-                Standard
+                <span class="priority-icon">🟢</span>Standard
                 <span class="priority-tag">Flexible</span>
               </label>
             </div>
             <div class="priority-opt pm">
               <input type="radio" name="priority" id="p-pm" value="Preventive Maintenance Visit">
               <label class="priority-label" for="p-pm">
-                <span class="priority-icon">🔵</span>
-                PM Visit
+                <span class="priority-icon">🔵</span>PM Visit
                 <span class="priority-tag">Scheduled</span>
               </label>
             </div>
           </div>
         </div>
-
         <div class="grid-2">
           <div class="field">
             <label class="label" for="issue_type">Nature of Problem <span class="req">*</span></label>
@@ -466,12 +532,10 @@ footer a:hover { text-decoration: underline; }
         </div>
       </div>
 
-      <!-- ═══════ SUBMIT ═══════ -->
+      <!-- SUBMIT -->
       <div class="submit-section">
         <div class="submit-row">
-          <button type="submit" class="submit-btn" id="submit-btn">
-            Submit Service Request →
-          </button>
+          <button type="submit" class="submit-btn" id="submit-btn">Submit Service Request →</button>
           <p class="submit-note">
             <strong>What happens next:</strong> Your request is emailed as a PDF to our dispatch team. We'll contact you within one business day to schedule. For emergencies, call <strong>800-678-2956</strong> now — don't wait.
           </p>
@@ -491,6 +555,10 @@ footer a:hover { text-decoration: underline; }
       <p style="margin-top:16px;color:rgba(255,255,255,0.4);font-size:13px;">
         Need immediate help? Call <a href="tel:18006782956" style="color:var(--amber-light);">1-800-678-2956</a> — 24/7
       </p>
+      <div class="success-nav">
+        <a href="https://www.taylor-upstate.com" class="btn-home">← Back to taylor-upstate.com</a>
+        <a href="https://www.taylor-upstate.com/training-videos" class="btn-videos">▶ Training Videos</a>
+      </div>
     </div>
 
   </div><!-- /form-card -->
@@ -514,7 +582,6 @@ footer a:hover { text-decoration: underline; }
   const successState = document.getElementById('success-state');
   const successRef = document.getElementById('success-ref');
 
-  // Clear error styling on input
   form.querySelectorAll('.input, .select, .textarea').forEach(el => {
     el.addEventListener('input', () => el.classList.remove('error'));
     el.addEventListener('change', () => el.classList.remove('error'));
@@ -523,20 +590,11 @@ footer a:hover { text-decoration: underline; }
   form.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    // ── VALIDATE ──
     let valid = true;
-    const requiredFields = form.querySelectorAll('[required]');
-    requiredFields.forEach(el => {
-      if (!el.value.trim()) {
-        el.classList.add('error');
-        valid = false;
-      }
+    form.querySelectorAll('[required]').forEach(el => {
+      if (!el.value.trim()) { el.classList.add('error'); valid = false; }
     });
-
-    // Check priority radio
-    if (!form.querySelector('[name="priority"]:checked')) {
-      valid = false;
-    }
+    if (!form.querySelector('[name="priority"]:checked')) valid = false;
 
     if (!valid) {
       errorBar.style.display = 'block';
@@ -549,11 +607,9 @@ footer a:hover { text-decoration: underline; }
     btn.disabled = true;
     btn.textContent = 'Sending...';
 
-    // ── COLLECT DATA ──
     const data = {};
     new FormData(form).forEach((val, key) => { data[key] = val; });
 
-    // ── SUBMIT ──
     try {
       const res = await fetch('/.netlify/functions/submit-service', {
         method: 'POST',

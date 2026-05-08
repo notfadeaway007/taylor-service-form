@@ -96,7 +96,7 @@ exports.handler = async (event) => {
     const fullName = `${first_name} ${last_name}`.trim();
     const tp       = getTimelineProps(timeline);
     const routing  = getRouting(county);
-    const fromEmail = process.env.FROM_EMAIL || 'noreply@taylorupstate.com';
+    const fromEmail = process.env.SALES_FROM_EMAIL || 'sales@taylorupstate.com';
 
     // ── BUILD SUBJECT (emoji lives in JS, never a template variable) ─────────
     const subject = `${tp.emoji} New Sales Lead — ${fullName || email} | ${routing.region}`;
@@ -192,7 +192,8 @@ exports.handler = async (event) => {
     const baseId = process.env.AIRTABLE_BASE_ID;
 
     if (token && baseId) {
-      await fetch(`https://api.airtable.com/v0/${baseId}/Sales%20Leads`, {
+      // Use table ID directly (more reliable than table name)
+      const atRes = await fetch(`https://api.airtable.com/v0/${baseId}/tblEZur8aCmDupauc`, {
         method:  'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -205,24 +206,26 @@ exports.handler = async (event) => {
             'Phone':             phone,
             'Address':           address,
             'County':            county,
-            'Region':            routing.region,
             'Territory':         routing.territory,
             'Best Time':         best_time,
-            'Equipment':         equipment,
+            'Equipment Interest':equipment,
             'Condition':         condition,
             'Business Type':     business_type,
+            'Timeline':          timeline,
             'Current Equipment': current_equipment,
             'Financing':         financing,
-            'Timeline':          timeline,
-            'Priority':          tp.label,
             'Message':           message,
-            'Heard From':        heard_from,
+            'How Heard':         heard_from,
             'Email Opt-In':      email_optin,
-            'Source':            'Website Sales Form',
-            'Submitted At':      new Date().toISOString()
+            'Status':            'New',
+            'Submitted At':      new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
           }
         })
       });
+      if (!atRes.ok) {
+        const atErr = await atRes.json();
+        console.error('Airtable error:', JSON.stringify(atErr));
+      }
     }
 
     return { statusCode: 200, headers: cors, body: JSON.stringify({ success: true }) };

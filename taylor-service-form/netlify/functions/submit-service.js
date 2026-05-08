@@ -50,7 +50,6 @@ function generatePDF(data) {
 
     const pri = getPriorityProps(data.priority);
 
-    // HEADER
     doc.rect(0,0,612,58).fill(navy);
     doc.fontSize(18).font('Helvetica-Bold').fillColor(white)
        .text('TAYLOR UPSTATE',ML,12,{characterSpacing:2,lineBreak:false});
@@ -88,7 +87,6 @@ function generatePDF(data) {
     function divider(){doc.moveTo(ML,y-2).lineTo(ML+W,y-2).strokeColor('#E8EAEC').lineWidth(0.4).stroke();}
     function gap(n=4){y+=n;}
 
-    // SECTION 1
     sectionBar('01  CONTACT INFORMATION');
     row3('First Name',data.first_name,'Last Name',data.last_name,'Role',data.role);
     divider();
@@ -99,16 +97,13 @@ function generatePDF(data) {
     row2('Best Time to Reach',data.best_time||'Any time','Submitted',submitted);
     gap(6);
 
-    // SECTION 2
     sectionBar('02  EQUIPMENT INFORMATION');
     row3('Equipment Brand',data.equipment_brand,'Model Number',data.model_number||'—','Serial Number',data.serial_number||'—');
     divider();
     row3('Equipment Age',data.equipment_age||'—','Warranty Status',data.warranty_status||'—','Last Service Date',data.last_service_date||'—');
     gap(6);
 
-    // SECTION 3
     sectionBar('03  SERVICE REQUEST DETAILS');
-
     doc.rect(ML,y,W,16).fill(pri.bgLight);
     doc.rect(ML,y,3,16).fill(pri.color);
     doc.fontSize(8.5).font('Helvetica-Bold').fillColor(pri.color)
@@ -140,7 +135,6 @@ function generatePDF(data) {
       y+=accH+5;
     }
 
-    // FOOTER
     doc.rect(0,752,612,40).fill(navy);
     doc.fontSize(7).font('Helvetica-Bold').fillColor('#0193cf')
        .text('TAYLOR UPSTATE',ML,760,{characterSpacing:1.5,lineBreak:false});

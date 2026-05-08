@@ -26,7 +26,6 @@ function getPriorityProps(priority) {
     bgLight: '#F0FDF4',
     tag:     'Flexible'
   };
-  // PM Visit
   return {
     emoji:   '🔵',
     color:   '#1A5FA8',
@@ -110,7 +109,6 @@ function generatePDF(data) {
     // SECTION 3
     sectionBar('03  SERVICE REQUEST DETAILS');
 
-    // Priority highlight — color-coded background + left bar
     doc.rect(ML,y,W,16).fill(pri.bgLight);
     doc.rect(ML,y,3,16).fill(pri.color);
     doc.fontSize(8.5).font('Helvetica-Bold').fillColor(pri.color)
@@ -120,7 +118,6 @@ function generatePDF(data) {
     row2('Issue Type',data.issue_type,'Preferred Service Date',data.preferred_date||'—');
     divider();
 
-    // Problem description
     doc.fontSize(6).font('Helvetica-Bold').fillColor(gray)
        .text('PROBLEM DESCRIPTION',ML,y,{characterSpacing:0.3,lineBreak:false});
     y+=9;
@@ -131,7 +128,6 @@ function generatePDF(data) {
        .text(data.problem_description||'—',ML+8,y+5,{width:W-14,height:descH-10,ellipsis:true});
     y+=descH+5;
 
-    // Access notes
     if(data.access_notes&&data.access_notes.trim()){
       doc.fontSize(6).font('Helvetica-Bold').fillColor(gray)
          .text('SITE ACCESS NOTES',ML,y,{characterSpacing:0.3,lineBreak:false});
@@ -187,13 +183,10 @@ exports.handler = async (event) => {
             <p style="color:#0193cf;margin:4px 0 0;font-size:10px;letter-spacing:3px;">NEW SERVICE REQUEST</p>
           </div>
           <div style="background:#f7f8fa;padding:20px 28px;border:1px solid #e0e0e0;border-top:none;border-radius:0 0 6px 6px;">
-
-            <!-- Priority banner -->
             <div style="background:${pri.bgLight};border-left:4px solid ${pri.color};padding:10px 14px;border-radius:0 4px 4px 0;margin-bottom:16px;">
               <span style="font-weight:bold;color:${pri.color};font-size:13px;">${pri.emoji} ${pri.label}</span>
               <span style="color:#5A6876;font-size:12px;margin-left:10px;">${pri.tag}</span>
             </div>
-
             <table style="width:100%;border-collapse:collapse;font-size:13px;">
               <tr><td style="padding:5px 0;color:#5A6876;width:38%;">Name</td><td style="padding:5px 0;">${data.first_name} ${data.last_name}</td></tr>
               <tr><td style="padding:5px 0;color:#5A6876;">Business</td><td style="padding:5px 0;">${data.company}</td></tr>
@@ -204,7 +197,6 @@ exports.handler = async (event) => {
               <tr><td style="padding:5px 0;color:#5A6876;">Issue</td><td style="padding:5px 0;">${data.issue_type}</td></tr>
               <tr><td style="padding:5px 0;color:#5A6876;">Best Time</td><td style="padding:5px 0;">${data.best_time||'Any time'}</td></tr>
             </table>
-
             <div style="margin-top:14px;padding:12px;background:#fff;border-left:3px solid #1A5FA8;border-radius:0 4px 4px 0;">
               <p style="margin:0 0 5px;font-size:10px;color:#5A6876;text-transform:uppercase;letter-spacing:1px;">Problem Description</p>
               <p style="margin:0;font-size:13px;color:#0B1829;line-height:1.6;">${data.problem_description}</p>
@@ -218,7 +210,8 @@ exports.handler = async (event) => {
         content:pdfBuffer.toString('base64')
       }]
     });
-// ── LOG TO AIRTABLE ────────────────────────────────────────────────────
+
+    // ── LOG TO AIRTABLE ──────────────────────────────────────────────────────
     const atToken  = process.env.AIRTABLE_TOKEN;
     const atBaseId = process.env.AIRTABLE_BASE_ID;
 
@@ -242,24 +235,24 @@ exports.handler = async (event) => {
             'First Name':         data.first_name,
             'Last Name':          data.last_name,
             'Business Name':      data.company,
-            'Role':               data.role          || '',
+            'Role':               data.role               || '',
             'Phone':              data.phone,
             'Email':              data.email,
             'Address':            data.service_address,
             'County':             data.county,
             'Territory':          territory,
-            'Best Time':          data.best_time      || '',
+            'Best Time':          data.best_time          || '',
             'Equipment Brand':    data.equipment_brand,
-            'Model Number':       data.model_number   || '',
-            'Serial Number':      data.serial_number  || '',
-            'Equipment Age':      data.equipment_age  || '',
-            'Warranty Status':    data.warranty_status|| '',
-            'Last Service Date':  data.last_service_date || '',
+            'Model Number':       data.model_number       || '',
+            'Serial Number':      data.serial_number      || '',
+            'Equipment Age':      data.equipment_age      || '',
+            'Warranty Status':    data.warranty_status    || '',
+            'Last Service Date':  data.last_service_date  || '',
             'Priority':           data.priority,
             'Nature of Problem':  data.issue_type,
-            'Preferred Date':     data.preferred_date || '',
+            'Preferred Date':     data.preferred_date     || '',
             'Problem Description':data.problem_description,
-            'Site Access Notes':  data.access_notes   || '',
+            'Site Access Notes':  data.access_notes       || '',
             'Status':             'New',
             'Submitted At':       new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
           }
@@ -270,7 +263,8 @@ exports.handler = async (event) => {
         console.error('Airtable error:', JSON.stringify(atErr));
       }
     }
-    // ── END AIRTABLE ───────────────────────────────────────────────────────
+    // ── END AIRTABLE ────────────────────────────────────────────────────────
+
     return {statusCode:200,headers:{'Content-Type':'application/json'},body:JSON.stringify({success:true})};
   } catch(err){
     console.error('Error:',err);

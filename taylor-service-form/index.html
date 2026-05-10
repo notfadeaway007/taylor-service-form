@@ -1,642 +1,747 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Request Equipment Service | Taylor Upstate, NY</title>
-<meta name="description" content="Submit a service request for Taylor, Middleby, and commercial kitchen equipment in Upstate NY. Factory-trained technicians dispatched within 24 hours.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Taylor Freezer Service Contract Application — Taylor Upstate</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --navy: #0B1829; --navy-mid: #142236; --blue: #1A5FA8;
-  --amber: #0193cf; --amber-light: #0ab0f0;
-  --white: #FFFFFF; --off: #F7F8FA;
-  --gray-100: #EEF0F2; --gray-200: #D8DCE1;
-  --gray-400: #94A0AE; --gray-600: #5A6876;
-  --red: #e6aa4b; --green: #27AE60;
-  --display: 'Barlow Condensed', sans-serif;
-  --body: 'Barlow', sans-serif;
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#102033;--cyan:#1a9fd4;--accent:#29c3f0;--gold:#deac5c;
+  --border:#c5dcea;--muted:#5a7a92;--bg:#f0f6fb;
 }
-
-html { scroll-behavior: smooth; }
-body { font-family: var(--body); background: var(--off); color: var(--navy); min-height: 100vh; }
-
-/* ── EMERGENCY BANNER ── */
-.emergency-bar {
-  background: var(--red); padding: 13px 24px; text-align: center;
-  font-family: var(--display); font-weight: 700; font-size: 15px;
-  color: var(--white); letter-spacing: 0.3px;
-  position: sticky; top: 0; z-index: 100;
-}
-.emergency-bar a { color: var(--amber-light); text-decoration: none; font-weight: 900; }
-.emergency-bar a:hover { text-decoration: underline; }
-
-/* ── SITE NAV BAR ── */
-.site-nav {
-  background: var(--navy-mid);
-  border-bottom: 1px solid rgba(255,255,255,0.07);
-  padding: 10px 24px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-.site-nav a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--display);
-  font-weight: 600;
-  font-size: 13px;
-  letter-spacing: 0.5px;
-  text-decoration: none;
-  padding: 7px 16px;
-  border-radius: 4px;
-  transition: background .15s, color .15s;
-}
-.site-nav a.nav-home {
-  background: rgba(1,147,207,0.15);
-  border: 1px solid rgba(1,147,207,0.35);
-  color: var(--amber-light);
-}
-.site-nav a.nav-home:hover {
-  background: rgba(1,147,207,0.28);
-  color: #fff;
-}
-.site-nav a.nav-secondary {
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.55);
-}
-.site-nav a.nav-secondary:hover {
-  background: rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.85);
-}
-
-/* ── HEADER ── */
-header {
-  background: var(--navy); padding: 48px 24px 56px;
-  position: relative; overflow: hidden;
-}
-header::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(ellipse 60% 100% at 85% 50%, rgba(26,95,168,0.22) 0%, transparent 70%);
-  pointer-events: none;
-}
-.header-inner { max-width: 960px; margin: 0 auto; position: relative; z-index: 2; }
-.eyebrow {
-  font-family: var(--display); font-weight: 700; font-size: 11px;
-  letter-spacing: 3px; text-transform: uppercase; color: var(--amber);
-  display: block; margin-bottom: 10px;
-}
-header h1 {
-  font-family: var(--display); font-weight: 900;
-  font-size: clamp(44px, 7vw, 80px); text-transform: uppercase;
-  line-height: .92; color: var(--white); letter-spacing: -1px; margin-bottom: 16px;
-}
-header h1 em { color: var(--amber-light); font-style: normal; }
-.header-sub { font-size: 16px; font-weight: 300; color: var(--gray-400); max-width: 500px; line-height: 1.6; }
-.header-meta { display: flex; gap: 24px; flex-wrap: wrap; margin-top: 22px; }
-.meta-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: rgba(255,255,255,0.55); }
-.meta-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); flex-shrink: 0; }
-.header-logo {
-  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
-  display: flex; flex-direction: column; gap: 8px; padding: 20px;
-}
-@media(max-width:800px){ .header-logo { display: none; } }
-.logo-stat { text-align: right; }
-.logo-num { font-family: var(--display); font-weight: 900; font-size: 36px; color: var(--amber-light); line-height: 1; display: block; }
-.logo-lbl { font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-400); }
-
-/* ── MAIN LAYOUT ── */
-main { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
-
-/* ── FORM CARD ── */
-.form-card {
-  background: var(--white); border-radius: 8px; border: 1px solid var(--gray-200);
-  overflow: hidden; transform: translateY(-28px);
-  box-shadow: 0 8px 48px rgba(0,0,0,0.1);
-}
-
-/* ── SECTIONS ── */
-.form-section { padding: 28px 32px; border-bottom: 1px solid var(--gray-100); }
-.form-section:last-of-type { border-bottom: none; }
-.section-title {
-  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
-  font-family: var(--display); font-weight: 700; font-size: 11px;
-  letter-spacing: 3px; text-transform: uppercase; color: var(--blue);
-}
-.section-title::after { content: ''; flex: 1; height: 1px; background: var(--gray-100); }
-.section-num {
-  width: 22px; height: 22px; border-radius: 50%;
-  background: var(--navy); color: var(--white);
-  font-family: var(--display); font-weight: 700; font-size: 11px;
-  display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;
-}
-
-/* ── GRIDS ── */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-.span-2 { grid-column: span 2; }
-.span-3 { grid-column: span 3; }
-
-/* ── FIELDS ── */
-.field { display: flex; flex-direction: column; gap: 5px; }
-.label {
-  font-family: var(--display); font-weight: 600; font-size: 11px;
-  letter-spacing: 1px; text-transform: uppercase; color: var(--navy);
-}
-.label .req { color: var(--red); margin-left: 2px; }
-.input, .select, .textarea {
-  font-family: var(--body); font-size: 15px; font-weight: 400;
-  color: var(--navy); background: var(--white);
-  border: 1.5px solid var(--gray-200); border-radius: 4px;
-  padding: 10px 13px; transition: border-color .2s, box-shadow .2s;
-  outline: none; width: 100%; -webkit-appearance: none;
-}
-.input:focus, .select:focus, .textarea:focus {
-  border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,95,168,0.1);
-}
-.input::placeholder, .textarea::placeholder { color: var(--gray-400); font-weight: 300; }
-.input.error { border-color: var(--red) !important; }
-.select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235A6876' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 13px center;
-  padding-right: 34px; cursor: pointer;
-}
-.textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
-
-/* ── PRIORITY SELECTOR ── */
-.priority-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-.priority-opt input { display: none; }
-.priority-label {
-  display: flex; flex-direction: column; align-items: center; gap: 6px;
-  padding: 14px 10px; border: 2px solid var(--gray-200); border-radius: 6px;
-  cursor: pointer; transition: all .2s; text-align: center;
-  font-size: 13px; font-weight: 600; color: var(--gray-600);
-}
-.priority-label:hover { border-color: var(--blue); color: var(--navy); }
-.priority-icon { font-size: 20px; }
-.priority-tag {
-  font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-  padding: 2px 7px; border-radius: 2px; background: var(--gray-100); color: var(--gray-400);
-}
-.priority-opt.emergency input:checked + .priority-label { border-color: var(--red); background: #FFF8ED; color: var(--red); }
-.priority-opt.emergency input:checked + .priority-label .priority-tag { background: #FFE4A0; color: var(--red); }
-.priority-opt.urgent input:checked + .priority-label { border-color: #E67E22; background: #FFF7ED; color: #C05621; }
-.priority-opt.urgent input:checked + .priority-label .priority-tag { background: #FED7AA; color: #C05621; }
-.priority-opt.standard input:checked + .priority-label { border-color: var(--green); background: #F0FDF4; color: #166534; }
-.priority-opt.standard input:checked + .priority-label .priority-tag { background: #BBF7D0; color: #166534; }
-.priority-opt.pm input:checked + .priority-label { border-color: var(--blue); background: #EFF6FF; color: var(--blue); }
-.priority-opt.pm input:checked + .priority-label .priority-tag { background: #BFDBFE; color: var(--blue); }
-
-/* ── SUBMIT SECTION ── */
-.submit-section { background: var(--navy); padding: 28px 32px; }
-.submit-row { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
-.submit-btn {
-  background: var(--amber); color: var(--navy); border: none;
-  font-family: var(--display); font-weight: 700; font-size: 17px;
-  letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 16px 48px; border-radius: 4px; cursor: pointer;
-  transition: background .2s, transform .1s; flex-shrink: 0;
-}
-.submit-btn:hover:not(:disabled) { background: var(--amber-light); }
-.submit-btn:active:not(:disabled) { transform: scale(0.98); }
-.submit-btn:disabled { background: var(--gray-400); cursor: not-allowed; }
-.submit-note { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; flex: 1; }
-.submit-note strong { color: rgba(255,255,255,0.7); }
-
-/* ── ERROR / SUCCESS ── */
-.error-bar {
-  display: none; background: #FFF8ED; border: 1px solid #FFE4A0;
-  border-radius: 4px; padding: 11px 16px; margin: 12px 32px 0;
-  font-size: 13px; color: var(--red);
-}
-.success-state {
-  display: none; background: var(--navy); padding: 60px 32px; text-align: center;
-}
-.success-icon {
-  width: 64px; height: 64px; border-radius: 50%;
-  background: var(--green); display: flex; align-items: center;
-  justify-content: center; margin: 0 auto 20px;
-}
-.success-icon svg { width: 32px; height: 32px; }
-.success-state h2 {
-  font-family: var(--display); font-weight: 900; font-size: 44px;
-  text-transform: uppercase; color: var(--white); margin-bottom: 12px;
-}
-.success-state p { color: var(--gray-400); font-size: 15px; line-height: 1.6; max-width: 460px; margin: 0 auto; }
-.success-ref { margin-top: 18px; font-family: var(--display); font-size: 13px; color: var(--amber-light); letter-spacing: 1px; }
-
-/* ── SUCCESS NAV BUTTONS ── */
-.success-nav {
-  display: flex; justify-content: center; gap: 12px;
-  flex-wrap: wrap; margin-top: 28px;
-}
-.success-nav a {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--display); font-weight: 700; font-size: 14px;
-  letter-spacing: 0.5px; text-decoration: none;
-  padding: 10px 22px; border-radius: 4px;
-  transition: background .15s, color .15s;
-}
-.success-nav a.btn-home {
-  background: var(--amber); color: var(--navy);
-}
-.success-nav a.btn-home:hover { background: var(--amber-light); }
-.success-nav a.btn-videos {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
-  color: rgba(255,255,255,0.7);
-}
-.success-nav a.btn-videos:hover { background: rgba(255,255,255,0.14); color: #fff; }
-
-/* ── FOOTER ── */
-footer { background: var(--navy); padding: 28px 24px; text-align: center; }
-footer p { font-size: 12px; color: rgba(255,255,255,0.35); line-height: 1.8; }
-footer a { color: var(--amber-light); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
-
-/* ── RESPONSIVE ── */
-@media(max-width:680px){
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  .span-2, .span-3 { grid-column: span 1; }
-  .priority-grid { grid-template-columns: repeat(2, 1fr); }
-  .form-section { padding: 22px 18px; }
-  .submit-section { padding: 22px 18px; }
-  .submit-row { flex-direction: column; align-items: stretch; }
-  .error-bar { margin: 12px 18px 0; }
-  .site-nav { padding: 8px 16px; gap: 8px; }
-  .site-nav a { font-size: 12px; padding: 6px 12px; }
-}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh;}
+.hdr{background:linear-gradient(135deg,#102033 0%,#1b3a56 60%,#1e4d74 100%);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.hdr-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:2px;}
+.hdr-sub{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;}
+.hero{background:var(--navy);padding:20px 24px;text-align:center;}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.hero-warn{background:rgba(222,172,92,.15);border:1px solid var(--gold);border-radius:4px;padding:10px 18px;display:inline-block;margin-top:8px;}
+.hero-warn p{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.5px;}
+.card{max-width:780px;margin:28px auto;background:#fff;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,.12);overflow:hidden;border-top:4px solid var(--cyan);}
+.section{padding:22px 28px;border-bottom:1px solid var(--border);}
+.section:last-child{border-bottom:none;}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--cyan);margin-bottom:16px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);}
+.field label .req{color:#c0392b;}
+.field input,.field select,.field textarea{border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'Barlow',sans-serif;font-size:13px;color:var(--navy);background:#fff;outline:none;transition:border-color .15s;}
+.field input:focus,.field select:focus{border-color:var(--cyan);}
+.field input[readonly]{background:#f7fbff;color:var(--muted);}
+.model-wrap{position:relative;}
+.model-search-box{width:100%;border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'Barlow',sans-serif;font-size:13px;color:var(--navy);outline:none;transition:border-color .15s;}
+.model-search-box:focus{border-color:var(--cyan);}
+.model-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:260px;overflow-y:auto;z-index:200;display:none;}
+.model-dropdown.open{display:block;}
+.dropdown-item{padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:baseline;border-bottom:1px solid #f0f6fb;}
+.dropdown-item:last-child{border-bottom:none;}
+.dropdown-item:hover{background:#eaf6fb;}
+.model-cat{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--navy);min-width:58px;}
+.model-name{font-size:12px;color:var(--muted);}
+.dropdown-group{padding:6px 12px 3px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);background:#f7fbff;border-bottom:1px solid var(--border);position:sticky;top:0;}
+.dropdown-empty{padding:12px;text-align:center;font-size:13px;color:var(--muted);}
+.price-note{font-size:11px;color:var(--gold);margin-top:4px;font-style:italic;}
+.sig-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px;}
+#sig-wrapper{border:1px solid var(--border);border-radius:3px;background:#fff;position:relative;overflow:hidden;}
+#sig-canvas{display:block;width:100%;cursor:crosshair;touch-action:none;}
+.sig-actions{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f7fbff;border-top:1px solid var(--border);}
+.sig-actions span{font-size:11px;color:var(--muted);}
+.sig-clear{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:3px 6px;}
+.sig-clear:hover{color:var(--navy);}
+#sig-error{display:none;font-size:11px;color:#c0392b;margin-top:4px;}
+.seller-note{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px;}
+.agreement{background:#fffde7;border-left:4px solid var(--gold);padding:14px 16px;border-radius:0 4px 4px 0;margin-bottom:16px;}
+.agreement p{font-size:13px;color:#6a5000;line-height:1.55;margin-bottom:8px;}
+.agreement p:last-child{margin-bottom:0;}
+.agreement .warn-line{font-weight:700;color:var(--gold);}
+.check-row{display:flex;gap:10px;align-items:flex-start;margin-top:12px;}
+.check-row input[type=checkbox]{margin-top:2px;flex-shrink:0;width:16px;height:16px;cursor:pointer;}
+.check-row label{font-size:12px;color:var(--navy);line-height:1.5;cursor:pointer;}
+.coverage-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px;}
+@media(max-width:600px){.coverage-grid{grid-template-columns:1fr;}}
+.cov-col h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.cov-col.covered h4{color:#27ae60;}
+.cov-col.excluded h4{color:#c0392b;}
+.cov-col ul{list-style:none;padding:0;}
+.cov-col ul li{font-size:12px;color:var(--muted);padding:3px 0;padding-left:14px;position:relative;line-height:1.4;}
+.cov-col.covered ul li::before{content:"✓";position:absolute;left:0;color:#27ae60;font-size:10px;font-weight:700;}
+.cov-col.excluded ul li::before{content:"✗";position:absolute;left:0;color:#c0392b;font-size:10px;font-weight:700;}
+.submit-wrap{text-align:center;padding:24px 28px;}
+.submit-btn{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:var(--cyan);color:#fff;border:none;border-radius:4px;padding:14px 40px;cursor:pointer;transition:all .15s;}
+.submit-btn:hover{background:#158fc0;}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;}
+#success-screen{display:none;padding:40px 28px;text-align:center;}
+#success-screen h2{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--navy);text-transform:uppercase;margin-bottom:10px;}
+#success-screen p{font-size:14px;color:var(--muted);line-height:1.6;max-width:480px;margin:0 auto 16px;}
+.dl-btn{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;background:var(--navy);color:#fff;border:none;border-radius:4px;padding:11px 28px;cursor:pointer;text-decoration:none;display:inline-block;margin-bottom:16px;}
+.dl-btn:hover{background:#1b3a56;}
+#success-screen a.back-link{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:var(--cyan);text-decoration:none;display:block;}
+.footer{background:var(--navy);padding:14px 24px;text-align:center;margin-top:32px;}
+.footer p{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.35);}
+.footer a{color:rgba(255,255,255,.5);text-decoration:none;}
+/* Spinner overlay */
+#spinner-overlay{display:none;position:fixed;inset:0;background:rgba(16,32,51,.7);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+#spinner-overlay.active{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.2);border-top-color:#29c3f0;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#spinner-overlay p{color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:1px;}
 </style>
 </head>
 <body>
 
-<!-- EMERGENCY BANNER -->
-<div class="emergency-bar">
-  🔴 Equipment down? Call now: <a href="tel:18006782956">1-800-678-2956</a> — 24 hours / 7 days
+<!-- Spinner -->
+<div id="spinner-overlay">
+  <div class="spinner"></div>
+  <p id="spinner-msg">Generating PDF…</p>
 </div>
 
-<!-- SITE NAV -->
-<nav class="site-nav">
-  <a href="https://www.taylor-upstate.com" class="nav-home">← taylor-upstate.com</a>
-  <a href="https://www.taylor-upstate.com/training-videos" class="nav-secondary">▶ Training Videos</a>
-</nav>
-
-<!-- HEADER -->
-<header>
-  <div class="header-inner">
-    <span class="eyebrow">Taylor Upstate — Authorized Service Center</span>
-    <h1>Request a<br><em>Service Call</em></h1>
-    <p class="header-sub">Complete the form below and our dispatch team will contact you within one business day. If this is an emergency, call <strong style="color:var(--amber-light)">800-678-2956</strong>.</p>
-    <div class="header-meta">
-      <span class="meta-item"><span class="meta-dot"></span>Response within 1 business day</span>
-      <span class="meta-item"><span class="meta-dot"></span>Factory-trained technicians</span>
-      <span class="meta-item"><span class="meta-dot"></span>94% first-visit fix rate</span>
-      <span class="meta-item"><span class="meta-dot"></span>Genuine OEM parts only</span>
-    </div>
+<div class="hdr">
+  <div>
+    <div class="hdr-logo">TAYLOR UPSTATE</div>
+    <div class="hdr-sub">Authorized Taylor Service Dealer</div>
   </div>
-  <div class="header-logo" aria-hidden="true">
-    <div class="logo-stat"><span class="logo-num">44</span><span class="logo-lbl">Years Serving Upstate NY</span></div>
-    <div class="logo-stat"><span class="logo-num">94%</span><span class="logo-lbl">First-Visit Fix Rate</span></div>
-    <div class="logo-stat"><span class="logo-num">24hr</span><span class="logo-lbl">Dispatch Time</span></div>
+  <div style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.4);">
+    800-678-2956 &nbsp;·&nbsp; taylor-upstate.com
   </div>
-</header>
+</div>
 
-<!-- MAIN FORM -->
-<main>
-  <div class="form-card">
+<div class="hero">
+  <h1>Freezer Service Contract Application</h1>
+  <div class="hero-warn">
+    <p>⚠ Contract must be received within 30 days of equipment installation</p>
+  </div>
+</div>
 
-    <div class="error-bar" id="error-bar">Please fill in all required fields and select a service priority.</div>
+<div class="card">
+  <div id="contract-form-wrapper">
+  <form id="contract-form">
+    <input type="hidden" id="sig-data" name="signature"/>
 
-    <form id="service-form" novalidate>
-
-      <!-- SECTION 1: CONTACT -->
-      <div class="form-section">
-        <div class="section-title"><span class="section-num">1</span>Contact Information</div>
-        <div class="grid-2">
-          <div class="field">
-            <label class="label" for="first_name">First Name <span class="req">*</span></label>
-            <input class="input" type="text" id="first_name" name="first_name" required placeholder="John" autocomplete="given-name">
-          </div>
-          <div class="field">
-            <label class="label" for="last_name">Last Name <span class="req">*</span></label>
-            <input class="input" type="text" id="last_name" name="last_name" required placeholder="Smith" autocomplete="family-name">
-          </div>
-          <div class="field">
-            <label class="label" for="company">Business / Company Name <span class="req">*</span></label>
-            <input class="input" type="text" id="company" name="company" required placeholder="Smith's Ice Cream Shop" autocomplete="organization">
-          </div>
-          <div class="field">
-            <label class="label" for="role">Your Role</label>
-            <select class="select" id="role" name="role">
-              <option value="">Select role...</option>
-              <option>Owner / Operator</option>
-              <option>Manager</option>
-              <option>Chef / Kitchen Manager</option>
-              <option>Facilities / Maintenance</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label" for="phone">Phone Number <span class="req">*</span></label>
-            <input class="input" type="tel" id="phone" name="phone" required placeholder="(518) 555-0100" autocomplete="tel">
-          </div>
-          <div class="field">
-            <label class="label" for="email">Email Address <span class="req">*</span></label>
-            <input class="input" type="email" id="email" name="email" required placeholder="john@smithsicecream.com" autocomplete="email">
-          </div>
-          <div class="field span-2">
-            <label class="label" for="service_address">Service Address <span class="req">*</span></label>
-            <input class="input" type="text" id="service_address" name="service_address" required placeholder="123 Main St, Albany, NY 12201" autocomplete="street-address">
-          </div>
-          <div class="field">
-            <label class="label" for="county">County <span class="req">*</span></label>
-            <select class="select" id="county" name="county" required>
-              <option value="">Select county...</option>
-              <option>Albany County</option><option>Allegany County</option><option>Broome County</option>
-              <option>Cattaraugus County</option><option>Cayuga County</option><option>Chautauqua County</option>
-              <option>Chemung County</option><option>Chenango County</option><option>Clinton County</option>
-              <option>Columbia County</option><option>Cortland County</option><option>Delaware County</option>
-              <option>Dutchess County</option><option>Erie County</option><option>Essex County</option>
-              <option>Franklin County</option><option>Fulton County</option><option>Genesee County</option>
-              <option>Greene County</option><option>Hamilton County</option><option>Herkimer County</option>
-              <option>Jefferson County</option><option>Lewis County</option><option>Livingston County</option>
-              <option>Madison County</option><option>Monroe County</option><option>Montgomery County</option>
-              <option>Niagara County</option><option>Oneida County</option><option>Onondaga County</option>
-              <option>Ontario County</option><option>Orange County</option><option>Orleans County</option>
-              <option>Oswego County</option><option>Otsego County</option><option>Putnam County</option>
-              <option>Rensselaer County</option><option>Saint Lawrence County</option><option>Saratoga County</option>
-              <option>Schenectady County</option><option>Schoharie County</option><option>Schuyler County</option>
-              <option>Seneca County</option><option>Steuben County</option><option>Sullivan County</option>
-              <option>Tioga County</option><option>Tompkins County</option><option>Ulster County</option>
-              <option>Warren County</option><option>Washington County</option><option>Wayne County</option>
-              <option>Wyoming County</option><option>Yates County</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label" for="best_time">Best Time to Reach You</label>
-            <select class="select" id="best_time" name="best_time">
-              <option value="">Any time</option>
-              <option>Morning (8am – 11am)</option>
-              <option>Midday (11am – 2pm)</option>
-              <option>Afternoon (2pm – 4:30pm)</option>
-              <option>Anytime during business hours</option>
-            </select>
-          </div>
+    <!-- APPLICANT -->
+    <div class="section">
+      <div class="section-title">Applicant Information</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Business Name <span class="req">*</span></label>
+          <input type="text" id="f-business" required placeholder="DBA or legal name"/>
+        </div>
+        <div class="field">
+          <label>Contact Name <span class="req">*</span></label>
+          <input type="text" id="f-contact" required placeholder="First and last name"/>
         </div>
       </div>
-
-      <!-- SECTION 2: EQUIPMENT -->
-      <div class="form-section">
-        <div class="section-title"><span class="section-num">2</span>Equipment Information</div>
-        <div class="grid-2">
-          <div class="field">
-            <label class="label" for="equipment_brand">Equipment Brand <span class="req">*</span></label>
-            <select class="select" id="equipment_brand" name="equipment_brand" required>
-              <option value="">Select brand...</option>
-              <optgroup label="Taylor">
-                <option>Taylor — Soft Serve Machine</option>
-                <option>Taylor — Frozen Yogurt Machine</option>
-                <option>Taylor — Milkshake Machine</option>
-                <option>Taylor — Frozen Beverage Dispenser</option>
-                <option>Taylor — Frozen Carbonated Beverage</option>
-                <option>Taylor — Batch Freezer / Frozen Custard</option>
-                <option>Taylor — Commercial Grill</option>
-              </optgroup>
-              <optgroup label="Middleby Brands">
-                <option>ANETS</option><option>APW Wyott</option><option>Bakers Pride</option>
-                <option>BKI</option><option>Blodgett</option><option>Bloomfield</option>
-                <option>Carter-Hoffmann</option><option>Concordia</option><option>Crown</option>
-                <option>CTX</option><option>Doyon</option><option>evo</option><option>Firex</option>
-                <option>Follett</option><option>Globe</option><option>Hydra-Rinse</option>
-                <option>Imperial</option><option>Jade</option><option>Joe Tap</option>
-                <option>Lang</option><option>MagiKitch'n</option><option>Marsal Pizza Ovens</option>
-                <option>Middleby Marshall</option><option>Nieco</option><option>Nu-Vu</option>
-                <option>Perfect Fry</option><option>Pitco</option><option>RAM</option>
-                <option>Southbend</option><option>Star Holman</option><option>Starline</option>
-                <option>TurboChef</option><option>Wonder Bar</option>
-              </optgroup>
-              <optgroup label="Other">
-                <option>Icetro</option><option>Flavor Burst</option>
-                <option>Emery Thompson</option><option>Other (describe below)</option>
-              </optgroup>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label" for="model_number">Model Number</label>
-            <input class="input" type="text" id="model_number" name="model_number" placeholder="e.g. C713-33">
-          </div>
-          <div class="field">
-            <label class="label" for="serial_number">Serial Number</label>
-            <input class="input" type="text" id="serial_number" name="serial_number" placeholder="Found on the equipment data plate">
-          </div>
-          <div class="field">
-            <label class="label" for="equipment_age">Approximate Equipment Age</label>
-            <select class="select" id="equipment_age" name="equipment_age">
-              <option value="">Unknown</option>
-              <option>Less than 1 year</option><option>1–3 years</option>
-              <option>3–5 years</option><option>5–10 years</option><option>10+ years</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label" for="warranty_status">Warranty Status</label>
-            <select class="select" id="warranty_status" name="warranty_status">
-              <option value="">Not sure</option>
-              <option>Yes — manufacturer warranty</option>
-              <option>Yes — extended / service contract</option>
-              <option>No — out of warranty</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label" for="last_service_date">Date of Last Service</label>
-            <input class="input" type="text" id="last_service_date" name="last_service_date" placeholder="Approx. date or 'unknown'">
-          </div>
-        </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label>Installation Address <span class="req">*</span></label>
+        <input type="text" id="f-address" required placeholder="Street, City, State, ZIP"/>
       </div>
-
-      <!-- SECTION 3: SERVICE DETAILS -->
-      <div class="form-section">
-        <div class="section-title"><span class="section-num">3</span>Service Request Details</div>
-        <div class="field" style="margin-bottom:20px;">
-          <label class="label">Service Priority <span class="req">*</span></label>
-          <div class="priority-grid">
-            <div class="priority-opt emergency">
-              <input type="radio" name="priority" id="p-emergency" value="EMERGENCY — Equipment Down">
-              <label class="priority-label" for="p-emergency">
-                <span class="priority-icon">🔴</span>Emergency
-                <span class="priority-tag">Equipment Down</span>
-              </label>
-            </div>
-            <div class="priority-opt urgent">
-              <input type="radio" name="priority" id="p-urgent" value="Urgent — Within 48 Hours">
-              <label class="priority-label" for="p-urgent">
-                <span class="priority-icon">🟡</span>Urgent
-                <span class="priority-tag">Within 48 Hrs</span>
-              </label>
-            </div>
-            <div class="priority-opt standard">
-              <input type="radio" name="priority" id="p-standard" value="Standard — Schedule at Convenience">
-              <label class="priority-label" for="p-standard">
-                <span class="priority-icon">🟢</span>Standard
-                <span class="priority-tag">Flexible</span>
-              </label>
-            </div>
-            <div class="priority-opt pm">
-              <input type="radio" name="priority" id="p-pm" value="Preventive Maintenance Visit">
-              <label class="priority-label" for="p-pm">
-                <span class="priority-icon">🔵</span>PM Visit
-                <span class="priority-tag">Scheduled</span>
-              </label>
-            </div>
-          </div>
+      <div class="grid3">
+        <div class="field">
+          <label>Phone <span class="req">*</span></label>
+          <input type="tel" id="f-phone" required placeholder="(000) 000-0000"/>
         </div>
-        <div class="grid-2">
-          <div class="field">
-            <label class="label" for="issue_type">Nature of Problem <span class="req">*</span></label>
-            <select class="select" id="issue_type" name="issue_type" required>
-              <option value="">Select issue type...</option>
-              <option>Not turning on / No power</option>
-              <option>Not freezing / Temperature issue</option>
-              <option>Leaking product or refrigerant</option>
-              <option>Unusual noise or vibration</option>
-              <option>Error code / Display issue</option>
-              <option>Product consistency / texture problem</option>
-              <option>Cleaning or sanitizing issue</option>
-              <option>Door, seal, or gasket issue</option>
-              <option>Motor or compressor issue</option>
-              <option>Electrical / control board issue</option>
-              <option>Preventive maintenance</option>
-              <option>Parts replacement (non-emergency)</option>
-              <option>Inspection / evaluation</option>
-              <option>Other (describe below)</option>
-            </select>
-          </div>
-          <div class="field">
-            <label class="label" for="preferred_date">Preferred Service Date</label>
-            <input class="input" type="text" id="preferred_date" name="preferred_date" placeholder="e.g. Anytime this week, Mon/Wed AM">
-          </div>
-          <div class="field span-2">
-            <label class="label" for="problem_description">Describe the Problem <span class="req">*</span></label>
-            <textarea class="textarea" id="problem_description" name="problem_description" required rows="5"
-              placeholder="What is the equipment doing (or not doing)? When did the problem start? Any error codes? Any recent repairs? The more detail you provide, the better prepared our technician will be."></textarea>
-          </div>
-          <div class="field span-2">
-            <label class="label" for="access_notes">Site Access Notes</label>
-            <textarea class="textarea" id="access_notes" name="access_notes" rows="3"
-              placeholder="Gate codes, parking instructions, who to ask for on arrival, business hours, etc."></textarea>
-          </div>
+        <div class="field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="f-email" required placeholder="you@business.com"/>
         </div>
-      </div>
-
-      <!-- SUBMIT -->
-      <div class="submit-section">
-        <div class="submit-row">
-          <button type="submit" class="submit-btn" id="submit-btn">Submit Service Request →</button>
-          <p class="submit-note">
-            <strong>What happens next:</strong> Your request is emailed as a PDF to our dispatch team. We'll contact you within one business day to schedule. For emergencies, call <strong>800-678-2956</strong> now — don't wait.
-          </p>
+        <div class="field">
+          <label>Fax</label>
+          <input type="tel" id="f-fax" placeholder="Optional"/>
         </div>
-      </div>
-
-    </form>
-
-    <!-- SUCCESS -->
-    <div class="success-state" id="success-state">
-      <div class="success-icon">
-        <svg viewBox="0 0 32 32" fill="none"><path d="M6 16l7 7 13-13" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-      <h2>Request Received!</h2>
-      <p>Your service request has been sent to our dispatch team. We'll contact you within one business day to confirm your appointment.</p>
-      <p class="success-ref" id="success-ref"></p>
-      <p style="margin-top:16px;color:rgba(255,255,255,0.4);font-size:13px;">
-        Need immediate help? Call <a href="tel:18006782956" style="color:var(--amber-light);">1-800-678-2956</a> — 24/7
-      </p>
-      <div class="success-nav">
-        <a href="https://www.taylor-upstate.com" class="btn-home">← Back to taylor-upstate.com</a>
-        <a href="https://www.taylor-upstate.com/training-videos" class="btn-videos">▶ Training Videos</a>
       </div>
     </div>
 
-  </div><!-- /form-card -->
-</main>
+    <!-- EQUIPMENT -->
+    <div class="section">
+      <div class="section-title">Equipment Information</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Manufacturer</label>
+          <input type="text" value="Taylor" readonly/>
+        </div>
+        <div class="field">
+          <label>Equipment Model No. <span class="req">*</span></label>
+          <div class="model-wrap">
+            <input class="model-search-box" id="model-search" type="text" placeholder="Type model # or description…" autocomplete="off" required/>
+            <input type="hidden" id="model-hidden"/>
+            <div class="model-dropdown" id="model-dropdown"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="field">
+          <label>Serial Number <span class="req">*</span></label>
+          <input type="text" id="f-serial" required placeholder="Serial #"/>
+        </div>
+        <div class="field">
+          <label>Date of Installation <span class="req">*</span></label>
+          <input type="date" id="f-install"/>
+        </div>
+        <div class="field">
+          <label>Contract Term (Years) <span class="req">*</span></label>
+          <select id="f-term" required>
+            <option value="">Select term…</option>
+            <option value="1">1 Year</option>
+            <option value="2">2 Years</option>
+            <option value="3">3 Years</option>
+            <option value="4">4 Years</option>
+            <option value="5">5 Years</option>
+          </select>
+        </div>
+      </div>
+    </div>
 
-<footer>
-  <p>
-    <strong style="color:rgba(255,255,255,0.6)">Taylor Upstate</strong> — Authorized Taylor &amp; Middleby Service Center for Upstate New York<br>
-    <a href="tel:18006782956">800-678-2956</a> &nbsp;·&nbsp;
-    <a href="mailto:dispatch@taylorupstate.com">dispatch@taylorupstate.com</a> &nbsp;·&nbsp;
-    Marcellus &amp; Troy, NY &nbsp;·&nbsp; M–F 8am–4:30pm | Emergency 24/7<br>
-    <a href="https://www.taylor-upstate.com">← Back to taylor-upstate.com</a>
-  </p>
-</footer>
+    <!-- PRICING -->
+    <div class="section">
+      <div class="section-title">Contract Pricing</div>
+      <div class="grid2">
+        <div class="field">
+          <label>This Contract is Offered for the Amount of $</label>
+          <input type="text" id="f-price" readonly placeholder="To be confirmed by Taylor Upstate"/>
+          <div class="price-note">⚑ Taylor Upstate will confirm pricing upon review.</div>
+        </div>
+        <div class="field">
+          <label>Selling Dealer</label>
+          <input type="text" value="Taylor Upstate" readonly/>
+        </div>
+      </div>
+    </div>
+
+    <!-- COVERAGE -->
+    <div class="section">
+      <div class="section-title">What's Covered</div>
+      <div class="coverage-grid">
+        <div class="cov-col covered">
+          <h4>Covered ✓</h4>
+          <ul>
+            <li>All parts and labor for covered repairs</li>
+            <li>Factory-trained technician service calls</li>
+            <li>OEM Taylor replacement parts</li>
+            <li>Refrigeration system components</li>
+            <li>Electrical components and controls</li>
+            <li>Drive systems and motors</li>
+            <li>Preventive maintenance visits (per term)</li>
+          </ul>
+        </div>
+        <div class="cov-col excluded">
+          <h4>Not Covered ✗</h4>
+          <ul>
+            <li>Misuse, abuse, or negligence</li>
+            <li>Consumables: brushes, o-rings, blades, lubricants</li>
+            <li>Mix or product contamination</li>
+            <li>Unauthorized modifications or repairs</li>
+            <li>Cosmetic damage (dents, scratches)</li>
+            <li>Damage from power surges or improper utilities</li>
+            <li>Cleaning and sanitizing supplies</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPLICANT SIGNATURE -->
+    <div class="section">
+      <div class="section-title">Applicant Signature</div>
+      <div class="agreement">
+        <p>By signing below, applicant agrees to the terms and conditions of this Taylor Service Contract as administered by Taylor Upstate. This contract is not valid until accepted and signed by an authorized Taylor Upstate representative and submitted to Taylor Company for factory approval.</p>
+        <p class="warn-line">⚠ Contract must be received within 30 days of equipment installation to be valid.</p>
+        <div class="check-row">
+          <input type="checkbox" id="agree-check" required/>
+          <label for="agree-check">I understand that this contract must be received within <strong style="color:var(--gold);">30 days of equipment installation</strong>, and I agree to the terms and conditions of this service contract.</label>
+        </div>
+      </div>
+      <div class="sig-label">Applicant Signature <span style="color:#c0392b;">*</span></div>
+      <div id="sig-wrapper">
+        <canvas id="sig-canvas" height="130"></canvas>
+        <div class="sig-actions">
+          <span>Sign with mouse or finger</span>
+          <button type="button" class="sig-clear" onclick="clearSig()">✕ Clear</button>
+        </div>
+      </div>
+      <div id="sig-error">Please provide your signature before submitting.</div>
+      <div class="grid2" style="margin-top:16px;">
+        <div class="field">
+          <label>Printed Name <span class="req">*</span></label>
+          <input type="text" id="f-printed" required placeholder="Full legal name"/>
+        </div>
+        <div class="field">
+          <label>Date <span class="req">*</span></label>
+          <input type="date" id="f-appdate"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SELLER / FACTORY -->
+    <div class="section" style="background:#f7fbff;">
+      <div class="section-title">For Taylor Upstate / Factory Use Only</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Seller's Signature</label>
+          <input type="text" readonly placeholder="Completed by Taylor Upstate"/>
+          <div class="seller-note">Completed by Taylor Upstate upon processing</div>
+        </div>
+        <div class="field">
+          <label>Seller's Date</label>
+          <input type="text" readonly placeholder="Upon processing"/>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Factory Approval</label>
+          <input type="text" readonly placeholder="Completed by Taylor Company"/>
+        </div>
+        <div class="field">
+          <label>Factory Approval Date</label>
+          <input type="text" readonly placeholder="Upon factory review"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" class="submit-btn" id="submit-btn">Submit Freezer Service Contract Application →</button>
+    </div>
+  </form>
+  </div>
+
+  <!-- SUCCESS -->
+  <div id="success-screen">
+    <div style="font-size:48px;margin-bottom:12px;">✅</div>
+    <h2>Application Submitted</h2>
+    <p>Your Taylor Service Contract application has been emailed to Taylor Upstate as a signed PDF. We will review, confirm pricing, sign, and submit to Taylor Company for factory approval.</p>
+    <p>A copy of the PDF has also been downloaded to your device for your records.</p>
+    <button class="dl-btn" id="dl-again-btn" style="display:none;">⬇ Download PDF Again</button>
+    <p>Questions? Call <strong>800-678-2956</strong> or email <a href="mailto:sales@taylor-upstate.com" style="color:var(--cyan);">sales@taylor-upstate.com</a></p>
+    <a href="https://taylor-upstate.com/authorized-service" class="back-link">← Return to Authorized Service</a>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Taylor Upstate · Authorized Taylor Service Dealer · 800-678-2956 · <a href="https://taylor-upstate.com">taylor-upstate.com</a></p>
+  <p style="margin-top:4px;">Serving Albany, Syracuse, Binghamton, Utica, and all of Upstate New York</p>
+</div>
 
 <script>
-(function () {
-  const form = document.getElementById('service-form');
-  const btn = document.getElementById('submit-btn');
-  const errorBar = document.getElementById('error-bar');
-  const successState = document.getElementById('success-state');
-  const successRef = document.getElementById('success-ref');
+/* ═══ TAYLOR MODEL DATA ═══ */
+const TAYLOR_MODELS = [
+  { model: 'C152',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Gravity' },
+  { model: 'C161',  category: 'Soft Serve', name: 'Countertop, Twin Twist, Gravity' },
+  { model: 'C706',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Pump' },
+  { model: 'C707',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Gravity' },
+  { model: 'C708',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Heat Treatment, Pump' },
+  { model: 'C709',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Heat Treatment, Gravity' },
+  { model: 'C722',  category: 'Soft Serve', name: 'Countertop, Twin Twist, Pump' },
+  { model: 'C723',  category: 'Soft Serve', name: 'Countertop, Twin Twist, Gravity' },
+  { model: '161',   category: 'Soft Serve', name: 'Countertop, Twin Twist, Gravity' },
+  { model: '794',   category: 'Soft Serve', name: 'Floor, Twin Twist, Gravity' },
+  { model: '8752',  category: 'Soft Serve', name: 'Floor, Single Flavor, Pump' },
+  { model: '8756C', category: 'Soft Serve', name: 'Floor, Twin Twist, Pump' },
+  { model: '8756P', category: 'Soft Serve', name: 'Floor, Twin Twist, Pump' },
+  { model: 'C712',  category: 'Soft Serve', name: 'Floor, Twin Twist, Pump' },
+  { model: 'C713',  category: 'Soft Serve', name: 'Floor, Twin Twist, Gravity' },
+  { model: 'C716',  category: 'Soft Serve', name: 'Floor, Twin Twist, Heat Treatment, Pump' },
+  { model: 'C717',  category: 'Soft Serve', name: 'Floor, Twin Twist, Heat Treatment, Gravity' },
+  { model: 'C791',  category: 'Soft Serve', name: 'Floor, Twin Twist, Gravity' },
+  { model: 'C794',  category: 'Soft Serve', name: 'Floor, Twin Twist, Gravity, High Capacity' },
+  { model: 'PH61',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Heat Treatment' },
+  { model: 'C300',  category: 'FCB', name: 'Frozen Carbonated Beverage, Countertop' },
+  { model: 'C302',  category: 'FCB', name: 'Frozen Carbonated Beverage, Countertop' },
+  { model: 'C303',  category: 'FCB', name: 'Frozen Carbonated Beverage, Countertop' },
+  { model: 'C314',  category: 'FCB', name: 'Frozen Carbonated Beverage, Floor' },
+  { model: 'C392',  category: 'FCB', name: 'Frozen Carbonated Beverage, Countertop' },
+  { model: 'C393',  category: 'FCB', name: 'Frozen Carbonated Beverage, Countertop' },
+  { model: 'C394',  category: 'FCB', name: 'Frozen Carbonated Beverage, Floor' },
+  { model: '60',    category: 'Shake Freezer', name: 'Floor, Four Flavor' },
+  { model: '358',   category: 'Shake Freezer', name: 'Countertop, Single Flavor, Extra Thick' },
+  { model: '359',   category: 'Shake Freezer', name: 'Floor, Single Flavor' },
+  { model: '441',   category: 'Shake Freezer', name: 'Countertop, Single Flavor' },
+  { model: '490',   category: 'Shake Freezer', name: 'Floor, Single Flavor' },
+  { model: 'C606',  category: 'Shake Freezer', name: 'Countertop, Four Flavor' },
+  { model: '632',   category: 'Combination', name: 'Soft Serve & Shake, Floor, Gravity' },
+  { model: '772',   category: 'Combination', name: 'Soft Serve & Shake, Floor, High Capacity' },
+  { model: 'C612',  category: 'Combination', name: 'Shake & Soft Serve, Countertop/Floor' },
+  { model: '340',   category: 'Frozen Beverage', name: 'Floor, Single Flavor, Slush' },
+  { model: '342',   category: 'Frozen Beverage', name: 'Floor, Multi Flavor, Slush' },
+  { model: '349',   category: 'Frozen Beverage', name: 'FCB, Floor, Multi Flavor' },
+  { model: '390',   category: 'Frozen Beverage', name: 'Floor, Single Flavor' },
+  { model: '428',   category: 'Frozen Beverage', name: 'Floor, Single Flavor' },
+  { model: '430',   category: 'Frozen Beverage', name: 'Frozen Uncarbonated, Floor, Single Flavor' },
+  { model: '432',   category: 'Frozen Beverage', name: 'Frozen Uncarbonated, Floor, Multi Flavor' },
+  { model: '104',   category: 'Batch Freezer', name: 'Batch Ice Cream Freezer, Countertop' },
+  { model: 'C002',  category: 'Batch Freezer', name: 'Continuous Low Overrun Batch Freezer' },
+  { model: 'C043',  category: 'Batch Freezer', name: 'Continuous Low Overrun Batch Freezer, Large' },
+  { model: 'R160',  category: 'RAM Freezer', name: 'Refrigerated Merchandiser, Countertop' },
+  { model: 'R200',  category: 'RAM Freezer', name: 'Refrigerated Merchandiser, Floor' },
+  { model: 'R280',  category: 'RAM Freezer', name: 'Refrigerated Merchandiser, Floor, Large' },
+  { model: 'RC25',  category: 'Accessory', name: 'Remote Condensing Unit' },
+  { model: 'RD30',  category: 'Accessory', name: 'Remote Frozen Cocktail / Drink Dispenser' },
+];
+const CATEGORY_ORDER = ['Soft Serve','FCB','Shake Freezer','Combination','Frozen Beverage','Batch Freezer','RAM Freezer','Accessory'];
 
-  form.querySelectorAll('.input, .select, .textarea').forEach(el => {
-    el.addEventListener('input', () => el.classList.remove('error'));
-    el.addEventListener('change', () => el.classList.remove('error'));
-  });
-
-  form.addEventListener('submit', async function (e) {
-    e.preventDefault();
-
-    let valid = true;
-    form.querySelectorAll('[required]').forEach(el => {
-      if (!el.value.trim()) { el.classList.add('error'); valid = false; }
+/* ═══ DROPDOWN ═══ */
+function renderDropdown(filtered) {
+  const list = document.getElementById('model-dropdown');
+  if (!filtered.length) { list.innerHTML = '<div class="dropdown-empty">No models match</div>'; return; }
+  const groups = {};
+  filtered.forEach(m => { if (!groups[m.category]) groups[m.category] = []; groups[m.category].push(m); });
+  let html = '';
+  CATEGORY_ORDER.filter(c => groups[c]).forEach(cat => {
+    html += `<div class="dropdown-group">${cat}</div>`;
+    groups[cat].forEach(m => {
+      html += `<div class="dropdown-item" onmousedown="selectModel('${m.model}','${m.name}')">
+        <span class="model-cat">${m.model}</span><span class="model-name">${m.name}</span></div>`;
     });
-    if (!form.querySelector('[name="priority"]:checked')) valid = false;
-
-    if (!valid) {
-      errorBar.style.display = 'block';
-      errorBar.textContent = 'Please complete all required fields (*) and select a service priority.';
-      errorBar.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      return;
-    }
-
-    errorBar.style.display = 'none';
-    btn.disabled = true;
-    btn.textContent = 'Sending...';
-
-    const data = {};
-    new FormData(form).forEach((val, key) => { data[key] = val; });
-
-    try {
-      const res = await fetch('/.netlify/functions/submit-service', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-
-      if (res.ok) {
-        form.style.display = 'none';
-        successState.style.display = 'block';
-        const ref = 'TU-' + new Date().getFullYear() + '-' + Math.floor(Math.random() * 90000 + 10000);
-        successRef.textContent = 'Reference Number: ' + ref;
-        successState.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.error || 'Server error');
-      }
-    } catch (err) {
-      btn.disabled = false;
-      btn.textContent = 'Submit Service Request →';
-      errorBar.style.display = 'block';
-      errorBar.textContent = 'Something went wrong: ' + err.message + '. Please call 800-678-2956 directly.';
-      errorBar.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
   });
-})();
-</script>
+  list.innerHTML = html;
+}
+function selectModel(code, name) {
+  document.getElementById('model-search').value = `${code} — ${name}`;
+  document.getElementById('model-hidden').value = code;
+  document.getElementById('model-dropdown').classList.remove('open');
+}
+document.getElementById('model-search').addEventListener('input', function() {
+  document.getElementById('model-hidden').value = '';
+  const s = this.value.toLowerCase();
+  const f = s ? TAYLOR_MODELS.filter(m => m.model.toLowerCase().includes(s) || m.name.toLowerCase().includes(s) || m.category.toLowerCase().includes(s)) : TAYLOR_MODELS;
+  renderDropdown(f);
+  document.getElementById('model-dropdown').classList.add('open');
+});
+document.getElementById('model-search').addEventListener('focus', function() {
+  renderDropdown(TAYLOR_MODELS);
+  document.getElementById('model-dropdown').classList.add('open');
+});
+document.getElementById('model-search').addEventListener('blur', function() {
+  setTimeout(() => document.getElementById('model-dropdown').classList.remove('open'), 180);
+});
+renderDropdown(TAYLOR_MODELS);
 
+/* ═══ SIGNATURE PAD ═══ */
+const canvas = document.getElementById('sig-canvas');
+const ctx = canvas.getContext('2d');
+let drawing = false, hasSig = false, lastX = 0, lastY = 0;
+function resizeCanvas() {
+  const w = canvas.offsetWidth;
+  canvas.width = w; canvas.height = 130;
+  ctx.strokeStyle = '#102033'; ctx.lineWidth = 2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+}
+function getPos(e) {
+  const r = canvas.getBoundingClientRect();
+  const sx = canvas.width / r.width, sy = canvas.height / r.height;
+  if (e.touches) return [(e.touches[0].clientX - r.left)*sx, (e.touches[0].clientY - r.top)*sy];
+  return [(e.clientX - r.left)*sx, (e.clientY - r.top)*sy];
+}
+canvas.addEventListener('mousedown', e => { drawing=true; [lastX,lastY]=getPos(e); });
+canvas.addEventListener('mousemove', e => {
+  if (!drawing) return; hasSig=true;
+  const [x,y]=getPos(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); [lastX,lastY]=[x,y];
+});
+canvas.addEventListener('mouseup', () => drawing=false);
+canvas.addEventListener('mouseleave', () => drawing=false);
+canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing=true; [lastX,lastY]=getPos(e); });
+canvas.addEventListener('touchmove', e => {
+  e.preventDefault(); if (!drawing) return; hasSig=true;
+  const [x,y]=getPos(e); ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke(); [lastX,lastY]=[x,y];
+});
+canvas.addEventListener('touchend', () => drawing=false);
+function clearSig() { ctx.clearRect(0,0,canvas.width,canvas.height); hasSig=false; }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+/* ═══ PDF GENERATION ═══ */
+function generatePDF(d) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'letter' });
+  const PW = 215.9, mg = 16;
+  let y = 0;
+
+  // ── Header ──
+  doc.setFillColor(16,32,51);
+  doc.rect(0,0,PW,36,'F');
+  doc.setFillColor(26,159,212);
+  doc.rect(0,34,PW,2,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(18);
+  doc.text('TAYLOR UPSTATE', mg, 14);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(8);
+  doc.setTextColor(41,195,240);
+  doc.text('AUTHORIZED TAYLOR SERVICE DEALER', mg, 21);
+  doc.setTextColor(154,205,230);
+  doc.text('800-678-2956  -  taylor-upstate.com', mg, 28);
+
+  // PENDING badge
+  doc.setFillColor(222,172,92);
+  doc.roundedRect(PW-mg-34,7,34,15,2,2,'F');
+  doc.setTextColor(16,32,51);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(10);
+  doc.text('PENDING', PW-mg-17, 16.5, {align:'center'});
+
+  y = 43;
+
+  // Title
+  doc.setTextColor(16,32,51);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(15);
+  doc.text('FREEZER SERVICE CONTRACT APPLICATION', PW/2, y, {align:'center'});
+  y += 4;
+
+  // Warning strip — short enough to fit
+  doc.setFillColor(255,249,230);
+  doc.setDrawColor(222,172,92);
+  doc.roundedRect(mg, y, PW-mg*2, 7, 1,1,'FD');
+  doc.setTextColor(106,80,0);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(7.5);
+  doc.text('! MUST BE RECEIVED WITHIN 30 DAYS OF INSTALLATION WITH PAYMENT — NON-TRANSFERRABLE, NON-REFUNDABLE', PW/2, y+4.8, {align:'center'});
+  y += 10;
+
+  // ── Section header helper ──
+  function secHead(title) {
+    doc.setFillColor(16,32,51);
+    doc.rect(mg, y, PW-mg*2, 5.5, 'F');
+    doc.setTextColor(41,195,240);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(7.5);
+    doc.text(title, mg+2, y+4);
+    y += 7.5;
+    doc.setTextColor(16,32,51);
+  }
+
+  // ── Field helper (label + value + underline) ──
+  function fld(lbl, val, x, w) {
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(6);
+    doc.setTextColor(90,122,146);
+    doc.text(lbl.toUpperCase(), x, y);
+    doc.setFont('helvetica','bold');
+    doc.setFontSize(9);
+    doc.setTextColor(val ? 16 : 160, val ? 32 : 160, val ? 51 : 160);
+    doc.text(val || '___', x, y+4.5);
+    doc.setDrawColor(197,220,234);
+    doc.line(x, y+5.8, x+w, y+5.8);
+  }
+
+  // ── Blank line helper (for factory use fields) ──
+  function blankLine(lbl, note, x, w) {
+    doc.setFont('helvetica','normal');
+    doc.setFontSize(6);
+    doc.setTextColor(90,122,146);
+    doc.text(lbl.toUpperCase(), x, y);
+    doc.setDrawColor(16,32,51);
+    doc.line(x, y+5.5, x+w, y+5.5);
+    if (note) {
+      doc.setFontSize(5.5);
+      doc.setTextColor(130,150,165);
+      doc.text(note, x, y+8);
+    }
+  }
+
+  // ══ APPLICANT INFORMATION ══
+  secHead('APPLICANT INFORMATION');
+  fld('Business Name', d.business_name, mg, 85);
+  fld('Contact Name', d.contact_name, mg+89, 90);
+  y += 9;
+  fld('Installation Address', d.address, mg, PW-mg*2);
+  y += 9;
+  fld('Phone', d.phone, mg, 50);
+  fld('Email', d.email, mg+54, 90);
+  y += 11;
+
+  // ══ EQUIPMENT INFORMATION ══
+  secHead('EQUIPMENT INFORMATION');
+  fld('Manufacturer', 'Taylor', mg, 38);
+  fld('Equipment Model No.', d.model_number, mg+42, 72);
+  fld('Serial Number', d.serial_number, mg+118, 55);
+  y += 9;
+  fld('Date of Installation', d.install_date, mg, 58);
+  fld('Contract Term', d.contract_term+' Year(s)', mg+62, 50);
+  fld('Selling Dealer', 'Taylor Upstate', mg+116, 62);
+  y += 11;
+
+  // ══ CONTRACT PRICING ══
+  secHead('CONTRACT PRICING');
+  fld('This Contract is Offered for the Amount of $', d.contract_price || 'To be confirmed by Taylor Upstate', mg, 115);
+  // Note
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(6);
+  doc.setTextColor(130,100,0);
+  doc.text('* Taylor Upstate will confirm contract pricing upon review of this application.', mg, y+9);
+  y += 14;
+
+  // ══ COVERAGE SUMMARY ══
+  secHead('COVERAGE SUMMARY');
+  const cW = (PW-mg*2-6)/2;
+  const cR = mg+cW+6;
+
+  doc.setFillColor(39,174,96);
+  doc.rect(mg, y-1, cW, 5.5,'F');
+  doc.setTextColor(255,255,255);
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(7);
+  doc.text('COVERED [+]', mg+2, y+3);
+
+  doc.setFillColor(192,57,43);
+  doc.rect(cR, y-1, cW, 5.5,'F');
+  doc.text('NOT COVERED [x]', cR+2, y+3);
+  y += 6.5;
+
+  const cov = ['Parts & labor for covered repairs','Factory-trained technician calls','OEM Taylor replacement parts','Refrigeration system components','Drive systems and motors'];
+  const exc = ['Misuse, abuse, or negligence','Consumables (brushes, o-rings, blades)','Mix or product contamination','Unauthorized modifications or repairs','Power surges or improper utilities'];
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7.5);
+  cov.forEach((item,i) => {
+    doc.setTextColor(39,174,96);  doc.text('+', mg+1,   y+i*4.2);
+    doc.setTextColor(16,32,51);   doc.text(item, mg+5,  y+i*4.2);
+  });
+  exc.forEach((item,i) => {
+    doc.setTextColor(192,57,43);  doc.text('x', cR+1,   y+i*4.2);
+    doc.setTextColor(16,32,51);   doc.text(item, cR+5,  y+i*4.2);
+  });
+  y += cov.length*4.2 + 6;
+
+  // ══ SIGNATURES ══
+  secHead('APPLICANT SIGNATURE');
+
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(6.5);
+  doc.setTextColor(90,122,146);
+  doc.text('Applicant Signature:', mg, y);
+  y += 2;
+  if (d.signature) {
+    try { doc.addImage(d.signature,'PNG', mg, y, 70, 16); } catch(e){}
+  }
+  y += 17;
+  doc.setDrawColor(16,32,51);
+  doc.line(mg, y, mg+70, y);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(6.5);
+  doc.setTextColor(90,122,146);
+  doc.text(d.applicant_printed_name || '', mg, y+3.5);
+  doc.text('Date:  '+(d.applicant_date||''), mg+75, y+3.5);
+  y += 9;
+
+  // ══ FOR TAYLOR UPSTATE / FACTORY USE ONLY ══
+  secHead('FOR TAYLOR UPSTATE / FACTORY USE ONLY');
+
+  // Row 1: Seller's Signature + Seller's Date
+  blankLine("Seller's Signature", 'Authorized Taylor Upstate Representative — completed upon processing', mg, 115);
+  blankLine("Seller's Date", '', mg+119, 55);
+  y += 12;
+
+  // Row 2: Factory Approval + Factory Approval Date
+  blankLine('Factory Approval Signature', 'Taylor Company Authorized Representative', mg, 115);
+  blankLine('Factory Approval Date', '', mg+119, 55);
+  y += 8;
+
+  // Caution note
+  doc.setFillColor(255,249,230);
+  doc.setDrawColor(222,172,92);
+  doc.rect(mg, y, PW-mg*2, 7, 'FD');
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(6.5);
+  doc.setTextColor(106,80,0);
+  doc.text('CAUTION: This contract is valid only if required repairs are provided by an authorized Taylor distributor or their authorized service agent.', mg+2, y+2.8);
+  doc.text('Taylor Upstate will contact applicant to confirm pricing before processing. This contract is non-transferrable and non-refundable.', mg+2, y+5.8);
+
+  // ── Footer ──
+  doc.setFillColor(16,32,51);
+  doc.rect(0,268,PW,12,'F');
+  doc.setTextColor(154,205,230);
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(7.5);
+  doc.text('Taylor Upstate  -  Authorized Taylor Service Dealer  -  800-678-2956  -  taylor-upstate.com', PW/2, 275.5, {align:'center'});
+
+  return doc;
+}
+
+/* ═══ FORM SUBMIT ═══ */
+let savedPdfDoc = null;
+
+document.getElementById('contract-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  // Signature check
+  if (!hasSig) {
+    document.getElementById('sig-error').style.display = 'block';
+    document.getElementById('sig-wrapper').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  document.getElementById('sig-error').style.display = 'none';
+
+  // Model check
+  if (!document.getElementById('model-hidden').value) {
+    document.getElementById('model-search').focus();
+    alert('Please select a Taylor equipment model from the dropdown.');
+    return;
+  }
+
+  const spinner = document.getElementById('spinner-overlay');
+  const spinMsg = document.getElementById('spinner-msg');
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  spinner.classList.add('active');
+  spinMsg.textContent = 'Generating PDF…';
+
+  // Collect data
+  const data = {
+    business_name:      document.getElementById('f-business').value,
+    contact_name:       document.getElementById('f-contact').value,
+    address:            document.getElementById('f-address').value,
+    phone:              document.getElementById('f-phone').value,
+    email:              document.getElementById('f-email').value,
+    model_number:       document.getElementById('model-hidden').value,
+    serial_number:      document.getElementById('f-serial').value,
+    install_date:       document.getElementById('f-install').value,
+    contract_term:      document.getElementById('f-term').value,
+    applicant_printed_name: document.getElementById('f-printed').value,
+    applicant_date:     document.getElementById('f-appdate').value,
+    signature:          canvas.toDataURL('image/png'),
+  };
+
+  try {
+    // Generate PDF
+    const doc = generatePDF(data);
+    savedPdfDoc = doc;
+    const pdfBase64 = doc.output('datauristring').split(',')[1];
+    const pdfFilename = `ServiceContract_${data.business_name.replace(/[^a-zA-Z0-9]/g,'_')}_${data.model_number}.pdf`;
+
+    spinMsg.textContent = 'Sending to Taylor Upstate…';
+
+    // Call Netlify function
+    const res = await fetch('/.netlify/functions/send-contract', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ ...data, pdfBase64 })
+    });
+
+    if (!res.ok) throw new Error('Server error '+res.status);
+
+    // Auto-download PDF for applicant
+    doc.save(pdfFilename);
+
+    spinner.classList.remove('active');
+
+    // Show success
+    document.getElementById('contract-form-wrapper').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    window.scrollTo({top:0,behavior:'smooth'});
+
+    // Enable "download again" button
+    const dlBtn = document.getElementById('dl-again-btn');
+    dlBtn.style.display = 'inline-block';
+    dlBtn.onclick = () => savedPdfDoc && savedPdfDoc.save(pdfFilename);
+
+  } catch(err) {
+    spinner.classList.remove('active');
+    btn.disabled = false;
+    console.error(err);
+    alert('There was an error submitting the form. Please call 800-678-2956 or email sales@taylor-upstate.com.\n\n('+err.message+')');
+  }
+});
+</script>
 </body>
 </html>

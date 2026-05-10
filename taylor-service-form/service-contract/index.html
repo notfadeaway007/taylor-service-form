@@ -1,849 +1,584 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Taylor Limited Service Contract — Taylor Upstate</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --navy:       #0B1829;
-      --navy-mid:   #142236;
-      --navy-light: #1E3450;
-      --cyan:       #0193cf;
-      --cyan-light: #0ab0f0;
-      --gold:       #deac5c;
-      --white:      #FFFFFF;
-      --gray-200:   #D8DCE1;
-      --gray-400:   #94A0AE;
-      --gray-600:   #5A6876;
-      --off-white:  #F7F6F3;
-    }
-    body {
-      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-      background: var(--navy);
-      color: var(--white);
-      min-height: 100vh;
-      padding: 0;
-    }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Taylor Service Contract Application — Taylor Upstate</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#102033;--cyan:#1a9fd4;--accent:#29c3f0;--gold:#deac5c;
+  --border:#c5dcea;--muted:#5a7a92;--bg:#f0f6fb;
+}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh;}
 
-    /* ── HEADER ── */
-    .page-header {
-      background: var(--navy-mid);
-      border-bottom: 2px solid var(--cyan);
-      padding: 20px 32px;
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-    .page-header img { height: 42px; width: auto; }
-    .page-header-title {
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--gray-400);
-    }
-    .page-header-divider {
-      width: 1px;
-      height: 32px;
-      background: rgba(255,255,255,0.15);
-    }
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#102033 0%,#1b3a56 60%,#1e4d74 100%);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.hdr-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:2px;}
+.hdr-sub{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;}
 
-    /* ── HERO BANNER ── */
-    .contract-hero {
-      background: var(--navy-mid);
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      padding: 40px 32px;
-      text-align: center;
-    }
-    .contract-hero h1 {
-      font-size: clamp(20px, 4vw, 32px);
-      font-weight: 800;
-      letter-spacing: -0.3px;
-      text-transform: uppercase;
-      line-height: 1.1;
-      margin-bottom: 8px;
-    }
-    .contract-hero h1 span { color: var(--cyan-light); }
-    .contract-hero .subtitle {
-      font-size: 13px;
-      color: var(--gray-400);
-      letter-spacing: 0.5px;
-      margin-bottom: 16px;
-    }
-    .gold-warning {
-      display: inline-block;
-      background: rgba(222,172,92,0.1);
-      border: 1px solid rgba(222,172,92,0.4);
-      color: var(--gold);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      padding: 8px 20px;
-      border-radius: 2px;
-    }
+/* HERO BANNER */
+.hero{background:var(--navy);padding:20px 24px;text-align:center;}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.hero-warn{background:rgba(222,172,92,.15);border:1px solid var(--gold);border-radius:4px;padding:10px 18px;display:inline-block;margin-top:8px;}
+.hero-warn p{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.5px;}
 
-    /* ── LAYOUT ── */
-    .form-wrapper {
-      max-width: 780px;
-      margin: 0 auto;
-      padding: 40px 24px 60px;
-    }
+/* FORM CARD */
+.card{max-width:780px;margin:28px auto;background:#fff;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,.12);overflow:hidden;border-top:4px solid var(--cyan);}
+.section{padding:22px 28px;border-bottom:1px solid var(--border);}
+.section:last-child{border-bottom:none;}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--cyan);margin-bottom:16px;}
 
-    /* ── FORM SECTIONS ── */
-    .form-section {
-      background: var(--navy-mid);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 4px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-    .form-section-header {
-      background: rgba(255,255,255,0.04);
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .form-section-header .section-num {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: var(--cyan);
-      color: var(--white);
-      font-size: 11px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .form-section-header h2 {
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: var(--white);
-    }
-    .form-section-body { padding: 20px; }
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr;}}
 
-    /* ── FIELDS ── */
-    .field-row {
-      display: grid;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .field-row.cols-2 { grid-template-columns: 1fr 1fr; }
-    .field-row.cols-3 { grid-template-columns: 2fr 1fr 1fr; }
-    .field-row.cols-4 { grid-template-columns: 2fr 1fr 1fr 1fr; }
-    .field-group { display: flex; flex-direction: column; gap: 6px; }
-    label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--gray-400);
-    }
-    label .req { color: var(--gold); margin-left: 2px; }
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="number"],
-    select,
-    textarea {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-bottom: 2px solid rgba(255,255,255,0.25);
-      color: var(--white);
-      padding: 10px 12px;
-      font-size: 14px;
-      font-family: inherit;
-      border-radius: 2px;
-      outline: none;
-      width: 100%;
-      transition: border-color 0.15s;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--cyan);
-      border-bottom-color: var(--cyan);
-    }
-    select option { background: #142236; color: var(--white); }
-    input::placeholder { color: rgba(255,255,255,0.2); }
-    .field-note {
-      font-size: 11px;
-      color: var(--gray-400);
-      line-height: 1.5;
-      margin-top: 4px;
-    }
-    .field-note.gold { color: var(--gold); }
-    .search-wrapper { position: relative; }
-    .search-wrapper input { padding-right: 32px; }
-    .dropdown-list {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: #1E3450;
-      border: 1px solid rgba(1,147,207,0.4);
-      border-radius: 0 0 3px 3px;
-      max-height: 200px;
-      overflow-y: auto;
-      z-index: 100;
-      display: none;
-    }
-    .dropdown-list.open { display: block; }
-    .dropdown-item {
-      padding: 9px 12px;
-      font-size: 13px;
-      cursor: pointer;
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .dropdown-item:hover { background: rgba(1,147,207,0.2); color: var(--white); }
-    .dropdown-item .model-cat {
-      font-size: 10px;
-      letter-spacing: 0.8px;
-      text-transform: uppercase;
-      color: var(--cyan);
-      font-weight: 700;
-      min-width: 80px;
-    }
-    .dropdown-item .model-name { color: rgba(255,255,255,0.5); font-size: 11px; }
-    .dropdown-empty { padding: 12px; font-size: 13px; color: var(--gray-400); text-align: center; }
+/* FIELD */
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);}
+.field label .req{color:#c0392b;}
+.field input,.field select,.field textarea{border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'Barlow',sans-serif;font-size:13px;color:var(--navy);background:#fff;outline:none;transition:border-color .15s;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--cyan);}
+.field input[readonly]{background:#f7fbff;color:var(--muted);}
+.field textarea{resize:vertical;min-height:60px;}
 
-    /* ── SIGNATURE PAD ── */
-    .sig-pad-wrapper {
-      background: rgba(255,255,255,0.03);
-      border: 1px dashed rgba(255,255,255,0.2);
-      border-radius: 3px;
-      overflow: hidden;
-      position: relative;
-    }
-    .sig-pad-wrapper canvas {
-      display: block;
-      width: 100%;
-      height: 110px;
-      cursor: crosshair;
-      touch-action: none;
-    }
-    .sig-pad-label {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 12px;
-      color: rgba(255,255,255,0.18);
-      pointer-events: none;
-      text-align: center;
-      line-height: 1.6;
-    }
-    .sig-pad-label.hidden { display: none; }
-    .sig-clear-btn {
-      display: inline-block;
-      margin-top: 6px;
-      font-size: 11px;
-      color: var(--gray-400);
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0;
-      text-decoration: underline;
-    }
-    .sig-clear-btn:hover { color: var(--cyan); }
+/* SEARCHABLE DROPDOWN */
+.model-wrap{position:relative;}
+.model-input-row{display:flex;gap:8px;align-items:center;}
+.model-search-box{flex:1;border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'Barlow',sans-serif;font-size:13px;color:var(--navy);outline:none;transition:border-color .15s;}
+.model-search-box:focus{border-color:var(--cyan);}
+.model-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:260px;overflow-y:auto;z-index:200;display:none;}
+.model-dropdown.open{display:block;}
+.dropdown-item{padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:baseline;border-bottom:1px solid #f0f6fb;}
+.dropdown-item:last-child{border-bottom:none;}
+.dropdown-item:hover{background:#eaf6fb;}
+.model-cat{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--navy);min-width:58px;}
+.model-name{font-size:12px;color:var(--muted);}
+.dropdown-group{padding:6px 12px 3px;font-family:'Barlow Condensed',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--cyan);background:#f7fbff;border-bottom:1px solid var(--border);position:sticky;top:0;}
+.dropdown-empty{padding:12px;text-align:center;font-size:13px;color:var(--muted);}
 
-    /* ── COVERAGE BOX ── */
-    .coverage-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-    .coverage-card {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 16px;
-      border-radius: 3px;
-    }
-    .coverage-card h3 {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-    }
-    .coverage-card.covered h3 { color: var(--cyan-light); }
-    .coverage-card.excluded h3 { color: var(--gray-400); }
-    .coverage-card ol, .coverage-card ul {
-      font-size: 12px;
-      color: rgba(255,255,255,0.6);
-      line-height: 1.7;
-      padding-left: 18px;
-    }
+/* PRICE FIELD */
+.price-note{font-size:11px;color:var(--gold);margin-top:4px;font-style:italic;}
 
-    /* ── AGREEMENT ── */
-    .agreement-box {
-      background: rgba(222,172,92,0.07);
-      border: 1px solid rgba(222,172,92,0.3);
-      border-radius: 3px;
-      padding: 16px;
-      margin-bottom: 20px;
-    }
-    .agreement-box label {
-      font-size: 13px;
-      text-transform: none;
-      letter-spacing: 0;
-      color: rgba(255,255,255,0.75);
-      font-weight: 400;
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      cursor: pointer;
-    }
-    .agreement-box input[type="checkbox"] {
-      width: 16px;
-      height: 16px;
-      flex-shrink: 0;
-      margin-top: 2px;
-      accent-color: var(--gold);
-    }
-    .agreement-box .gold-text { color: var(--gold); font-weight: 700; }
+/* SIGNATURE */
+.sig-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px;}
+#sig-wrapper{border:1px solid var(--border);border-radius:3px;background:#fff;position:relative;overflow:hidden;}
+#sig-canvas{display:block;width:100%;cursor:crosshair;touch-action:none;}
+.sig-actions{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f7fbff;border-top:1px solid var(--border);}
+.sig-actions span{font-size:11px;color:var(--muted);}
+.sig-clear{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:3px 6px;}
+.sig-clear:hover{color:var(--navy);}
+#sig-error{display:none;font-size:11px;color:#c0392b;margin-top:4px;}
 
-    /* ── DISCLAIMER ── */
-    .disclaimer {
-      background: rgba(255,255,255,0.02);
-      border-left: 3px solid rgba(255,255,255,0.1);
-      padding: 14px 16px;
-      margin-bottom: 20px;
-    }
-    .disclaimer p {
-      font-size: 11px;
-      color: rgba(255,255,255,0.35);
-      line-height: 1.7;
-    }
-    .disclaimer strong { color: rgba(255,255,255,0.5); }
+/* READONLY SELLER FIELDS */
+.seller-note{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px;}
 
-    /* ── SUBMIT ── */
-    .submit-btn {
-      width: 100%;
-      background: var(--cyan);
-      color: var(--white);
-      border: none;
-      padding: 16px 24px;
-      font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      border-radius: 3px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .submit-btn:hover { background: var(--cyan-light); }
-    .submit-btn:disabled { background: var(--gray-400); cursor: not-allowed; }
+/* AGREEMENT */
+.agreement{background:#fffde7;border-left:4px solid var(--gold);padding:14px 16px;border-radius:0 4px 4px 0;margin-bottom:16px;}
+.agreement p{font-size:13px;color:#6a5000;line-height:1.55;margin-bottom:8px;}
+.agreement p:last-child{margin-bottom:0;}
+.agreement .warn-line{font-weight:700;color:var(--gold);}
+.check-row{display:flex;gap:10px;align-items:flex-start;margin-top:12px;}
+.check-row input[type=checkbox]{margin-top:2px;flex-shrink:0;width:16px;height:16px;cursor:pointer;}
+.check-row label{font-size:12px;color:var(--navy);line-height:1.5;cursor:pointer;}
 
-    /* ── SUCCESS ── */
-    .success-screen {
-      display: none;
-      text-align: center;
-      padding: 60px 24px;
-    }
-    .success-screen .check { font-size: 56px; margin-bottom: 16px; }
-    .success-screen h2 { font-size: 24px; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; color: var(--cyan-light); }
-    .success-screen p { font-size: 15px; color: var(--gray-400); line-height: 1.7; max-width: 500px; margin: 0 auto 24px; }
-    .back-link { color: var(--cyan); font-size: 13px; font-weight: 700; text-decoration: none; }
+/* COVERAGE */
+.coverage-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px;}
+@media(max-width:600px){.coverage-grid{grid-template-columns:1fr;}}
+.cov-col h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.cov-col.covered h4{color:#27ae60;}
+.cov-col.excluded h4{color:#c0392b;}
+.cov-col ul{list-style:none;padding:0;}
+.cov-col ul li{font-size:12px;color:var(--muted);padding:3px 0;padding-left:14px;position:relative;line-height:1.4;}
+.cov-col.covered ul li::before{content:"✓";position:absolute;left:0;color:#27ae60;font-size:10px;font-weight:700;}
+.cov-col.excluded ul li::before{content:"✗";position:absolute;left:0;color:#c0392b;font-size:10px;font-weight:700;}
 
-    /* ── SEPARATOR ── */
-    .sig-separator {
-      border: none;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      margin: 16px 0;
-    }
-    .sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-    .sig-readonly {
-      background: rgba(255,255,255,0.03);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 3px;
-      padding: 14px;
-      min-height: 80px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-    }
-    .sig-readonly .sig-label {
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--gray-400);
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-    }
-    .sig-readonly .pending-note {
-      font-size: 11px;
-      color: rgba(255,255,255,0.2);
-      font-style: italic;
-    }
+/* SUBMIT */
+.submit-wrap{text-align:center;padding:24px 28px;}
+.submit-btn{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:var(--cyan);color:#fff;border:none;border-radius:4px;padding:14px 40px;cursor:pointer;transition:all .15s;}
+.submit-btn:hover{background:#158fc0;}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;}
 
-    @media (max-width: 640px) {
-      .field-row.cols-2,
-      .field-row.cols-3,
-      .field-row.cols-4,
-      .coverage-grid,
-      .sig-row { grid-template-columns: 1fr; }
-      .page-header img { height: 32px; }
-    }
-  </style>
+/* SUCCESS */
+#success-screen{display:none;padding:40px 28px;text-align:center;}
+#success-screen h2{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--navy);text-transform:uppercase;margin-bottom:10px;}
+#success-screen p{font-size:14px;color:var(--muted);line-height:1.6;max-width:480px;margin:0 auto 20px;}
+#success-screen a{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--cyan);text-decoration:none;}
+
+/* FOOTER */
+.footer{background:var(--navy);padding:14px 24px;text-align:center;margin-top:32px;}
+.footer p{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.35);}
+.footer a{color:rgba(255,255,255,.5);text-decoration:none;}
+</style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <div class="page-header">
-    <img src="https://images.squarespace-cdn.com/content/v1/58aba5366a496335867b2e11/081cef9b-b31b-44a8-bd70-f985cbd4643f/Taylor+Upstate+Logo+Large.png?format=300w" alt="Taylor Upstate" />
-    <div class="page-header-divider"></div>
-    <div class="page-header-title">Service Contract Application</div>
+<div class="hdr">
+  <div>
+    <div class="hdr-logo">TAYLOR UPSTATE</div>
+    <div class="hdr-sub">Authorized Taylor Service Dealer</div>
   </div>
+  <div style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.4);">
+    800-678-2956 &nbsp;·&nbsp; taylor-upstate.com
+  </div>
+</div>
 
-  <div class="form-wrapper">
+<div class="hero">
+  <h1>Service Contract Application</h1>
+  <div class="hero-warn">
+    <p>⚠ Contract must be received within 30 days of equipment installation</p>
+  </div>
+</div>
 
-    <!-- HERO -->
-    <div class="contract-hero" style="margin:-40px -24px 32px;padding:36px 24px;">
-      <h1>Taylor Limited Service Contract<br /><span>Freezers &amp; Dispensers</span></h1>
-      <p class="subtitle">Non-Transferrable &nbsp;·&nbsp; Non-Refundable &nbsp;·&nbsp; Taylor Company Authorized</p>
-      <span class="gold-warning">⚠&nbsp; Must be received at factory within 30 days of install — with payment</span>
+<div class="card">
+  <div id="contract-form-wrapper">
+  <form id="contract-form" name="taylor-service-contract" method="POST" data-netlify="true" data-netlify-honeypot="bot-field">
+    <input type="hidden" name="form-name" value="taylor-service-contract"/>
+    <input type="hidden" name="bot-field"/>
+    <input type="hidden" id="sig-data" name="signature"/>
+
+    <!-- APPLICANT -->
+    <div class="section">
+      <div class="section-title">Applicant Information</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Business Name <span class="req">*</span></label>
+          <input type="text" name="business_name" required placeholder="DBA or legal name"/>
+        </div>
+        <div class="field">
+          <label>Contact Name <span class="req">*</span></label>
+          <input type="text" name="contact_name" required placeholder="First and last name"/>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label>Installation Address <span class="req">*</span></label>
+        <input type="text" name="address" required placeholder="Street, City, State, ZIP"/>
+      </div>
+      <div class="grid3">
+        <div class="field">
+          <label>Phone <span class="req">*</span></label>
+          <input type="tel" name="phone" required placeholder="(000) 000-0000"/>
+        </div>
+        <div class="field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" name="email" required placeholder="you@business.com"/>
+        </div>
+        <div class="field">
+          <label>Fax</label>
+          <input type="tel" name="fax" placeholder="Optional"/>
+        </div>
+      </div>
     </div>
 
-    <!-- SUCCESS SCREEN (hidden by default) -->
-    <div class="success-screen" id="success-screen">
-      <div class="check">✅</div>
-      <h2>Application Submitted</h2>
-      <p>Your Taylor Limited Service Contract application has been received by Taylor Upstate. A representative will contact you to confirm pricing and finalize the agreement. <strong style="color:var(--gold);">Remember: the signed contract with payment must be received at the factory within 30 days of installation.</strong></p>
-      <a href="https://www.taylor-upstate.com/authorized-service" class="back-link">← Return to Authorized Service</a>
+    <!-- EQUIPMENT -->
+    <div class="section">
+      <div class="section-title">Equipment Information</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Manufacturer</label>
+          <input type="text" name="manufacturer" value="Taylor" readonly/>
+        </div>
+        <div class="field">
+          <label>Equipment Model No. <span class="req">*</span></label>
+          <div class="model-wrap">
+            <input class="model-search-box" id="model-search" type="text" placeholder="Type model # or description to search…" autocomplete="off" required/>
+            <input type="hidden" name="model_number" id="model-hidden"/>
+            <div class="model-dropdown" id="model-dropdown"></div>
+          </div>
+        </div>
+      </div>
+      <div class="grid3">
+        <div class="field">
+          <label>Serial Number <span class="req">*</span></label>
+          <input type="text" name="serial_number" required placeholder="Serial #"/>
+        </div>
+        <div class="field">
+          <label>Date of Installation <span class="req">*</span></label>
+          <input type="date" name="install_date" required/>
+        </div>
+        <div class="field">
+          <label>Contract Term (Years) <span class="req">*</span></label>
+          <select name="contract_term" required>
+            <option value="">Select term…</option>
+            <option value="1">1 Year</option>
+            <option value="2">2 Years</option>
+            <option value="3">3 Years</option>
+            <option value="4">4 Years</option>
+            <option value="5">5 Years</option>
+          </select>
+        </div>
+      </div>
     </div>
 
-    <!-- FORM -->
-    <form id="contract-form" name="taylor-service-contract" method="POST" netlify data-netlify="true" netlify-honeypot="bot-field">
-      <input type="hidden" name="form-name" value="taylor-service-contract" />
-      <p style="display:none;"><input name="bot-field" /></p>
-      <!-- Signature data hidden fields -->
-      <input type="hidden" name="applicant_signature_data" id="sig-data" />
-
-      <!-- ══ SECTION 1: APPLICANT ══ -->
-      <div class="form-section">
-        <div class="form-section-header">
-          <span class="section-num">1</span>
-          <h2>Applicant Information</h2>
+    <!-- PRICING -->
+    <div class="section">
+      <div class="section-title">Contract Pricing</div>
+      <div class="grid2">
+        <div class="field">
+          <label>This Contract is Offered for the Amount of $</label>
+          <input type="text" name="contract_price" readonly value="" placeholder="To be confirmed by Taylor Upstate"/>
+          <div class="price-note">⚑ Taylor Upstate will confirm contract pricing upon review of your application.</div>
         </div>
-        <div class="form-section-body">
-          <div class="field-row cols-2">
-            <div class="field-group">
-              <label>Name of Applicant <span class="req">*</span></label>
-              <input type="text" name="applicant_name" required placeholder="First and last name" />
-            </div>
-            <div class="field-group">
-              <label>Name of Business <span class="req">*</span></label>
-              <input type="text" name="business_name" required placeholder="Business / DBA name" />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field-group">
-              <label>Machine Location — Street Address <span class="req">*</span></label>
-              <input type="text" name="machine_location" required placeholder="Street address where equipment is installed" />
-            </div>
-          </div>
-          <div class="field-row cols-4">
-            <div class="field-group">
-              <label>City <span class="req">*</span></label>
-              <input type="text" name="city" required />
-            </div>
-            <div class="field-group">
-              <label>State <span class="req">*</span></label>
-              <input type="text" name="state" value="NY" required style="max-width:80px;" />
-            </div>
-            <div class="field-group">
-              <label>Zip <span class="req">*</span></label>
-              <input type="text" name="zip" required style="max-width:100px;" />
-            </div>
-          </div>
-          <div class="field-row cols-2">
-            <div class="field-group">
-              <label>Phone <span class="req">*</span></label>
-              <input type="tel" name="phone" required placeholder="(___) ___-____" />
-            </div>
-            <div class="field-group">
-              <label>Email Address <span class="req">*</span></label>
-              <input type="email" name="email" required placeholder="your@email.com" />
-            </div>
-          </div>
+        <div class="field">
+          <label>Selling Dealer</label>
+          <input type="text" name="selling_dealer" readonly value="Taylor Upstate"/>
         </div>
       </div>
+    </div>
 
-      <!-- ══ SECTION 2: EQUIPMENT ══ -->
-      <div class="form-section">
-        <div class="form-section-header">
-          <span class="section-num">2</span>
-          <h2>Equipment Details</h2>
+    <!-- COVERAGE -->
+    <div class="section">
+      <div class="section-title">What's Covered</div>
+      <div class="coverage-grid">
+        <div class="cov-col covered">
+          <h4>Covered ✓</h4>
+          <ul>
+            <li>All parts and labor for covered repairs</li>
+            <li>Factory-trained technician service calls</li>
+            <li>OEM Taylor replacement parts</li>
+            <li>Refrigeration system components</li>
+            <li>Electrical components and controls</li>
+            <li>Drive systems and motors</li>
+            <li>Preventive maintenance visits (per term)</li>
+          </ul>
         </div>
-        <div class="form-section-body">
-          <div class="field-row cols-2">
-            <div class="field-group">
-              <label>Equipment Model No. <span class="req">*</span></label>
-              <div class="search-wrapper">
-                <input type="text" id="model-search" name="model_number" required placeholder="Search Taylor models…" autocomplete="off" oninput="filterModels(this.value)" onfocus="openDropdown()" />
-                <div class="dropdown-list" id="model-dropdown"></div>
-              </div>
-            </div>
-            <div class="field-group">
-              <label>Serial No. <span class="req">*</span></label>
-              <input type="text" name="serial_number" required placeholder="Located on the equipment nameplate" />
-            </div>
-          </div>
-          <div class="field-row cols-2">
-            <div class="field-group">
-              <label>Contract Term <span class="req">*</span></label>
-              <select name="contract_term" required>
-                <option value="">Select term</option>
-                <option value="1">1 Year</option>
-                <option value="2">2 Years</option>
-                <option value="3">3 Years</option>
-                <option value="4">4 Years</option>
-                <option value="5">5 Years</option>
-              </select>
-            </div>
-            <div class="field-group">
-              <label>Contract Amount</label>
-              <input type="text" name="contract_amount" placeholder="$ &nbsp;—&nbsp; To be confirmed by Taylor Upstate" style="background:rgba(255,255,255,0.02);color:rgba(255,255,255,0.4);" readonly />
-              <p class="field-note gold">Taylor Upstate will confirm pricing before finalizing</p>
-            </div>
-          </div>
+        <div class="cov-col excluded">
+          <h4>Not Covered ✗</h4>
+          <ul>
+            <li>Misuse, abuse, or negligence</li>
+            <li>Consumables: brushes, o-rings, blades, lubricants</li>
+            <li>Mix or product contamination</li>
+            <li>Unauthorized modifications or repairs</li>
+            <li>Cosmetic damage (dents, scratches)</li>
+            <li>Damage from power surges or improper utilities</li>
+            <li>Cleaning and sanitizing supplies</li>
+          </ul>
         </div>
       </div>
+    </div>
 
-      <!-- ══ SECTION 3: DEALER ══ -->
-      <div class="form-section">
-        <div class="form-section-header">
-          <span class="section-num">3</span>
-          <h2>Selling Distributor / Dealer</h2>
-        </div>
-        <div class="form-section-body">
-          <div class="field-row cols-2">
-            <div class="field-group">
-              <label>Selling Distributor or Dealer</label>
-              <input type="text" name="selling_dealer" value="Taylor Upstate" />
-            </div>
-            <div class="field-group">
-              <label>Dealer Phone</label>
-              <input type="tel" name="dealer_phone" value="800-678-2956" />
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field-group">
-              <label>Dealer Address</label>
-              <input type="text" name="dealer_address" value="564 Livingston St, Troy, NY 12182" />
-            </div>
-          </div>
+    <!-- APPLICANT SIGNATURE -->
+    <div class="section">
+      <div class="section-title">Applicant Signature</div>
+      <div class="agreement">
+        <p>By signing below, applicant agrees to the terms and conditions of this Taylor Service Contract as administered by Taylor Upstate. This contract is not valid until accepted and signed by an authorized Taylor Upstate representative and submitted to Taylor Company for factory approval.</p>
+        <p class="warn-line">⚠ Contract must be received within 30 days of equipment installation to be valid.</p>
+        <div class="check-row">
+          <input type="checkbox" id="agree-check" name="agreed_to_terms" value="yes" required/>
+          <label for="agree-check">I understand that this contract must be received within <strong style="color:var(--gold);">30 days of equipment installation</strong>, and I agree to the terms and conditions of this service contract.</label>
         </div>
       </div>
-
-      <!-- ══ SECTION 4: COVERAGE ══ -->
-      <div class="form-section">
-        <div class="form-section-header">
-          <span class="section-num">4</span>
-          <h2>Coverage Summary — Read Before Signing</h2>
-        </div>
-        <div class="form-section-body">
-          <div class="coverage-grid">
-            <div class="coverage-card covered">
-              <h3>✓ What's Covered</h3>
-              <ol>
-                <li>Any inoperative electrical switch or control</li>
-                <li>Any inoperative motor or compressor</li>
-                <li>Any inoperative freezing cylinder, condenser or evaporator</li>
-                <li>Any inoperative direct drive or gear box including couplings and pulleys</li>
-                <li>Any inoperative fan motor, fan blade or blower assembly</li>
-                <li>Any inoperative drive shaft, beater assembly, freezer door, draw valve, or torque rotor assembly</li>
-                <li>Any refrigerant leak</li>
-                <li>Any inoperative spinner motor or component thereof</li>
-                <li>Any inoperative pump drive assembly</li>
-                <li>Any inoperative rear shell bearing including bearing nut and lock washer (limited to one bearing per year per freezing cylinder)</li>
-              </ol>
-            </div>
-            <div class="coverage-card excluded">
-              <h3>✗ Not Covered (Normal Wear Items)</h3>
-              <ul>
-                <li>Check Bands</li>
-                <li>O-Rings</li>
-                <li>Door Gaskets</li>
-                <li>Front Bearings</li>
-                <li>Guide Bearings</li>
-                <li>Scraper Blades</li>
-                <li>Vinyl Mix Hoses</li>
-                <li>Plastic Pump Parts (after year one)</li>
-                <li>Design Caps / Restrictor Caps</li>
-                <li>Torque Arms</li>
-                <li>Cup Seals / Lip Seals</li>
-                <li>Belts</li>
-                <li>Dirty Condensers</li>
-                <li>Cleaning Supplies / Lubricant</li>
-                <li>Seasonal shutdown / startup</li>
-                <li>Misuse, negligence, acts of God</li>
-              </ul>
-            </div>
-          </div>
-          <div class="disclaimer">
-            <p><strong>Limitations on Service Liability:</strong> The provisions of this contract do not apply to seasonal shutdown or start ups, normal maintenance or normal wear and deterioration, nor to any freezer or parts thereof that have been subject to misuse, negligence, fire, theft, vandalism, wind, rain, water, lightning, high water, earthquake, any natural disaster, act of God, or accident or have been repaired or altered in any way so as, in the judgment of the Manufacturer, to adversely affect performance. This contract will not cover return trips or waiting time necessitated by the owner/operator's unwillingness to allow the mechanic to begin working once the technician arrives. It is very important that the owner/operator be well versed in the operation and daily cleaning and maintenance of the machine as this contract will not provide coverage for breakdowns which are the direct result of misuse, abuse, or neglect. Under the terms of this contract, any part that requires replacement will be replaced with a Taylor Company original equipment part by a Taylor Distributor or their authorized service agent, during their normal servicing hours.</p>
-          </div>
+      <div class="sig-label">Applicant Signature <span class="req" style="color:#c0392b;">*</span></div>
+      <div id="sig-wrapper">
+        <canvas id="sig-canvas" height="130"></canvas>
+        <div class="sig-actions">
+          <span>Sign with mouse or finger</span>
+          <button type="button" class="sig-clear" onclick="clearSig()">✕ Clear</button>
         </div>
       </div>
+      <div id="sig-error">Please provide your signature before submitting.</div>
 
-      <!-- ══ SECTION 5: SIGNATURES ══ -->
-      <div class="form-section">
-        <div class="form-section-header">
-          <span class="section-num">5</span>
-          <h2>Signatures</h2>
+      <div class="grid2" style="margin-top:16px;">
+        <div class="field">
+          <label>Printed Name <span class="req">*</span></label>
+          <input type="text" name="applicant_printed_name" required placeholder="Full legal name"/>
         </div>
-        <div class="form-section-body">
-          <div class="sig-row">
-            <!-- APPLICANT SIGNATURE -->
-            <div class="field-group">
-              <label>Applicant Signature <span class="req">*</span></label>
-              <div class="sig-pad-wrapper" id="sig-wrapper">
-                <canvas id="sig-canvas" width="340" height="110"></canvas>
-                <div class="sig-pad-label" id="sig-placeholder">Sign here with mouse<br />or finger on touchscreen</div>
-              </div>
-              <button type="button" class="sig-clear-btn" onclick="clearSignature()">Clear signature</button>
-              <p id="sig-error" style="font-size:11px;color:#ff6b6b;margin-top:4px;display:none;">Applicant signature is required</p>
-            </div>
-
-            <!-- SELLER SIGNATURE — Taylor fills out -->
-            <div class="field-group">
-              <label>Seller's Signature &amp; Date</label>
-              <div class="sig-readonly">
-                <div class="pending-note">Completed by Taylor Upstate upon processing</div>
-                <div class="sig-label">Seller's Signature &nbsp;/&nbsp; Date</div>
-              </div>
-              <div style="margin-top:16px;">
-                <div class="sig-readonly" style="min-height:60px;">
-                  <div class="pending-note">Completed by Taylor Company</div>
-                  <div class="sig-label">Factory Approval &nbsp;/&nbsp; Date</div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="field">
+          <label>Date <span class="req">*</span></label>
+          <input type="date" name="applicant_date" required/>
         </div>
       </div>
+    </div>
 
-      <!-- ══ AGREEMENT ══ -->
-      <div class="agreement-box">
-        <label>
-          <input type="checkbox" name="agreement" id="agreement-check" required />
-          <span>I have read and understand the coverage terms and limitations above. I acknowledge that this contract is <span class="gold-text">non-transferrable and non-refundable</span>, that it must be received at the factory <span class="gold-text">within 30 days of installation with payment</span>, and is valid only if required repairs are provided by an authorized Taylor Distributor or their authorized agent. I understand that Taylor Upstate will contact me to confirm the contract amount before finalizing.</span>
-        </label>
+    <!-- SELLER / FACTORY (read-only) -->
+    <div class="section" style="background:#f7fbff;">
+      <div class="section-title">For Taylor Upstate / Factory Use Only</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Seller's Signature</label>
+          <input type="text" readonly value="" placeholder="Completed by Taylor Upstate upon processing"/>
+          <div class="seller-note">Completed by Taylor Upstate upon processing</div>
+        </div>
+        <div class="field">
+          <label>Seller's Date</label>
+          <input type="text" readonly placeholder="Upon processing"/>
+        </div>
       </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Factory Approval</label>
+          <input type="text" readonly placeholder="Completed by Taylor Company"/>
+          <div class="seller-note">Completed by Taylor Company</div>
+        </div>
+        <div class="field">
+          <label>Factory Approval Date</label>
+          <input type="text" readonly placeholder="Upon factory review"/>
+        </div>
+      </div>
+    </div>
 
-      <!-- ══ SUBMIT ══ -->
+    <div class="submit-wrap">
       <button type="submit" class="submit-btn" id="submit-btn">Submit Service Contract Application →</button>
-      <p style="text-align:center;font-size:11px;color:var(--gray-400);margin-top:12px;">Submitted to Taylor Upstate — Troy &amp; Marcellus, NY &nbsp;·&nbsp; 800-678-2956 &nbsp;·&nbsp; <a href="https://www.taylor-upstate.com/authorized-service" style="color:var(--cyan);">Return to Authorized Service</a></p>
+    </div>
 
-    </form>
+  </form>
+  </div><!-- /contract-form-wrapper -->
+
+  <div id="success-screen">
+    <div style="font-size:48px;margin-bottom:12px;">✅</div>
+    <h2>Application Submitted</h2>
+    <p>Your Taylor Service Contract application has been received by Taylor Upstate. We will review your application, confirm pricing, and submit to Taylor Company for factory approval. You will be contacted shortly.</p>
+    <p>Questions? Call <strong>800-678-2956</strong> or email <a href="mailto:sales@taylor-upstate.com">sales@taylor-upstate.com</a></p>
+    <p style="margin-top:20px;"><a href="https://taylor-upstate.com/authorized-service">← Return to Authorized Service</a></p>
   </div>
 
-  <script>
-    /* ═══════════════════════════════
-       TAYLOR MODEL DATA
-    ═══════════════════════════════ */
-    const TAYLOR_MODELS = [
-      // Soft Serve / Frozen Yogurt / Custard
-      { model: 'C606',  category: 'Soft Serve', name: 'Single Flavor, Countertop, Gravity' },
-      { model: 'C706',  category: 'Soft Serve', name: 'Single Flavor, Floor Standing, Gravity' },
-      { model: 'C707',  category: 'Soft Serve', name: 'Single Flavor, Floor Standing, Gravity' },
-      { model: 'C708',  category: 'Soft Serve', name: 'Single Flavor, Floor Standing, Pump' },
-      { model: 'C708SHK', category: 'Shake/Soft Serve', name: 'Shake Configuration' },
-      { model: 'C709',  category: 'Soft Serve', name: 'Single Flavor, Floor Standing, Heat Treatment' },
-      { model: 'C712',  category: 'Soft Serve', name: 'Multi Flavor, Combo Milkshake, Floor Standing' },
-      { model: 'C713',  category: 'Soft Serve', name: 'Multi Flavor, Floor Standing, Gravity' },
-      { model: 'C716',  category: 'Soft Serve', name: 'Multi Flavor, Floor Standing, Heat Treatment' },
-      { model: 'C717',  category: 'Soft Serve', name: 'Multi Flavor, Floor Standing, Heat Treatment' },
-      { model: 'C722',  category: 'Soft Serve', name: 'Multi Flavor, Countertop, Pump' },
-      { model: 'C723',  category: 'Soft Serve', name: 'Multi Flavor, Countertop, Gravity' },
-      { model: 'C791',  category: 'Soft Serve', name: 'Multi Flavor, Floor Standing, Gravity' },
-      { model: 'C794',  category: 'Soft Serve', name: 'Multi Flavor, Floor Standing, Gravity' },
-      // Shake / Frozen Yogurt
-      { model: '632',   category: 'Shake / Frozen Yogurt', name: 'Shake Freezer' },
-      { model: '772',   category: 'Shake / Frozen Yogurt', name: 'Frozen Yogurt / Shake' },
-      { model: '8752',  category: 'Shake / Frozen Yogurt', name: 'Soft Serve / Shake Freezer' },
-      { model: '8756',  category: 'Shake / Frozen Yogurt', name: 'Shake / Frozen Yogurt Freezer' },
-      { model: '8757',  category: 'Shake / Frozen Yogurt', name: 'Shake / Frozen Yogurt Freezer' },
-      // Frozen Beverage / Smoothie
-      { model: '428',   category: 'Frozen Beverage', name: 'Frozen Beverage Freezer, Single Flavor' },
-      { model: '430',   category: 'Frozen Beverage', name: 'Frozen Uncarbonated Beverage, Single Flavor' },
-      { model: '432',   category: 'Frozen Beverage', name: 'Frozen Uncarbonated Beverage, Multi Flavor' },
-      { model: '441',   category: 'Frozen Beverage / Shake', name: 'Shake Freezer, Single Flavor' },
-      { model: '490',   category: 'Frozen Beverage / Shake', name: 'Shake Freezer, Single Flavor' },
-      // FCB (Frozen Carbonated Beverage)
-      { model: '340',   category: 'FCB', name: 'Frozen Carbonated Beverage' },
-      { model: '341',   category: 'FCB', name: 'Frozen Carbonated Beverage' },
-      { model: '342',   category: 'FCB', name: 'Frozen Carbonated Beverage' },
-      { model: '349',   category: 'FCB', name: 'Frozen Carbonated Beverage' },
-      { model: '390',   category: 'FCB', name: 'Frozen Carbonated Beverage' },
-      // Grills — Crown Series
-      { model: 'L810',  category: 'Crown Series Grill', name: 'Three Platen, All-Electric, Two-Sided' },
-      { model: 'L811',  category: 'Crown Series Grill', name: 'Three Platen, Gas/Electric, Two-Sided' },
-      { model: 'L812',  category: 'Crown Series Grill', name: 'Three Platen, All-Electric, Energy Star' },
-      { model: 'L813',  category: 'Crown Series Grill', name: 'Two Platen, Gas/Electric, Two Independent Zones' },
-      { model: 'L819',  category: 'Crown Series Grill', name: 'Two Platen, Gas/Electric, Energy Star' },
-      { model: 'L820',  category: 'Crown Series Grill', name: 'Two Platen, All-Electric, Two-Sided' },
-      { model: 'L828',  category: 'Crown Series Grill', name: 'Single Platen, All-Electric, Two-Sided' },
-      { model: 'L850',  category: 'Crown Series Grill', name: 'Single Platen, 10", All-Electric, Two-Sided' },
-      { model: 'L852',  category: 'Crown Series Grill', name: 'Two Platen, 21", All-Electric, Two-Sided' },
-      { model: 'L858',  category: 'Crown Series Grill', name: 'Three Platen, 32", All-Electric, IoT Compatible' },
-      // Freezer Carts
-      { model: 'R160',  category: 'Freezer Cart', name: 'Soft Serve Freezer Cart' },
-      { model: 'R200',  category: 'Freezer Cart', name: 'Soft Serve Freezer Cart' },
-      { model: 'R280',  category: 'Freezer Cart', name: 'Soft Serve Freezer Cart' },
-    ];
+</div><!-- /card -->
 
-    /* ═══ SEARCHABLE DROPDOWN ═══ */
-    function renderDropdown(filtered) {
-      const list = document.getElementById('model-dropdown');
-      if (!filtered.length) {
-        list.innerHTML = '<div class="dropdown-empty">No Taylor models match your search</div>';
+<div class="footer">
+  <p>Taylor Upstate · Authorized Taylor Service Dealer · 800-678-2956 · <a href="https://taylor-upstate.com">taylor-upstate.com</a></p>
+  <p style="margin-top:4px;">Serving Albany, Syracuse, Binghamton, Utica, and all of Upstate New York</p>
+</div>
+
+<script>
+  /* ═══ TAYLOR MODEL DATA ═══
+     Synced from Equipment Proposal tool — all Taylor models, no L-series grills
+  ══════════════════════════════════════════════════════════════════════════════ */
+  const TAYLOR_MODELS = [
+    // Soft Serve — Countertop
+    { model: 'C152',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Gravity' },
+    { model: 'C161',  category: 'Soft Serve', name: 'Countertop, Twin Twist, Gravity' },
+    { model: 'C706',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Pump' },
+    { model: 'C707',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Gravity' },
+    { model: 'C708',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Heat Treatment, Pump' },
+    { model: 'C709',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Heat Treatment, Gravity' },
+    { model: 'C722',  category: 'Soft Serve', name: 'Countertop, Twin Twist, Pump' },
+    { model: 'C723',  category: 'Soft Serve', name: 'Countertop, Twin Twist, Gravity' },
+    // Soft Serve — Floor
+    { model: '161',   category: 'Soft Serve', name: 'Countertop, Twin Twist, Gravity' },
+    { model: '794',   category: 'Soft Serve', name: 'Floor, Twin Twist, Gravity' },
+    { model: '8752',  category: 'Soft Serve', name: 'Floor, Single Flavor, Pump' },
+    { model: '8756C', category: 'Soft Serve', name: 'Floor, Twin Twist, Pump, Carbonated' },
+    { model: '8756P', category: 'Soft Serve', name: 'Floor, Twin Twist, Pump' },
+    { model: 'C712',  category: 'Soft Serve', name: 'Floor, Twin Twist, Pump' },
+    { model: 'C713',  category: 'Soft Serve', name: 'Floor, Twin Twist, Gravity' },
+    { model: 'C716',  category: 'Soft Serve', name: 'Floor, Twin Twist, Heat Treatment, Pump' },
+    { model: 'C717',  category: 'Soft Serve', name: 'Floor, Twin Twist, Heat Treatment, Gravity' },
+    { model: 'C791',  category: 'Soft Serve', name: 'Floor, Twin Twist, Gravity' },
+    { model: 'C794',  category: 'Soft Serve', name: 'Floor, Twin Twist, Gravity, High Capacity' },
+    { model: 'PH61',  category: 'Soft Serve', name: 'Countertop, Single Flavor, Heat Treatment' },
+    // Custard Freezers
+    { model: 'C300',  category: 'Custard Freezer', name: 'Countertop' },
+    { model: 'C302',  category: 'Custard Freezer', name: 'Countertop' },
+    { model: 'C303',  category: 'Custard Freezer', name: 'Countertop' },
+    { model: 'C314',  category: 'Custard Freezer', name: 'Floor' },
+    { model: 'C392',  category: 'Custard Freezer', name: 'Countertop' },
+    { model: 'C393',  category: 'Custard Freezer', name: 'Countertop' },
+    { model: 'C394',  category: 'Custard Freezer', name: 'Floor' },
+    // Shake Freezers
+    { model: '60',    category: 'Shake Freezer', name: 'Floor, Four Flavor' },
+    { model: '358',   category: 'Shake Freezer', name: 'Countertop, Single Flavor, Extra Thick' },
+    { model: '359',   category: 'Shake Freezer', name: 'Floor, Single Flavor' },
+    { model: '441',   category: 'Shake Freezer', name: 'Countertop, Single Flavor' },
+    { model: '490',   category: 'Shake Freezer', name: 'Floor, Single Flavor' },
+    { model: 'C606',  category: 'Shake Freezer', name: 'Countertop, Four Flavor' },
+    // Combination Units
+    { model: '632',   category: 'Combination', name: 'Soft Serve & Shake, Floor, Gravity' },
+    { model: '772',   category: 'Combination', name: 'Soft Serve & Shake, Floor, High Capacity' },
+    { model: 'C612',  category: 'Combination', name: 'Shake & Soft Serve, Countertop/Floor' },
+    // Frozen Beverage
+    { model: '340',   category: 'Frozen Beverage', name: 'Floor, Single Flavor, Slush' },
+    { model: '342',   category: 'Frozen Beverage', name: 'Floor, Multi Flavor, Slush' },
+    { model: '349',   category: 'Frozen Beverage', name: 'FCB, Floor, Multi Flavor' },
+    { model: '390',   category: 'Frozen Beverage', name: 'Floor, Single Flavor' },
+    { model: '428',   category: 'Frozen Beverage', name: 'Floor, Single Flavor' },
+    { model: '430',   category: 'Frozen Beverage', name: 'Frozen Uncarbonated, Floor, Single Flavor' },
+    { model: '432',   category: 'Frozen Beverage', name: 'Frozen Uncarbonated, Floor, Multi Flavor' },
+    // Batch Ice Cream / Batch Freezers
+    { model: '104',   category: 'Batch Freezer', name: 'Batch Ice Cream Freezer, Countertop' },
+    { model: 'C002',  category: 'Batch Freezer', name: 'Continuous Low Overrun Batch Freezer' },
+    { model: 'C043',  category: 'Batch Freezer', name: 'Continuous Low Overrun Batch Freezer, Large' },
+    // RAM Freezer (formerly Freezer Carts)
+    { model: 'R160',  category: 'RAM Freezer', name: 'Refrigerated Merchandiser, Countertop' },
+    { model: 'R200',  category: 'RAM Freezer', name: 'Refrigerated Merchandiser, Floor' },
+    { model: 'R280',  category: 'RAM Freezer', name: 'Refrigerated Merchandiser, Floor, Large' },
+    // Accessories / Remote Equipment
+    { model: 'RC25',  category: 'Accessory', name: 'Remote Condensing Unit' },
+    { model: 'RD30',  category: 'Accessory', name: 'Remote Frozen Cocktail / Drink Dispenser' },
+  ];
+
+  const CATEGORY_ORDER = ['Soft Serve','Custard Freezer','Shake Freezer','Combination','Frozen Beverage','Batch Freezer','RAM Freezer','Accessory'];
+
+  /* ═══ SEARCHABLE DROPDOWN ═══ */
+  function getFiltered(q) {
+    if (!q) return TAYLOR_MODELS;
+    const s = q.toLowerCase();
+    return TAYLOR_MODELS.filter(m =>
+      m.model.toLowerCase().includes(s) ||
+      m.name.toLowerCase().includes(s) ||
+      m.category.toLowerCase().includes(s)
+    );
+  }
+
+  function renderDropdown(filtered) {
+    const list = document.getElementById('model-dropdown');
+    if (!filtered.length) {
+      list.innerHTML = '<div class="dropdown-empty">No Taylor models match your search</div>';
+      return;
+    }
+    // Group by category
+    const groups = {};
+    filtered.forEach(m => {
+      if (!groups[m.category]) groups[m.category] = [];
+      groups[m.category].push(m);
+    });
+    let html = '';
+    const cats = CATEGORY_ORDER.filter(c => groups[c]);
+    cats.forEach(cat => {
+      html += `<div class="dropdown-group">${cat}</div>`;
+      groups[cat].forEach(m => {
+        html += `<div class="dropdown-item" onmousedown="selectModel('${m.model}','${m.category} — ${m.name}')">
+          <span class="model-cat">${m.model}</span>
+          <span class="model-name">${m.name}</span>
+        </div>`;
+      });
+    });
+    list.innerHTML = html;
+  }
+
+  function openDropdown() {
+    const list = document.getElementById('model-dropdown');
+    list.classList.add('open');
+    renderDropdown(getFiltered(document.getElementById('model-search').value));
+  }
+
+  function closeDropdown() {
+    document.getElementById('model-dropdown').classList.remove('open');
+  }
+
+  function selectModel(code, label) {
+    document.getElementById('model-search').value = label ? `${code} — ${label}` : code;
+    document.getElementById('model-hidden').value = code;
+    closeDropdown();
+  }
+
+  document.getElementById('model-search').addEventListener('input', function() {
+    document.getElementById('model-hidden').value = '';
+    openDropdown();
+  });
+  document.getElementById('model-search').addEventListener('focus', openDropdown);
+  document.getElementById('model-search').addEventListener('blur', function() {
+    setTimeout(closeDropdown, 180);
+  });
+
+  // Init dropdown
+  renderDropdown(TAYLOR_MODELS);
+
+  /* ═══ SIGNATURE PAD ═══ */
+  const canvas = document.getElementById('sig-canvas');
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  let hasSig = false;
+  let lastX = 0, lastY = 0;
+
+  function resizeCanvas() {
+    const w = canvas.offsetWidth;
+    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    canvas.width = w;
+    canvas.height = 130;
+    ctx.putImageData(imgData, 0, 0);
+    ctx.strokeStyle = '#102033';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+
+  function getPos(e) {
+    const r = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / r.width;
+    const scaleY = canvas.height / r.height;
+    if (e.touches) {
+      return [(e.touches[0].clientX - r.left) * scaleX, (e.touches[0].clientY - r.top) * scaleY];
+    }
+    return [(e.clientX - r.left) * scaleX, (e.clientY - r.top) * scaleY];
+  }
+
+  canvas.addEventListener('mousedown', e => { drawing = true; [lastX, lastY] = getPos(e); });
+  canvas.addEventListener('mousemove', e => {
+    if (!drawing) return;
+    hasSig = true;
+    const [x, y] = getPos(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+    [lastX, lastY] = [x, y];
+  });
+  canvas.addEventListener('mouseup', () => { drawing = false; });
+  canvas.addEventListener('mouseleave', () => { drawing = false; });
+
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; [lastX, lastY] = getPos(e); });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!drawing) return;
+    hasSig = true;
+    const [x, y] = getPos(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+    [lastX, lastY] = [x, y];
+  });
+  canvas.addEventListener('touchend', () => { drawing = false; });
+
+  function clearSig() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    hasSig = false;
+    document.getElementById('sig-data').value = '';
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  /* ═══ FORM SUBMIT ═══ */
+  document.getElementById('contract-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    if (!hasSig) {
+      document.getElementById('sig-error').style.display = 'block';
+      document.getElementById('sig-wrapper').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    document.getElementById('sig-error').style.display = 'none';
+
+    if (!document.getElementById('model-hidden').value) {
+      document.getElementById('model-search').focus();
+      alert('Please select a Taylor equipment model from the dropdown.');
+      return;
+    }
+
+    document.getElementById('sig-data').value = canvas.toDataURL('image/png');
+
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    const formData = new FormData(this);
+
+    try {
+      const res = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString()
+      });
+      if (res.ok) {
+        document.getElementById('contract-form-wrapper').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
-        list.innerHTML = filtered.map(m =>
-          `<div class="dropdown-item" onclick="selectModel('${m.model}')">
-            <span class="model-cat">${m.model}</span>
-            <span class="model-name">${m.name}</span>
-          </div>`
-        ).join('');
+        throw new Error('Submission failed');
       }
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = 'Submit Service Contract Application →';
+      alert('There was an error submitting the form. Please call 800-678-2956 or email sales@taylor-upstate.com.');
     }
-    function openDropdown() {
-      const list = document.getElementById('model-dropdown');
-      list.classList.add('open');
-      const val = document.getElementById('model-search').value;
-      renderDropdown(val ? TAYLOR_MODELS.filter(m =>
-        m.model.toLowerCase().includes(val.toLowerCase()) ||
-        m.name.toLowerCase().includes(val.toLowerCase()) ||
-        m.category.toLowerCase().includes(val.toLowerCase())
-      ) : TAYLOR_MODELS);
-    }
-    function filterModels(val) {
-      const list = document.getElementById('model-dropdown');
-      list.classList.add('open');
-      const filtered = TAYLOR_MODELS.filter(m =>
-        m.model.toLowerCase().includes(val.toLowerCase()) ||
-        m.name.toLowerCase().includes(val.toLowerCase()) ||
-        m.category.toLowerCase().includes(val.toLowerCase())
-      );
-      renderDropdown(filtered);
-    }
-    function selectModel(model) {
-      document.getElementById('model-search').value = model;
-      document.getElementById('model-dropdown').classList.remove('open');
-    }
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.search-wrapper')) {
-        document.getElementById('model-dropdown').classList.remove('open');
-      }
-    });
-
-    /* ═══ SIGNATURE PAD ═══ */
-    const canvas = document.getElementById('sig-canvas');
-    const ctx = canvas.getContext('2d');
-    let drawing = false;
-    let hasSig = false;
-
-    function resizeCanvas() {
-      const wrapper = document.querySelector('.sig-pad-wrapper');
-      const ratio = window.devicePixelRatio || 1;
-      canvas.width = wrapper.offsetWidth * ratio;
-      canvas.height = 110 * ratio;
-      canvas.style.width = wrapper.offsetWidth + 'px';
-      canvas.style.height = '110px';
-      ctx.scale(ratio, ratio);
-      ctx.strokeStyle = '#FFFFFF';
-      ctx.lineWidth = 2;
-      ctx.lineCap = 'round';
-      ctx.lineJoin = 'round';
-    }
-
-    function getPos(e) {
-      const rect = canvas.getBoundingClientRect();
-      const ratio = window.devicePixelRatio || 1;
-      if (e.touches) {
-        return {
-          x: (e.touches[0].clientX - rect.left),
-          y: (e.touches[0].clientY - rect.top)
-        };
-      }
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top };
-    }
-
-    canvas.addEventListener('mousedown', (e) => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
-    canvas.addEventListener('mousemove', (e) => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); hasSig = true; document.getElementById('sig-placeholder').classList.add('hidden'); });
-    canvas.addEventListener('mouseup', () => { drawing = false; ctx.closePath(); });
-    canvas.addEventListener('mouseleave', () => { drawing = false; });
-
-    canvas.addEventListener('touchstart', (e) => { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
-    canvas.addEventListener('touchmove', (e) => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); hasSig = true; document.getElementById('sig-placeholder').classList.add('hidden'); });
-    canvas.addEventListener('touchend', () => { drawing = false; ctx.closePath(); });
-
-    function clearSignature() {
-      const ratio = window.devicePixelRatio || 1;
-      ctx.clearRect(0, 0, canvas.width / ratio, canvas.height / ratio);
-      hasSig = false;
-      document.getElementById('sig-placeholder').classList.remove('hidden');
-      document.getElementById('sig-data').value = '';
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    /* ═══ FORM SUBMIT ═══ */
-    document.getElementById('contract-form').addEventListener('submit', async function(e) {
-      e.preventDefault();
-
-      // Validate signature
-      if (!hasSig) {
-        document.getElementById('sig-error').style.display = 'block';
-        document.getElementById('sig-wrapper').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-      document.getElementById('sig-error').style.display = 'none';
-
-      // Capture signature as base64
-      document.getElementById('sig-data').value = canvas.toDataURL('image/png');
-
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Submitting…';
-
-      const formData = new FormData(this);
-
-      try {
-        const res = await fetch('/', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams(formData).toString()
-        });
-
-        if (res.ok) {
-          document.getElementById('contract-form').style.display = 'none';
-          document.getElementById('success-screen').style.display = 'block';
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        } else {
-          throw new Error('Submission failed');
-        }
-      } catch (err) {
-        btn.disabled = false;
-        btn.textContent = 'Submit Service Contract Application →';
-        alert('There was an error submitting the form. Please call 800-678-2956 or email sales@taylor-upstate.com.');
-      }
-    });
-  </script>
+  });
+</script>
 </body>
 </html>

@@ -407,114 +407,161 @@ resizeCanvas();
 function generatePDF(d) {
   var jsPDF = window.jspdf.jsPDF;
   var doc = new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
-  var PW=215.9, mg=18, y=0;
+  var PW=215.9, mg=16, y=0;
 
-  doc.setFillColor(16,32,51); doc.rect(0,0,PW,38,'F');
-  doc.setFillColor(26,159,212); doc.rect(0,36,PW,2,'F');
-  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(20);
-  doc.text('TAYLOR UPSTATE', mg, 16);
-  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(41,195,240);
-  doc.text('AUTHORIZED TAYLOR SERVICE DEALER', mg, 23);
-  doc.setTextColor(154,205,230); doc.text('800-678-2956  .  taylor-upstate.com', mg, 30);
+  // ── Header ──
+  doc.setFillColor(16,32,51); doc.rect(0,0,PW,36,'F');
+  doc.setFillColor(26,159,212); doc.rect(0,34,PW,2,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(18);
+  doc.text('TAYLOR UPSTATE', mg, 14);
+  doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(41,195,240);
+  doc.text('AUTHORIZED TAYLOR SERVICE DEALER', mg, 21);
+  doc.setTextColor(154,205,230);
+  doc.text('800-678-2956  -  taylor-upstate.com', mg, 28);
 
-  doc.setFillColor(222,172,92); doc.roundedRect(PW-mg-36,8,36,16,2,2,'F');
-  doc.setTextColor(16,32,51); doc.setFont('helvetica','bold'); doc.setFontSize(11);
-  doc.text('PENDING', PW-mg-18, 18.5, {align:'center'});
+  // PENDING badge
+  doc.setFillColor(222,172,92); doc.roundedRect(PW-mg-34,7,34,15,2,2,'F');
+  doc.setTextColor(16,32,51); doc.setFont('helvetica','bold'); doc.setFontSize(10);
+  doc.text('PENDING', PW-mg-17, 16.5, {align:'center'});
 
-  y=48;
-  doc.setTextColor(16,32,51); doc.setFont('helvetica','bold'); doc.setFontSize(16);
+  y=42;
+
+  // Title
+  doc.setTextColor(16,32,51); doc.setFont('helvetica','bold'); doc.setFontSize(14);
   doc.text('GRILL EXTENDED SERVICE CONTRACT', PW/2, y, {align:'center'});
-  y+=4; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(90,122,146);
-  doc.text('Taylor Grill Limited Service Contract Agreement - Non-Transferrable, Non-Refundable', PW/2, y+3, {align:'center'});
+  y+=4;
+  doc.setFontSize(7); doc.setFont('helvetica','normal'); doc.setTextColor(90,122,146);
+  doc.text('Taylor Grill Limited Service Contract Agreement - Non-Transferrable, Non-Refundable', PW/2, y+2.5, {align:'center'});
+  y+=8;
+
+  // Warning strip
+  doc.setFillColor(255,249,230); doc.setDrawColor(222,172,92);
+  doc.roundedRect(mg,y,PW-mg*2,7,1,1,'FD');
+  doc.setTextColor(106,80,0); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+  doc.text('! MUST BE RECEIVED WITHIN 30 DAYS OF INSTALLATION WITH PAYMENT — NON-TRANSFERRABLE, NON-REFUNDABLE', PW/2, y+4.8, {align:'center'});
   y+=10;
 
-  doc.setFillColor(255,249,230); doc.setDrawColor(222,172,92);
-  doc.roundedRect(mg,y,PW-mg*2,8,1,1,'FD');
-  doc.setTextColor(106,80,0); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
-  doc.text('! Contract must be received within 30 days of equipment installation', PW/2, y+5.5, {align:'center'});
-  y+=13;
-
+  // ── Section header helper ──
   function secH(t) {
-    doc.setFillColor(16,32,51); doc.rect(mg,y,PW-mg*2,6.5,'F');
-    doc.setTextColor(41,195,240); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
-    doc.text(t, mg+3, y+4.5); y+=9; doc.setTextColor(16,32,51);
+    doc.setFillColor(16,32,51); doc.rect(mg,y,PW-mg*2,5.5,'F');
+    doc.setTextColor(41,195,240); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+    doc.text(t, mg+2, y+4); y+=7.5; doc.setTextColor(16,32,51);
   }
+
+  // ── Field helper ──
   function fld(lbl,val,x,w) {
-    doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(90,122,146);
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(90,122,146);
     doc.text(lbl.toUpperCase(), x, y);
-    doc.setFont('helvetica','bold'); doc.setFontSize(10);
-    doc.setTextColor(val?16:150,val?32:150,val?51:150);
-    doc.text(val||'-', x, y+5);
-    doc.setDrawColor(197,220,234); doc.line(x,y+6.5,x+w,y+6.5);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9);
+    doc.setTextColor(val?16:160, val?32:160, val?51:160);
+    doc.text(val||'___', x, y+4.5);
+    doc.setDrawColor(197,220,234); doc.line(x,y+5.8,x+w,y+5.8);
   }
 
+  // ── Blank line helper (factory use fields) ──
+  function blankLine(lbl, note, x, w) {
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(90,122,146);
+    doc.text(lbl.toUpperCase(), x, y);
+    doc.setDrawColor(16,32,51); doc.line(x, y+5.5, x+w, y+5.5);
+    if(note) {
+      doc.setFontSize(5.5); doc.setTextColor(130,150,165);
+      doc.text(note, x, y+8);
+    }
+  }
+
+  // ══ APPLICANT INFORMATION ══
   secH('APPLICANT INFORMATION');
-  fld('Name of Applicant',d.applicant_name,mg,85); fld('Name of Business',d.business_name,mg+90,85); y+=12;
-  fld('Machine Location',d.address,mg,PW-mg*2); y+=12;
-  fld('City',d.city,mg,65); fld('State',d.state,mg+70,20); fld('ZIP',d.zip,mg+95,30); fld('Phone',d.phone,mg+130,65); y+=14;
+  fld('Name of Applicant',d.applicant_name,mg,85);
+  fld('Name of Business',d.business_name,mg+89,90);
+  y+=9;
+  fld('Machine Location - Street Address',d.address,mg,PW-mg*2);
+  y+=9;
+  fld('City',d.city,mg,58);
+  fld('State',d.state,mg+62,18);
+  fld('ZIP',d.zip,mg+84,26);
+  fld('Phone',d.phone,mg+114,65);
+  y+=11;
 
+  // ══ GRILL INFORMATION ══
   secH('GRILL INFORMATION');
-  fld('Grill Model No.',d.model_number,mg,80); fld('Serial No.',d.serial_number,mg+85,60); fld('Install Date',d.install_date,mg+150,45); y+=12;
-  fld('Contract Term',d.contract_term+' Year(s)',mg,65); fld('Selling Distributor / Dealer','Taylor Upstate',mg+70,125); y+=14;
+  fld('Grill Model No.',d.model_number,mg,78);
+  fld('Serial No.',d.serial_number,mg+82,58);
+  fld('Install Date',d.install_date,mg+144,50);
+  y+=9;
+  fld('Contract Term',d.contract_term+' Year(s)',mg,117);
+  y+=11;
 
+  // ══ CONTRACT PRICING ══
   secH('CONTRACT PRICING');
-  fld('This Contract is Offered for the Amount of $',d.contract_price||'To be confirmed by Taylor Upstate',mg,PW-mg*2); y+=12;
-
-  secH('COVERAGE SUMMARY');
-  var cW=(PW-mg*2-8)/2, cR=mg+cW+8;
-  doc.setFillColor(39,174,96); doc.rect(mg,y-2,cW,6,'F');
-  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(8);
-  doc.text('COVERED', mg+2, y+2.5);
-  doc.setFillColor(192,57,43); doc.rect(cR,y-2,cW,6,'F');
-  doc.text('NOT COVERED', cR+2, y+2.5); y+=7;
-
-  var cov=['Inoperative electrical switch or control','Inoperative motor or air compressor','Inoperative direct drive or gear box','Inoperative fan motor, blade, or blower','Inoperative platen assembly','Inoperative heater, high limit, or thermocouple'];
-  var exc=['Seasonal shutdown or startup','Normal maintenance, wear, deterioration','Carbon and grease buildup cleaning','Release material, air lines, or hoses','Upper platen plating loss (not Taylor fault)','Operator abuse, misuse, or neglect'];
-  doc.setFont('helvetica','normal'); doc.setFontSize(8);
-  cov.forEach(function(item,i){
-    doc.setTextColor(39,174,96); doc.text('+',mg+1,y+i*4.6);
-    doc.setTextColor(16,32,51); doc.text(item,mg+5,y+i*4.6);
-  });
-  exc.forEach(function(item,i){
-    doc.setTextColor(192,57,43); doc.text('x',cR+1,y+i*4.6);
-    doc.setTextColor(16,32,51); doc.text(item,cR+5,y+i*4.6);
-  });
-  y+=cov.length*4.6+6;
-
-  doc.setFillColor(255,249,230); doc.setDrawColor(222,172,92);
-  doc.roundedRect(mg,y,PW-mg*2,10,1,1,'FD');
-  doc.setTextColor(106,80,0); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
-  doc.text('CAUTION: This contract is valid only if required repairs are provided by an authorized Taylor distributor or their authorized service agent.',mg+3,y+4);
-  doc.text('This contract is non-transferrable and non-refundable.',mg+3,y+8);
+  // Blank price line (left) — Taylor Upstate fills in before submitting to factory
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(90,122,146);
+  doc.text('THIS CONTRACT IS OFFERED FOR THE AMOUNT OF $', mg, y);
+  doc.setDrawColor(197,220,234);
+  doc.line(mg, y+5.8, mg+95, y+5.8);
+  // Selling Dealer (right) — populated
+  fld('Selling Distributor or Dealer','Taylor Upstate',mg+100,78);
+  doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(130,100,0);
+  doc.text('* Taylor Upstate will confirm and enter contract pricing before submitting to Taylor Company for factory approval.', mg, y+9);
   y+=14;
 
-  secH('SIGNATURES');
-  doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(90,122,146);
-  doc.text('APPLICANT SIGNATURE', mg, y); y+=3;
-  if(d.signature){try{doc.addImage(d.signature,'PNG',mg,y,75,18);}catch(e){}}
-  y+=20;
-  doc.setDrawColor(16,32,51); doc.line(mg,y,mg+75,y);
-  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(90,122,146);
-  doc.text(d.applicant_printed_name||'',mg,y+4);
-  doc.text('Date: '+(d.applicant_date||''),mg+80,y+4); y+=12;
+  // ══ COVERAGE SUMMARY ══
+  secH('COVERAGE SUMMARY');
+  var cW=(PW-mg*2-6)/2, cR=mg+cW+6;
+  doc.setFillColor(39,174,96); doc.rect(mg,y-1,cW,5.5,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(7);
+  doc.text('COVERED [+]', mg+2, y+3);
+  doc.setFillColor(192,57,43); doc.rect(cR,y-1,cW,5.5,'F');
+  doc.text('NOT COVERED [x]', cR+2, y+3);
+  y+=6.5;
 
-  doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(90,122,146);
-  doc.text("SELLER'S SIGNATURE - Taylor Upstate",mg,y); y+=14;
-  doc.setDrawColor(16,32,51); doc.line(mg,y,mg+95,y);
-  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(90,122,146);
-  doc.text('Authorized Taylor Upstate Representative',mg,y+4);
-  doc.text('Date:',mg+100,y+4); doc.line(mg+110,y,mg+155,y); y+=12;
+  var cov=['Inoperative electrical switch or control','Inoperative motor or air compressor','Inoperative direct drive or gear box','Inoperative fan motor, fan blade, or blower','Inoperative platen assembly','Inoperative heater, high limit, or thermocouple'];
+  var exc=['Seasonal shutdown or startup','Normal maintenance, wear, deterioration','Carbon and grease buildup cleaning','Release material, air lines, or hoses','Upper platen plating loss (not Taylor fault)','Operator abuse, misuse, or neglect'];
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+  cov.forEach(function(item,i){
+    doc.setTextColor(39,174,96);  doc.text('+', mg+1,  y+i*4.0);
+    doc.setTextColor(16,32,51);   doc.text(item, mg+5, y+i*4.0);
+  });
+  exc.forEach(function(item,i){
+    doc.setTextColor(192,57,43);  doc.text('x', cR+1,  y+i*4.0);
+    doc.setTextColor(16,32,51);   doc.text(item, cR+5, y+i*4.0);
+  });
+  y+=cov.length*4.0+6;
 
-  doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(90,122,146);
-  doc.text('FACTORY APPROVAL - Taylor Company',mg,y); y+=14;
-  doc.setDrawColor(16,32,51); doc.line(mg,y,mg+95,y);
-  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(90,122,146);
-  doc.text('Taylor Company Authorized Representative',mg,y+4);
-  doc.text('Date:',mg+100,y+4); doc.line(mg+110,y,mg+155,y);
+  // ══ APPLICANT SIGNATURE ══
+  secH('APPLICANT SIGNATURE');
+  doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(90,122,146);
+  doc.text('Applicant Signature:', mg, y);
+  y+=2;
+  if(d.signature){try{doc.addImage(d.signature,'PNG',mg,y,70,15);}catch(e){}}
+  y+=16;
+  doc.setDrawColor(16,32,51); doc.line(mg,y,mg+70,y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(90,122,146);
+  doc.text(d.applicant_printed_name||'', mg, y+3.5);
+  doc.text('Date:  '+(d.applicant_date||''), mg+75, y+3.5);
+  y+=9;
 
+  // ══ FOR TAYLOR UPSTATE / FACTORY USE ONLY ══
+  secH('FOR TAYLOR UPSTATE / FACTORY USE ONLY');
+
+  blankLine("Seller's Signature", 'Authorized Taylor Upstate Representative — completed upon processing', mg, 115);
+  blankLine("Seller's Date", '', mg+119, 55);
+  y+=12;
+
+  blankLine('Factory Approval Signature', 'Taylor Company Authorized Representative', mg, 115);
+  blankLine('Factory Approval Date', '', mg+119, 55);
+  y+=8;
+
+  // Caution box
+  doc.setFillColor(255,249,230); doc.setDrawColor(222,172,92);
+  doc.rect(mg,y,PW-mg*2,7,'FD');
+  doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(106,80,0);
+  doc.text('CAUTION: This contract is valid only if required repairs are provided by an authorized Taylor distributor or their authorized service agent.', mg+2, y+2.8);
+  doc.text('This contract is non-transferrable and non-refundable. Taylor Upstate will confirm pricing before processing.', mg+2, y+5.8);
+
+  // ── Footer ──
   doc.setFillColor(16,32,51); doc.rect(0,268,PW,12,'F');
-  doc.setTextColor(154,205,230); doc.setFont('helvetica','normal'); doc.setFontSize(8);
-  doc.text('Taylor Upstate  .  Authorized Taylor Service Dealer  .  800-678-2956  .  taylor-upstate.com',PW/2,275.5,{align:'center'});
+  doc.setTextColor(154,205,230); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+  doc.text('Taylor Upstate  -  Authorized Taylor Service Dealer  -  800-678-2956  -  taylor-upstate.com',PW/2,275.5,{align:'center'});
 
   return doc;
 }

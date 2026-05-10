@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Taylor Grill Extended Service Contract — Taylor Upstate</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#102033;--cyan:#1a9fd4;--accent:#29c3f0;--gold:#deac5c;--border:#c5dcea;--muted:#5a7a92;--bg:#f0f6fb;}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh;}
+.hdr{background:linear-gradient(135deg,#102033 0%,#1b3a56 60%,#1e4d74 100%);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.hdr-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:2px;}
+.hdr-sub{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;}
+.hero{background:var(--navy);padding:20px 24px;text-align:center;}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.hero-warn{background:rgba(222,172,92,.15);border:1px solid var(--gold);border-radius:4px;padding:10px 18px;display:inline-block;margin-top:8px;}
+.hero-warn p{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.5px;}
+.card{max-width:780px;margin:28px auto;background:#fff;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,.12);overflow:hidden;border-top:4px solid var(--cyan);}
+.section{padding:22px 28px;border-bottom:1px solid var(--border);}
+.section:last-child{border-bottom:none;}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--cyan);margin-bottom:16px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);}
+.field label .req{color:#c0392b;}
+.field input,.field select{border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'Barlow',sans-serif;font-size:13px;color:var(--navy);background:#fff;outline:none;transition:border-color .15s;}
+.field input:focus,.field select:focus{border-color:var(--cyan);}
+.field input[readonly]{background:#f7fbff;color:var(--muted);}
+.model-wrap{position:relative;}
+.model-search-box{width:100%;border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'Barlow',sans-serif;font-size:13px;color:var(--navy);outline:none;transition:border-color .15s;}
+.model-search-box:focus{border-color:var(--cyan);}
+.model-dropdown{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,.12);max-height:280px;overflow-y:auto;z-index:200;display:none;}
+.model-dropdown.open{display:block;}
+.dropdown-item{padding:8px 12px;cursor:pointer;display:flex;gap:10px;align-items:baseline;border-bottom:1px solid #f0f6fb;}
+.dropdown-item:last-child{border-bottom:none;}
+.dropdown-item:hover{background:#eaf6fb;}
+.model-cat{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:var(--navy);min-width:52px;}
+.model-name{font-size:12px;color:var(--muted);}
+.dropdown-empty{padding:12px;text-align:center;font-size:13px;color:var(--muted);}
+.price-note{font-size:11px;color:var(--gold);margin-top:4px;font-style:italic;}
+.sig-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px;}
+#sig-wrapper{border:1px solid var(--border);border-radius:3px;background:#fff;overflow:hidden;}
+#sig-canvas{display:block;width:100%;cursor:crosshair;touch-action:none;}
+.sig-actions{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f7fbff;border-top:1px solid var(--border);}
+.sig-actions span{font-size:11px;color:var(--muted);}
+.sig-clear{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:3px 6px;}
+.sig-clear:hover{color:var(--navy);}
+#sig-error{display:none;font-size:11px;color:#c0392b;margin-top:4px;}
+.seller-note{font-size:11px;color:var(--muted);font-style:italic;margin-top:4px;}
+.agreement{background:#fffde7;border-left:4px solid var(--gold);padding:14px 16px;border-radius:0 4px 4px 0;margin-bottom:16px;}
+.agreement p{font-size:13px;color:#6a5000;line-height:1.55;margin-bottom:8px;}
+.agreement p:last-child{margin-bottom:0;}
+.agreement .warn-line{font-weight:700;color:var(--gold);}
+.check-row{display:flex;gap:10px;align-items:flex-start;margin-top:12px;}
+.check-row input[type=checkbox]{margin-top:2px;flex-shrink:0;width:16px;height:16px;cursor:pointer;}
+.check-row label{font-size:12px;color:var(--navy);line-height:1.5;cursor:pointer;}
+.coverage-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:4px;}
+@media(max-width:600px){.coverage-grid{grid-template-columns:1fr;}}
+.cov-col h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px;}
+.cov-col.covered h4{color:#27ae60;}
+.cov-col.excluded h4{color:#c0392b;}
+.cov-col ul{list-style:none;padding:0;}
+.cov-col ul li{font-size:12px;color:var(--muted);padding:3px 0;padding-left:14px;position:relative;line-height:1.4;}
+.cov-col.covered ul li::before{content:"checkmark";content:"\2713";position:absolute;left:0;color:#27ae60;font-size:10px;font-weight:700;}
+.cov-col.excluded ul li::before{content:"x";content:"\2717";position:absolute;left:0;color:#c0392b;font-size:10px;font-weight:700;}
+.submit-wrap{text-align:center;padding:24px 28px;}
+.submit-btn{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:var(--cyan);color:#fff;border:none;border-radius:4px;padding:14px 40px;cursor:pointer;transition:all .15s;}
+.submit-btn:hover{background:#158fc0;}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;}
+#success-screen{display:none;padding:40px 28px;text-align:center;}
+#success-screen h2{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--navy);text-transform:uppercase;margin-bottom:10px;}
+#success-screen p{font-size:14px;color:var(--muted);line-height:1.6;max-width:480px;margin:0 auto 16px;}
+.dl-btn{font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;background:var(--navy);color:#fff;border:none;border-radius:4px;padding:11px 28px;cursor:pointer;display:inline-block;margin-bottom:16px;}
+#success-screen a.back-link{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:var(--cyan);text-decoration:none;display:block;}
+.footer{background:var(--navy);padding:14px 24px;text-align:center;margin-top:32px;}
+.footer p{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.35);}
+.footer a{color:rgba(255,255,255,.5);text-decoration:none;}
+#spinner-overlay{display:none;position:fixed;inset:0;background:rgba(16,32,51,.7);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+#spinner-overlay.active{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.2);border-top-color:#29c3f0;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#spinner-overlay p{color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:1px;}
+</style>
+</head>
+<body>
+
+<div id="spinner-overlay">
+  <div class="spinner"></div>
+  <p id="spinner-msg">Generating PDF...</p>
+</div>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-logo">TAYLOR UPSTATE</div>
+    <div class="hdr-sub">Authorized Taylor Service Dealer</div>
+  </div>
+  <div style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.4);">
+    800-678-2956 &nbsp;&middot;&nbsp; taylor-upstate.com
+  </div>
+</div>
+
+<div class="hero">
+  <h1>Grill Extended Service Contract</h1>
+  <div class="hero-warn">
+    <p>&#9888; Contract must be received within 30 days of equipment installation</p>
+  </div>
+</div>
+
+<div class="card">
+  <div id="contract-form-wrapper">
+  <form id="contract-form">
+    <input type="hidden" id="sig-data"/>
+
+    <!-- APPLICANT -->
+    <div class="section">
+      <div class="section-title">Applicant Information</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Name of Applicant <span class="req">*</span></label>
+          <input type="text" id="f-applicant" required placeholder="First and last name"/>
+        </div>
+        <div class="field">
+          <label>Name of Business <span class="req">*</span></label>
+          <input type="text" id="f-business" required placeholder="DBA or legal name"/>
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:14px;">
+        <label>Machine Location &mdash; Street Address <span class="req">*</span></label>
+        <input type="text" id="f-address" required placeholder="Street address of grill installation"/>
+      </div>
+      <div class="grid3">
+        <div class="field">
+          <label>City <span class="req">*</span></label>
+          <input type="text" id="f-city" required placeholder="City"/>
+        </div>
+        <div class="field">
+          <label>State <span class="req">*</span></label>
+          <input type="text" id="f-state" required placeholder="NY" maxlength="2"/>
+        </div>
+        <div class="field">
+          <label>ZIP <span class="req">*</span></label>
+          <input type="text" id="f-zip" required placeholder="12345" maxlength="10"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- GRILL INFO -->
+    <div class="section">
+      <div class="section-title">Grill Information</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Grill Model No. <span class="req">*</span></label>
+          <div class="model-wrap">
+            <input class="model-search-box" id="model-search" type="text" placeholder="Type model # to search..." autocomplete="off" required/>
+            <input type="hidden" id="model-hidden"/>
+            <div class="model-dropdown" id="model-dropdown"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Serial No. <span class="req">*</span></label>
+          <input type="text" id="f-serial" required placeholder="Serial number"/>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Date of Installation <span class="req">*</span></label>
+          <input type="date" id="f-install"/>
+        </div>
+        <div class="field">
+          <label>Contract Term (Years) <span class="req">*</span></label>
+          <select id="f-term" required>
+            <option value="">Select term...</option>
+            <option value="1">1 Year</option>
+            <option value="2">2 Years</option>
+            <option value="3">3 Years</option>
+            <option value="4">4 Years</option>
+            <option value="5">5 Years</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="section">
+      <div class="section-title">Contract Pricing</div>
+      <div class="grid2">
+        <div class="field">
+          <label>This Contract is Offered for the Amount of $</label>
+          <input type="text" id="f-price" readonly placeholder="To be confirmed by Taylor Upstate"/>
+          <div class="price-note">&#9873; Taylor Upstate will confirm contract pricing upon review.</div>
+        </div>
+        <div class="field">
+          <label>Selling Distributor or Dealer</label>
+          <input type="text" readonly value="Taylor Upstate"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div class="section">
+      <div class="section-title">Contact Information</div>
+      <div class="grid3">
+        <div class="field">
+          <label>Phone <span class="req">*</span></label>
+          <input type="tel" id="f-phone" required placeholder="(000) 000-0000"/>
+        </div>
+        <div class="field">
+          <label>Email <span class="req">*</span></label>
+          <input type="email" id="f-email" required placeholder="you@business.com"/>
+        </div>
+        <div class="field">
+          <label>Fax</label>
+          <input type="tel" id="f-fax" placeholder="Optional"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- COVERAGE -->
+    <div class="section">
+      <div class="section-title">What's Covered</div>
+      <div class="coverage-grid">
+        <div class="cov-col covered">
+          <h4>Covered &#10003;</h4>
+          <ul>
+            <li>Any inoperative electrical switch or control</li>
+            <li>Any inoperative motor or air compressor</li>
+            <li>Any inoperative direct drive or gear box, couplings and pulleys</li>
+            <li>Any inoperative fan motor, fan blade, or blower assembly</li>
+            <li>Any inoperative platen assembly</li>
+            <li>Any inoperative heater, high limit, or thermocouple</li>
+          </ul>
+        </div>
+        <div class="cov-col excluded">
+          <h4>Not Covered &#10007;</h4>
+          <ul>
+            <li>Seasonal shutdown or startup</li>
+            <li>Normal maintenance, wear, and deterioration</li>
+            <li>Required cleaning of carbon and grease buildup</li>
+            <li>Release material, air lines, or hoses</li>
+            <li>Upper platen loss of plating (not Taylor's fault)</li>
+            <li>External power supplies and machine grounding</li>
+            <li>Operator abuse, misuse, or neglect</li>
+            <li>Acts of God, fire, theft, vandalism, natural disasters</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPLICANT SIGNATURE -->
+    <div class="section">
+      <div class="section-title">Applicant Signature</div>
+      <div class="agreement">
+        <p>By signing below, applicant agrees to the terms and conditions of this Taylor Grill Extended Service Contract as administered by Taylor Upstate. This contract is non-transferrable and non-refundable. It is valid only if required repairs are provided by an authorized Taylor distributor or their authorized service agent. Not valid until accepted and signed by Taylor Upstate and submitted to Taylor Company for factory approval.</p>
+        <p class="warn-line">&#9888; Contract must be received within 30 days of equipment installation to be valid.</p>
+        <div class="check-row">
+          <input type="checkbox" id="agree-check" required/>
+          <label for="agree-check">I understand this contract must be received within <strong style="color:var(--gold);">30 days of equipment installation</strong>, that it is <strong>non-transferrable and non-refundable</strong>, and I agree to all terms and conditions of this grill service contract.</label>
+        </div>
+      </div>
+      <div class="sig-label">Applicant Signature <span style="color:#c0392b;">*</span></div>
+      <div id="sig-wrapper">
+        <canvas id="sig-canvas" height="130"></canvas>
+        <div class="sig-actions">
+          <span>Sign with mouse or finger</span>
+          <button type="button" class="sig-clear" onclick="clearSig()">&#10005; Clear</button>
+        </div>
+      </div>
+      <div id="sig-error">Please provide your signature before submitting.</div>
+      <div class="grid2" style="margin-top:16px;">
+        <div class="field">
+          <label>Printed Name <span class="req">*</span></label>
+          <input type="text" id="f-printed" required placeholder="Full legal name"/>
+        </div>
+        <div class="field">
+          <label>Date <span class="req">*</span></label>
+          <input type="date" id="f-appdate"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SELLER / FACTORY -->
+    <div class="section" style="background:#f7fbff;">
+      <div class="section-title">For Taylor Upstate / Factory Use Only</div>
+      <div class="grid2" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Seller's Signature</label>
+          <input type="text" readonly placeholder="Completed by Taylor Upstate upon processing"/>
+          <div class="seller-note">Completed by Taylor Upstate upon processing</div>
+        </div>
+        <div class="field">
+          <label>Seller's Date</label>
+          <input type="text" readonly placeholder="Upon processing"/>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Factory Approval</label>
+          <input type="text" readonly placeholder="Completed by Taylor Company"/>
+        </div>
+        <div class="field">
+          <label>Factory Approval Date</label>
+          <input type="text" readonly placeholder="Upon factory review"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="submit-wrap">
+      <button type="submit" class="submit-btn" id="submit-btn">Submit Grill Service Contract Application &rarr;</button>
+    </div>
+  </form>
+  </div>
+
+  <div id="success-screen">
+    <div style="font-size:48px;margin-bottom:12px;">&#9989;</div>
+    <h2>Application Submitted</h2>
+    <p>Your Taylor Grill Extended Service Contract has been emailed to Taylor Upstate as a signed PDF. We will review, confirm pricing, sign, and submit to Taylor Company for factory approval.</p>
+    <p>A copy has also been downloaded to your device for your records.</p>
+    <button class="dl-btn" id="dl-again-btn" style="display:none;">&#11015; Download PDF Again</button>
+    <p>Questions? Call <strong>800-678-2956</strong> or email <a href="mailto:sales@taylor-upstate.com" style="color:var(--cyan);">sales@taylor-upstate.com</a></p>
+    <a href="https://taylor-upstate.com/authorized-service" class="back-link">&larr; Return to Authorized Service</a>
+  </div>
+</div>
+
+<div class="footer">
+  <p>Taylor Upstate &middot; Authorized Taylor Service Dealer &middot; 800-678-2956 &middot; <a href="https://taylor-upstate.com">taylor-upstate.com</a></p>
+</div>
+
+<script>
+const GRILL_MODELS = [
+  { model:'L810', name:'Two-Sided Electric Grill, Three Platen' },
+  { model:'L811', name:'Two-Sided Gas Grill, Three Platen' },
+  { model:'L812', name:'Two-Sided Electric Grill, Two Platen, 3 Lane' },
+  { model:'L813', name:'Two-Sided Gas Grill, Two Platen, 3 Lane' },
+  { model:'L819', name:'Two-Sided Gas Grill, Two Platen' },
+  { model:'L820', name:'Two-Sided Electric Grill, Two Platen' },
+  { model:'L828', name:'Two-Sided Electric Grill, One Platen, 12in' },
+  { model:'L850', name:'Crown Series, Two-Sided Electric Grill, Single Platen' },
+  { model:'L852', name:'Crown Series, Two-Sided Electric Grill, Two Platen' },
+  { model:'L858', name:'Crown Series, Two-Sided Electric Grill, Three Platen' },
+];
+
+function renderDropdown(list) {
+  const el = document.getElementById('model-dropdown');
+  if (!list.length) { el.innerHTML = '<div class="dropdown-empty">No grill models match</div>'; return; }
+  el.innerHTML = list.map(m =>
+    '<div class="dropdown-item" onmousedown="selectModel(\''+m.model+'\',\''+m.name+'\')">' +
+    '<span class="model-cat">'+m.model+'</span><span class="model-name">'+m.name+'</span></div>'
+  ).join('');
+}
+function selectModel(code,name) {
+  document.getElementById('model-search').value = code+' - '+name;
+  document.getElementById('model-hidden').value = code;
+  document.getElementById('model-dropdown').classList.remove('open');
+}
+document.getElementById('model-search').addEventListener('input', function() {
+  document.getElementById('model-hidden').value = '';
+  var s = this.value.toLowerCase();
+  var f = s ? GRILL_MODELS.filter(function(m){ return m.model.toLowerCase().indexOf(s)>-1 || m.name.toLowerCase().indexOf(s)>-1; }) : GRILL_MODELS;
+  renderDropdown(f);
+  document.getElementById('model-dropdown').classList.add('open');
+});
+document.getElementById('model-search').addEventListener('focus', function() {
+  renderDropdown(GRILL_MODELS);
+  document.getElementById('model-dropdown').classList.add('open');
+});
+document.getElementById('model-search').addEventListener('blur', function() {
+  setTimeout(function(){ document.getElementById('model-dropdown').classList.remove('open'); }, 180);
+});
+renderDropdown(GRILL_MODELS);
+
+// SIGNATURE PAD
+var canvas = document.getElementById('sig-canvas');
+var ctx = canvas.getContext('2d');
+var drawing = false, hasSig = false, lastX = 0, lastY = 0;
+function resizeCanvas() {
+  canvas.width = canvas.offsetWidth; canvas.height = 130;
+  ctx.strokeStyle='#102033'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.lineJoin='round';
+}
+function getPos(e) {
+  var r = canvas.getBoundingClientRect();
+  var sx = canvas.width/r.width, sy = canvas.height/r.height;
+  if (e.touches) return [(e.touches[0].clientX-r.left)*sx,(e.touches[0].clientY-r.top)*sy];
+  return [(e.clientX-r.left)*sx,(e.clientY-r.top)*sy];
+}
+canvas.addEventListener('mousedown',function(e){drawing=true;var p=getPos(e);lastX=p[0];lastY=p[1];});
+canvas.addEventListener('mousemove',function(e){
+  if(!drawing)return;hasSig=true;var p=getPos(e);
+  ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p[0],p[1]);ctx.stroke();lastX=p[0];lastY=p[1];
+});
+canvas.addEventListener('mouseup',function(){drawing=false;});
+canvas.addEventListener('mouseleave',function(){drawing=false;});
+canvas.addEventListener('touchstart',function(e){e.preventDefault();drawing=true;var p=getPos(e);lastX=p[0];lastY=p[1];});
+canvas.addEventListener('touchmove',function(e){
+  e.preventDefault();if(!drawing)return;hasSig=true;var p=getPos(e);
+  ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p[0],p[1]);ctx.stroke();lastX=p[0];lastY=p[1];
+});
+canvas.addEventListener('touchend',function(){drawing=false;});
+function clearSig(){ctx.clearRect(0,0,canvas.width,canvas.height);hasSig=false;}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+
+// PDF GENERATION
+function generatePDF(d) {
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+  var PW=215.9, mg=18, y=0;
+
+  doc.setFillColor(16,32,51); doc.rect(0,0,PW,38,'F');
+  doc.setFillColor(26,159,212); doc.rect(0,36,PW,2,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(20);
+  doc.text('TAYLOR UPSTATE', mg, 16);
+  doc.setFont('helvetica','normal'); doc.setFontSize(9); doc.setTextColor(41,195,240);
+  doc.text('AUTHORIZED TAYLOR SERVICE DEALER', mg, 23);
+  doc.setTextColor(154,205,230); doc.text('800-678-2956  .  taylor-upstate.com', mg, 30);
+
+  doc.setFillColor(222,172,92); doc.roundedRect(PW-mg-36,8,36,16,2,2,'F');
+  doc.setTextColor(16,32,51); doc.setFont('helvetica','bold'); doc.setFontSize(11);
+  doc.text('PENDING', PW-mg-18, 18.5, {align:'center'});
+
+  y=48;
+  doc.setTextColor(16,32,51); doc.setFont('helvetica','bold'); doc.setFontSize(16);
+  doc.text('GRILL EXTENDED SERVICE CONTRACT', PW/2, y, {align:'center'});
+  y+=4; doc.setFontSize(9); doc.setFont('helvetica','normal'); doc.setTextColor(90,122,146);
+  doc.text('Taylor Grill Limited Service Contract Agreement - Non-Transferrable, Non-Refundable', PW/2, y+3, {align:'center'});
+  y+=10;
+
+  doc.setFillColor(255,249,230); doc.setDrawColor(222,172,92);
+  doc.roundedRect(mg,y,PW-mg*2,8,1,1,'FD');
+  doc.setTextColor(106,80,0); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+  doc.text('! Contract must be received within 30 days of equipment installation', PW/2, y+5.5, {align:'center'});
+  y+=13;
+
+  function secH(t) {
+    doc.setFillColor(16,32,51); doc.rect(mg,y,PW-mg*2,6.5,'F');
+    doc.setTextColor(41,195,240); doc.setFont('helvetica','bold'); doc.setFontSize(8.5);
+    doc.text(t, mg+3, y+4.5); y+=9; doc.setTextColor(16,32,51);
+  }
+  function fld(lbl,val,x,w) {
+    doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(90,122,146);
+    doc.text(lbl.toUpperCase(), x, y);
+    doc.setFont('helvetica','bold'); doc.setFontSize(10);
+    doc.setTextColor(val?16:150,val?32:150,val?51:150);
+    doc.text(val||'-', x, y+5);
+    doc.setDrawColor(197,220,234); doc.line(x,y+6.5,x+w,y+6.5);
+  }
+
+  secH('APPLICANT INFORMATION');
+  fld('Name of Applicant',d.applicant_name,mg,85); fld('Name of Business',d.business_name,mg+90,85); y+=12;
+  fld('Machine Location',d.address,mg,PW-mg*2); y+=12;
+  fld('City',d.city,mg,65); fld('State',d.state,mg+70,20); fld('ZIP',d.zip,mg+95,30); fld('Phone',d.phone,mg+130,65); y+=14;
+
+  secH('GRILL INFORMATION');
+  fld('Grill Model No.',d.model_number,mg,80); fld('Serial No.',d.serial_number,mg+85,60); fld('Install Date',d.install_date,mg+150,45); y+=12;
+  fld('Contract Term',d.contract_term+' Year(s)',mg,65); fld('Selling Distributor / Dealer','Taylor Upstate',mg+70,125); y+=14;
+
+  secH('CONTRACT PRICING');
+  fld('This Contract is Offered for the Amount of $',d.contract_price||'To be confirmed by Taylor Upstate',mg,PW-mg*2); y+=12;
+
+  secH('COVERAGE SUMMARY');
+  var cW=(PW-mg*2-8)/2, cR=mg+cW+8;
+  doc.setFillColor(39,174,96); doc.rect(mg,y-2,cW,6,'F');
+  doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+  doc.text('COVERED', mg+2, y+2.5);
+  doc.setFillColor(192,57,43); doc.rect(cR,y-2,cW,6,'F');
+  doc.text('NOT COVERED', cR+2, y+2.5); y+=7;
+
+  var cov=['Inoperative electrical switch or control','Inoperative motor or air compressor','Inoperative direct drive or gear box','Inoperative fan motor, blade, or blower','Inoperative platen assembly','Inoperative heater, high limit, or thermocouple'];
+  var exc=['Seasonal shutdown or startup','Normal maintenance, wear, deterioration','Carbon and grease buildup cleaning','Release material, air lines, or hoses','Upper platen plating loss (not Taylor fault)','Operator abuse, misuse, or neglect'];
+  doc.setFont('helvetica','normal'); doc.setFontSize(8);
+  cov.forEach(function(item,i){
+    doc.setTextColor(39,174,96); doc.text('+',mg+1,y+i*4.6);
+    doc.setTextColor(16,32,51); doc.text(item,mg+5,y+i*4.6);
+  });
+  exc.forEach(function(item,i){
+    doc.setTextColor(192,57,43); doc.text('x',cR+1,y+i*4.6);
+    doc.setTextColor(16,32,51); doc.text(item,cR+5,y+i*4.6);
+  });
+  y+=cov.length*4.6+6;
+
+  doc.setFillColor(255,249,230); doc.setDrawColor(222,172,92);
+  doc.roundedRect(mg,y,PW-mg*2,10,1,1,'FD');
+  doc.setTextColor(106,80,0); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+  doc.text('CAUTION: This contract is valid only if required repairs are provided by an authorized Taylor distributor or their authorized service agent.',mg+3,y+4);
+  doc.text('This contract is non-transferrable and non-refundable.',mg+3,y+8);
+  y+=14;
+
+  secH('SIGNATURES');
+  doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(90,122,146);
+  doc.text('APPLICANT SIGNATURE', mg, y); y+=3;
+  if(d.signature){try{doc.addImage(d.signature,'PNG',mg,y,75,18);}catch(e){}}
+  y+=20;
+  doc.setDrawColor(16,32,51); doc.line(mg,y,mg+75,y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(90,122,146);
+  doc.text(d.applicant_printed_name||'',mg,y+4);
+  doc.text('Date: '+(d.applicant_date||''),mg+80,y+4); y+=12;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(90,122,146);
+  doc.text("SELLER'S SIGNATURE - Taylor Upstate",mg,y); y+=14;
+  doc.setDrawColor(16,32,51); doc.line(mg,y,mg+95,y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(90,122,146);
+  doc.text('Authorized Taylor Upstate Representative',mg,y+4);
+  doc.text('Date:',mg+100,y+4); doc.line(mg+110,y,mg+155,y); y+=12;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(8.5); doc.setTextColor(90,122,146);
+  doc.text('FACTORY APPROVAL - Taylor Company',mg,y); y+=14;
+  doc.setDrawColor(16,32,51); doc.line(mg,y,mg+95,y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(7.5); doc.setTextColor(90,122,146);
+  doc.text('Taylor Company Authorized Representative',mg,y+4);
+  doc.text('Date:',mg+100,y+4); doc.line(mg+110,y,mg+155,y);
+
+  doc.setFillColor(16,32,51); doc.rect(0,268,PW,12,'F');
+  doc.setTextColor(154,205,230); doc.setFont('helvetica','normal'); doc.setFontSize(8);
+  doc.text('Taylor Upstate  .  Authorized Taylor Service Dealer  .  800-678-2956  .  taylor-upstate.com',PW/2,275.5,{align:'center'});
+
+  return doc;
+}
+
+// FORM SUBMIT
+var savedPdfDoc = null;
+document.getElementById('contract-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  if(!hasSig){
+    document.getElementById('sig-error').style.display='block';
+    document.getElementById('sig-wrapper').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  document.getElementById('sig-error').style.display='none';
+  if(!document.getElementById('model-hidden').value){
+    document.getElementById('model-search').focus();
+    alert('Please select a Taylor grill model from the dropdown.');
+    return;
+  }
+  var spinner=document.getElementById('spinner-overlay');
+  var spinMsg=document.getElementById('spinner-msg');
+  var btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  spinner.classList.add('active');
+  spinMsg.textContent='Generating PDF...';
+
+  var data={
+    applicant_name: document.getElementById('f-applicant').value,
+    business_name:  document.getElementById('f-business').value,
+    address:        document.getElementById('f-address').value,
+    city:           document.getElementById('f-city').value,
+    state:          document.getElementById('f-state').value,
+    zip:            document.getElementById('f-zip').value,
+    phone:          document.getElementById('f-phone').value,
+    email:          document.getElementById('f-email').value,
+    model_number:   document.getElementById('model-hidden').value,
+    serial_number:  document.getElementById('f-serial').value,
+    install_date:   document.getElementById('f-install').value,
+    contract_term:  document.getElementById('f-term').value,
+    applicant_printed_name: document.getElementById('f-printed').value,
+    applicant_date: document.getElementById('f-appdate').value,
+    signature:      canvas.toDataURL('image/png'),
+  };
+
+  try {
+    var doc=generatePDF(data);
+    savedPdfDoc=doc;
+    var pdfBase64=doc.output('datauristring').split(',')[1];
+    var pdfFilename='GrillServiceContract_'+data.business_name.replace(/[^a-zA-Z0-9]/g,'_')+'_'+data.model_number+'.pdf';
+    spinMsg.textContent='Sending to Taylor Upstate...';
+
+    var res=await fetch('/.netlify/functions/send-grill-contract',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(Object.assign({},data,{pdfBase64:pdfBase64}))
+    });
+    if(!res.ok) throw new Error('Server error '+res.status);
+
+    doc.save(pdfFilename);
+    spinner.classList.remove('active');
+    document.getElementById('contract-form-wrapper').style.display='none';
+    document.getElementById('success-screen').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+
+    var dlBtn=document.getElementById('dl-again-btn');
+    dlBtn.style.display='inline-block';
+    dlBtn.onclick=function(){if(savedPdfDoc)savedPdfDoc.save(pdfFilename);};
+  } catch(err) {
+    spinner.classList.remove('active');
+    btn.disabled=false;
+    console.error(err);
+    alert('There was an error submitting the form. Please call 800-678-2956.\n\n('+err.message+')');
+  }
+});
+</script>
+</body>
+</html>

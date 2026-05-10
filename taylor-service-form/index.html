@@ -558,18 +558,25 @@ function generatePDF(d) {
   fld('Serial Number', d.serial_number, mg+118, 55);
   y += 9;
   fld('Date of Installation', d.install_date, mg, 58);
-  fld('Contract Term', d.contract_term+' Year(s)', mg+62, 50);
-  fld('Selling Dealer', 'Taylor Upstate', mg+116, 62);
+  fld('Contract Term', d.contract_term+' Year(s)', mg+62, 115);
   y += 11;
 
   // ══ CONTRACT PRICING ══
   secHead('CONTRACT PRICING');
-  fld('This Contract is Offered for the Amount of $', d.contract_price || 'To be confirmed by Taylor Upstate', mg, 115);
+  // Blank price line (left) — Taylor Upstate fills in before submitting to factory
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(6);
+  doc.setTextColor(90,122,146);
+  doc.text('THIS CONTRACT IS OFFERED FOR THE AMOUNT OF $', mg, y);
+  doc.setDrawColor(197,220,234);
+  doc.line(mg, y+5.8, mg+95, y+5.8);
+  // Selling Dealer (right) — populated
+  fld('Selling Distributor or Dealer', 'Taylor Upstate', mg+100, 78);
   // Note
   doc.setFont('helvetica','normal');
   doc.setFontSize(6);
   doc.setTextColor(130,100,0);
-  doc.text('* Taylor Upstate will confirm contract pricing upon review of this application.', mg, y+9);
+  doc.text('* Taylor Upstate will confirm and enter contract pricing before submitting to Taylor Company for factory approval.', mg, y+9);
   y += 14;
 
   // ══ COVERAGE SUMMARY ══

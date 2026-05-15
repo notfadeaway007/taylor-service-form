@@ -1,1 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Credit Application — Net 30 Terms — Taylor Upstate</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--navy:#102033;--cyan:#1a9fd4;--accent:#29c3f0;--gold:#deac5c;--border:#c5dcea;--muted:#5a7a92;--bg:#f0f6fb;}
+body{font-family:'Barlow',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh;}
+.hdr{background:linear-gradient(135deg,#102033 0%,#1b3a56 60%,#1e4d74 100%);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.hdr-logo{font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#fff;letter-spacing:2px;}
+.hdr-sub{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:var(--accent);letter-spacing:3px;text-transform:uppercase;}
+.hero{background:var(--navy);padding:20px 24px;text-align:center;}
+.hero h1{font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:#fff;letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
+.hero p{font-family:'Barlow Condensed',sans-serif;font-size:13px;color:rgba(255,255,255,.55);letter-spacing:1px;}
+.card{max-width:860px;margin:28px auto;background:#fff;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,.12);overflow:hidden;border-top:4px solid var(--cyan);}
+.section{padding:22px 28px;border-bottom:1px solid var(--border);}
+.section:last-child{border-bottom:none;}
+.section-title{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--cyan);margin-bottom:16px;}
+.section-num{display:inline-block;background:var(--navy);color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;padding:2px 7px;border-radius:2px;margin-right:6px;letter-spacing:.5px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.grid4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
+@media(max-width:700px){.grid2,.grid3,.grid4{grid-template-columns:1fr;}}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);}
+.field label .req{color:#c0392b;}
+.field input,.field select{border:1px solid var(--border);border-radius:3px;padding:8px 10px;font-family:'Barlow',sans-serif;font-size:13px;color:var(--navy);background:#fff;outline:none;transition:border-color .15s;}
+.field input:focus,.field select:focus{border-color:var(--cyan);}
+.field .hint{font-size:10px;color:var(--muted);font-style:italic;margin-top:2px;}
+/* Radio buttons for business structure */
+.radio-group{display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;}
+.radio-group label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--navy);cursor:pointer;font-family:'Barlow',sans-serif;}
+.radio-group input[type=radio]{cursor:pointer;width:15px;height:15px;}
+/* Owner blocks */
+.owner-block{background:#f7fbff;border:1px solid var(--border);border-left:3px solid var(--cyan);padding:16px;border-radius:2px;margin-bottom:12px;}
+.owner-block:last-child{margin-bottom:0;}
+.owner-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px;}
+/* Ref blocks */
+.ref-block{background:#f7fbff;border:1px solid var(--border);border-left:3px solid var(--accent);padding:16px;border-radius:2px;margin-bottom:12px;}
+.ref-block:last-child{margin-bottom:0;}
+.ref-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--navy);margin-bottom:10px;}
+/* SSN warning */
+.ssn-note{background:#fff3cd;border:1px solid #ffc107;border-radius:3px;padding:8px 12px;margin-top:6px;font-size:11px;color:#856404;line-height:1.5;}
+/* Authorization */
+.auth-box{background:#f7fbff;border:1px solid var(--border);border-radius:3px;padding:16px;margin-bottom:16px;}
+.auth-box ul{padding-left:18px;margin-top:8px;}
+.auth-box ul li{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:4px;}
+/* Signature */
+.sig-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px;}
+#sig-wrapper{border:1px solid var(--border);border-radius:3px;background:#fff;overflow:hidden;}
+#sig-canvas{display:block;width:100%;cursor:crosshair;touch-action:none;}
+.sig-actions{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;background:#f7fbff;border-top:1px solid var(--border);}
+.sig-actions span{font-size:11px;color:var(--muted);}
+.sig-clear{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);background:none;border:none;cursor:pointer;padding:3px 6px;}
+#sig-error{display:none;font-size:11px;color:#c0392b;margin-top:4px;}
+/* Submit */
+.submit-wrap{text-align:center;padding:24px 28px;}
+.submit-btn{font-family:'Barlow Condensed',sans-serif;font-size:16px;font-weight:800;letter-spacing:1px;text-transform:uppercase;background:var(--cyan);color:#fff;border:none;border-radius:4px;padding:14px 40px;cursor:pointer;transition:all .15s;}
+.submit-btn:hover{background:#158fc0;}
+.submit-btn:disabled{opacity:.6;cursor:not-allowed;}
+/* Success */
+#success-screen{display:none;padding:40px 28px;text-align:center;}
+#success-screen h2{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;color:var(--navy);text-transform:uppercase;margin-bottom:10px;}
+#success-screen p{font-size:14px;color:var(--muted);line-height:1.6;max-width:520px;margin:0 auto 16px;}
+#success-screen a.back-link{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:600;color:var(--cyan);text-decoration:none;display:block;}
+/* Footer */
+.footer{background:var(--navy);padding:14px 24px;text-align:center;margin-top:32px;}
+.footer p{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.35);}
+.footer a{color:rgba(255,255,255,.5);text-decoration:none;}
+/* Spinner */
+#spinner-overlay{display:none;position:fixed;inset:0;background:rgba(16,32,51,.7);z-index:9999;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+#spinner-overlay.active{display:flex;}
+.spinner{width:40px;height:40px;border:4px solid rgba(255,255,255,.2);border-top-color:#29c3f0;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+#spinner-overlay p{color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:15px;letter-spacing:1px;}
+</style>
+</head>
+<body>
 
+<div id="spinner-overlay">
+  <div class="spinner"></div>
+  <p id="spinner-msg">Generating PDF...</p>
+</div>
+
+<div class="hdr">
+  <div>
+    <div class="hdr-logo">TAYLOR UPSTATE</div>
+    <div class="hdr-sub">Credit Application — Net 30 Terms</div>
+  </div>
+  <div style="text-align:right;font-family:'Barlow Condensed',sans-serif;font-size:11px;color:rgba(255,255,255,.4);">
+    800-678-2956 &middot; taylor-upstate.com
+  </div>
+</div>
+
+<div class="hero">
+  <h1>Credit Application for Net 30 Terms</h1>
+  <p>4291 Slate Hill Rd, Marcellus, NY 13108 &nbsp;&middot;&nbsp; 800-678-2956 &nbsp;&middot;&nbsp; taylor-upstate.com</p>
+</div>
+
+<div class="card">
+<div id="form-wrapper">
+<form id="credit-form">
+
+  <!-- SECTION 1: APPLICANT BUSINESS INFORMATION -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">1</span> Applicant Business Information</div>
+    <div class="grid2" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Legal Business Name <span class="req">*</span></label>
+        <input type="text" id="f-legal-name" required placeholder="Full legal business name"/>
+      </div>
+      <div class="field">
+        <label>DBA (if applicable)</label>
+        <input type="text" id="f-dba" placeholder="Doing business as..."/>
+      </div>
+    </div>
+    <div class="grid2" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Federal Tax ID / EIN <span class="req">*</span></label>
+        <input type="text" id="f-ein" required placeholder="XX-XXXXXXX"/>
+      </div>
+      <div class="field">
+        <label>Business Structure <span class="req">*</span></label>
+        <div class="radio-group" id="biz-structure-group">
+          <label><input type="radio" name="biz_structure" value="Corporation"/> Corporation</label>
+          <label><input type="radio" name="biz_structure" value="LLC"/> LLC</label>
+          <label><input type="radio" name="biz_structure" value="Partnership"/> Partnership</label>
+          <label><input type="radio" name="biz_structure" value="Sole Proprietorship"/> Sole Proprietorship</label>
+          <label><input type="radio" name="biz_structure" value="Other"/> Other:</label>
+          <input type="text" id="f-biz-other" placeholder="Specify" style="width:100px;padding:4px 8px;font-size:12px;border:1px solid var(--border);border-radius:3px;"/>
+        </div>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label>Physical Address <span class="req">*</span></label>
+      <input type="text" id="f-phys-address" required placeholder="Street address"/>
+    </div>
+    <div class="grid3" style="margin-bottom:14px;">
+      <div class="field">
+        <label>City <span class="req">*</span></label>
+        <input type="text" id="f-phys-city" required placeholder="City"/>
+      </div>
+      <div class="field">
+        <label>State <span class="req">*</span></label>
+        <input type="text" id="f-phys-state" required placeholder="NY" maxlength="2"/>
+      </div>
+      <div class="field">
+        <label>ZIP <span class="req">*</span></label>
+        <input type="text" id="f-phys-zip" required placeholder="12345" maxlength="10"/>
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:14px;">
+      <label>Billing Address (if different from physical)</label>
+      <input type="text" id="f-bill-address" placeholder="Street, City, State, ZIP — leave blank if same"/>
+    </div>
+    <div class="grid3" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Years in Business</label>
+        <input type="text" id="f-years-biz" placeholder="e.g. 5"/>
+      </div>
+      <div class="field">
+        <label>Number of Employees</label>
+        <input type="text" id="f-num-employees" placeholder="e.g. 12"/>
+      </div>
+      <div class="field">
+        <label>Business Phone <span class="req">*</span></label>
+        <input type="tel" id="f-biz-phone" required placeholder="(000) 000-0000"/>
+      </div>
+    </div>
+    <div class="grid2" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Business Email <span class="req">*</span></label>
+        <input type="email" id="f-biz-email" required placeholder="info@business.com"/>
+      </div>
+      <div class="field">
+        <label>Website</label>
+        <input type="text" id="f-website" placeholder="www.yourbusiness.com"/>
+      </div>
+    </div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:10px;">Key Contact Person</div>
+    <div class="grid2" style="margin-bottom:14px;">
+      <div class="field">
+        <label>Name <span class="req">*</span></label>
+        <input type="text" id="f-contact-name" required placeholder="First and last name"/>
+      </div>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="f-contact-title" placeholder="e.g. Owner, CFO"/>
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field">
+        <label>Phone</label>
+        <input type="tel" id="f-contact-phone" placeholder="(000) 000-0000"/>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="f-contact-email" placeholder="contact@business.com"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: OWNERSHIP/PRINCIPALS -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">2</span> Ownership / Principals</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5;">List all owners with 20%+ ownership or principals/officers. At least one owner required.</p>
+    <div class="ssn-note">
+      <strong>Security Notice:</strong> SSN is required for credit verification purposes only. This form uses HTTPS encryption. SSNs are included in the signed PDF sent to Taylor Upstate and are NOT stored in our database — only the PDF attachment contains this information.
+    </div>
+    <div style="margin-top:16px;">
+      <!-- Owner 1 -->
+      <div class="owner-block">
+        <div class="owner-label">Owner / Principal 1 <span style="color:#c0392b;">*</span></div>
+        <div class="grid2" style="margin-bottom:10px;">
+          <div class="field"><label>Name <span class="req">*</span></label><input type="text" id="f-o1-name" required placeholder="Full name"/></div>
+          <div class="field"><label>Title</label><input type="text" id="f-o1-title" placeholder="CEO, Owner..."/></div>
+        </div>
+        <div class="grid3" style="margin-bottom:10px;">
+          <div class="field"><label>Ownership %</label><input type="text" id="f-o1-pct" placeholder="e.g. 60"/></div>
+          <div class="field"><label>Phone</label><input type="tel" id="f-o1-phone" placeholder="(000) 000-0000"/></div>
+          <div class="field"><label>SSN (credit check)</label><input type="password" id="f-o1-ssn" placeholder="XXX-XX-XXXX" autocomplete="off"/></div>
+        </div>
+        <div class="field"><label>Home Address</label><input type="text" id="f-o1-address" placeholder="Street, City, State, ZIP"/></div>
+      </div>
+      <!-- Owner 2 -->
+      <div class="owner-block">
+        <div class="owner-label">Owner / Principal 2</div>
+        <div class="grid2" style="margin-bottom:10px;">
+          <div class="field"><label>Name</label><input type="text" id="f-o2-name" placeholder="Full name"/></div>
+          <div class="field"><label>Title</label><input type="text" id="f-o2-title" placeholder="CEO, Owner..."/></div>
+        </div>
+        <div class="grid3" style="margin-bottom:10px;">
+          <div class="field"><label>Ownership %</label><input type="text" id="f-o2-pct" placeholder="e.g. 40"/></div>
+          <div class="field"><label>Phone</label><input type="tel" id="f-o2-phone" placeholder="(000) 000-0000"/></div>
+          <div class="field"><label>SSN (credit check)</label><input type="password" id="f-o2-ssn" placeholder="XXX-XX-XXXX" autocomplete="off"/></div>
+        </div>
+        <div class="field"><label>Home Address</label><input type="text" id="f-o2-address" placeholder="Street, City, State, ZIP"/></div>
+      </div>
+      <!-- Owner 3 -->
+      <div class="owner-block">
+        <div class="owner-label">Owner / Principal 3</div>
+        <div class="grid2" style="margin-bottom:10px;">
+          <div class="field"><label>Name</label><input type="text" id="f-o3-name" placeholder="Full name"/></div>
+          <div class="field"><label>Title</label><input type="text" id="f-o3-title" placeholder="CEO, Owner..."/></div>
+        </div>
+        <div class="grid3" style="margin-bottom:10px;">
+          <div class="field"><label>Ownership %</label><input type="text" id="f-o3-pct" placeholder="e.g. 20"/></div>
+          <div class="field"><label>Phone</label><input type="tel" id="f-o3-phone" placeholder="(000) 000-0000"/></div>
+          <div class="field"><label>SSN (credit check)</label><input type="password" id="f-o3-ssn" placeholder="XXX-XX-XXXX" autocomplete="off"/></div>
+        </div>
+        <div class="field"><label>Home Address</label><input type="text" id="f-o3-address" placeholder="Street, City, State, ZIP"/></div>
+      </div>
+      <!-- Owner 4 -->
+      <div class="owner-block">
+        <div class="owner-label">Owner / Principal 4</div>
+        <div class="grid2" style="margin-bottom:10px;">
+          <div class="field"><label>Name</label><input type="text" id="f-o4-name" placeholder="Full name"/></div>
+          <div class="field"><label>Title</label><input type="text" id="f-o4-title" placeholder="CEO, Owner..."/></div>
+        </div>
+        <div class="grid3" style="margin-bottom:10px;">
+          <div class="field"><label>Ownership %</label><input type="text" id="f-o4-pct" placeholder="e.g. 20"/></div>
+          <div class="field"><label>Phone</label><input type="tel" id="f-o4-phone" placeholder="(000) 000-0000"/></div>
+          <div class="field"><label>SSN (credit check)</label><input type="password" id="f-o4-ssn" placeholder="XXX-XX-XXXX" autocomplete="off"/></div>
+        </div>
+        <div class="field"><label>Home Address</label><input type="text" id="f-o4-address" placeholder="Street, City, State, ZIP"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 3: TRADE REFERENCES -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">3</span> Trade References <span style="font-weight:400;font-size:11px;color:var(--muted);">(Minimum 3 Required)</span></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;">Please provide vendors you have current credit accounts with.</p>
+    <!-- Ref 1 -->
+    <div class="ref-block">
+      <div class="ref-label">Trade Reference 1 <span style="color:#c0392b;">*</span></div>
+      <div class="grid2" style="margin-bottom:10px;">
+        <div class="field"><label>Company Name <span class="req">*</span></label><input type="text" id="f-r1-company" required placeholder="Company name"/></div>
+        <div class="field"><label>Account Number (if known)</label><input type="text" id="f-r1-acct" placeholder="Account #"/></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Contact Name</label><input type="text" id="f-r1-contact" placeholder="Name"/></div>
+        <div class="field"><label>Contact Phone</label><input type="tel" id="f-r1-phone" placeholder="(000) 000-0000"/></div>
+        <div class="field"><label>Contact Email</label><input type="email" id="f-r1-email" placeholder="email@vendor.com"/></div>
+      </div>
+      <div class="field" style="margin-top:10px;max-width:200px;"><label>Current Terms</label><input type="text" id="f-r1-terms" placeholder="e.g. Net 30"/></div>
+    </div>
+    <!-- Ref 2 -->
+    <div class="ref-block">
+      <div class="ref-label">Trade Reference 2 <span style="color:#c0392b;">*</span></div>
+      <div class="grid2" style="margin-bottom:10px;">
+        <div class="field"><label>Company Name <span class="req">*</span></label><input type="text" id="f-r2-company" required placeholder="Company name"/></div>
+        <div class="field"><label>Account Number (if known)</label><input type="text" id="f-r2-acct" placeholder="Account #"/></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Contact Name</label><input type="text" id="f-r2-contact" placeholder="Name"/></div>
+        <div class="field"><label>Contact Phone</label><input type="tel" id="f-r2-phone" placeholder="(000) 000-0000"/></div>
+        <div class="field"><label>Contact Email</label><input type="email" id="f-r2-email" placeholder="email@vendor.com"/></div>
+      </div>
+      <div class="field" style="margin-top:10px;max-width:200px;"><label>Current Terms</label><input type="text" id="f-r2-terms" placeholder="e.g. Net 30"/></div>
+    </div>
+    <!-- Ref 3 -->
+    <div class="ref-block">
+      <div class="ref-label">Trade Reference 3 <span style="color:#c0392b;">*</span></div>
+      <div class="grid2" style="margin-bottom:10px;">
+        <div class="field"><label>Company Name <span class="req">*</span></label><input type="text" id="f-r3-company" required placeholder="Company name"/></div>
+        <div class="field"><label>Account Number (if known)</label><input type="text" id="f-r3-acct" placeholder="Account #"/></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Contact Name</label><input type="text" id="f-r3-contact" placeholder="Name"/></div>
+        <div class="field"><label>Contact Phone</label><input type="tel" id="f-r3-phone" placeholder="(000) 000-0000"/></div>
+        <div class="field"><label>Contact Email</label><input type="email" id="f-r3-email" placeholder="email@vendor.com"/></div>
+      </div>
+      <div class="field" style="margin-top:10px;max-width:200px;"><label>Current Terms</label><input type="text" id="f-r3-terms" placeholder="e.g. Net 30"/></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: BANK REFERENCE -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">4</span> Bank Reference</div>
+    <div class="grid3" style="margin-bottom:14px;">
+      <div class="field"><label>Bank Name</label><input type="text" id="f-bank-name" placeholder="Bank name"/></div>
+      <div class="field"><label>Branch Location / City</label><input type="text" id="f-bank-branch" placeholder="Branch city"/></div>
+      <div class="field"><label>Account Number (Last 4 Digits)</label><input type="text" id="f-bank-acct" placeholder="XXXX" maxlength="4"/></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Bank Contact</label><input type="text" id="f-bank-contact" placeholder="Contact name"/></div>
+      <div class="field"><label>Bank Phone</label><input type="tel" id="f-bank-phone" placeholder="(000) 000-0000"/></div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: AUTHORIZATION + SIGNATURE -->
+  <div class="section">
+    <div class="section-title"><span class="section-num">5</span> Authorization for Credit Investigation</div>
+    <div class="auth-box">
+      <p style="font-size:13px;color:var(--navy);margin-bottom:8px;">By signing below, the Applicant:</p>
+      <ul>
+        <li>Authorizes Taylor Upstate to obtain credit information, including consumer credit reports on principals, from credit reporting agencies, banks, trade references, and other sources.</li>
+        <li>Certifies that all information provided is true and complete.</li>
+        <li>Agrees to abide by our standard terms: <strong>net 30 days from invoice date.</strong></li>
+        <li>Agrees to pay finance charges of <strong>1.5% per month (18% APR)</strong> on past due amounts.</li>
+        <li>Agrees that all invoices are due and payable according to terms regardless of any disputes (disputes must be reported in writing within 10 days of invoice receipt).</li>
+        <li>Acknowledges that credit terms may be modified, suspended, or revoked at the sole discretion of Taylor Upstate.</li>
+      </ul>
+    </div>
+    <div class="sig-label">Authorized Signature <span style="color:#c0392b;">*</span></div>
+    <div id="sig-wrapper">
+      <canvas id="sig-canvas" height="130"></canvas>
+      <div class="sig-actions">
+        <span>Sign with mouse or finger</span>
+        <button type="button" class="sig-clear" onclick="clearSig()">&#10005; Clear</button>
+      </div>
+    </div>
+    <div id="sig-error">Please provide your signature before submitting.</div>
+    <div class="grid3" style="margin-top:16px;">
+      <div class="field">
+        <label>Printed Name <span class="req">*</span></label>
+        <input type="text" id="f-auth-name" required placeholder="Full legal name"/>
+      </div>
+      <div class="field">
+        <label>Title</label>
+        <input type="text" id="f-auth-title" placeholder="Owner, CEO..."/>
+      </div>
+      <div class="field">
+        <label>Date <span class="req">*</span></label>
+        <input type="date" id="f-auth-date"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-wrap">
+    <button type="submit" class="submit-btn" id="submit-btn">Submit Credit Application &rarr;</button>
+  </div>
+</form>
+</div>
+
+<!-- SUCCESS -->
+<div id="success-screen">
+  <div style="font-size:48px;margin-bottom:12px;">&#9989;</div>
+  <h2>Application Submitted</h2>
+  <p>Your Net 30 credit application has been received by Taylor Upstate. A signed copy of your application has been emailed to you and our team. We will review and be in touch shortly.</p>
+  <button class="submit-btn" id="dl-again-btn" style="display:none;margin-bottom:16px;">&#11015; Download PDF Again</button>
+  <p>Questions? Call <strong>800-678-2956</strong> or email <a href="mailto:sales@taylor-upstate.com" style="color:var(--cyan);">sales@taylor-upstate.com</a></p>
+  <a href="https://taylor-upstate.com" class="back-link" style="margin-top:16px;">&larr; Return to Taylor Upstate</a>
+</div>
+</div><!-- /card -->
+
+<div class="footer">
+  <p>Taylor Upstate &middot; 4291 Slate Hill Rd, Marcellus NY 13108 &middot; 800-678-2956 &middot; <a href="https://taylor-upstate.com">taylor-upstate.com</a></p>
+</div>
+
+<script>
+// ── SIGNATURE PAD ──
+var canvas = document.getElementById('sig-canvas');
+var ctx = canvas.getContext('2d');
+var drawing = false, hasSig = false, lastX = 0, lastY = 0;
+function resizeCanvas() {
+  canvas.width = canvas.offsetWidth; canvas.height = 130;
+  ctx.strokeStyle='#102033'; ctx.lineWidth=2; ctx.lineCap='round'; ctx.lineJoin='round';
+}
+function getPos(e) {
+  var r = canvas.getBoundingClientRect();
+  var sx = canvas.width/r.width, sy = canvas.height/r.height;
+  if (e.touches) return [(e.touches[0].clientX-r.left)*sx,(e.touches[0].clientY-r.top)*sy];
+  return [(e.clientX-r.left)*sx,(e.clientY-r.top)*sy];
+}
+canvas.addEventListener('mousedown',function(e){drawing=true;var p=getPos(e);lastX=p[0];lastY=p[1];});
+canvas.addEventListener('mousemove',function(e){
+  if(!drawing)return;hasSig=true;var p=getPos(e);
+  ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p[0],p[1]);ctx.stroke();lastX=p[0];lastY=p[1];
+});
+canvas.addEventListener('mouseup',function(){drawing=false;});
+canvas.addEventListener('mouseleave',function(){drawing=false;});
+canvas.addEventListener('touchstart',function(e){e.preventDefault();drawing=true;var p=getPos(e);lastX=p[0];lastY=p[1];});
+canvas.addEventListener('touchmove',function(e){
+  e.preventDefault();if(!drawing)return;hasSig=true;var p=getPos(e);
+  ctx.beginPath();ctx.moveTo(lastX,lastY);ctx.lineTo(p[0],p[1]);ctx.stroke();lastX=p[0];lastY=p[1];
+});
+canvas.addEventListener('touchend',function(){drawing=false;});
+function clearSig(){ctx.clearRect(0,0,canvas.width,canvas.height);hasSig=false;}
+window.addEventListener('resize',resizeCanvas);
+resizeCanvas();
+
+// ── PDF GENERATION (2 pages) ──
+function generatePDF(d) {
+  var jsPDF = window.jspdf.jsPDF;
+  var doc = new jsPDF({orientation:'portrait',unit:'mm',format:'letter'});
+  var PW=215.9, mg=16, y=0;
+
+  function addHeader(pg) {
+    doc.setFillColor(16,32,51); doc.rect(0,0,PW,34,'F');
+    doc.setFillColor(26,159,212); doc.rect(0,32,PW,2,'F');
+    doc.setTextColor(255,255,255); doc.setFont('helvetica','bold'); doc.setFontSize(17);
+    doc.text('TAYLOR UPSTATE', mg, 13);
+    doc.setFont('helvetica','normal'); doc.setFontSize(8); doc.setTextColor(41,195,240);
+    doc.text('AUTHORIZED TAYLOR SERVICE DEALER', mg, 20);
+    doc.setTextColor(154,205,230);
+    doc.text('4291 Slate Hill Rd, Marcellus NY 13108   -   800-678-2956   -   taylor-upstate.com', mg, 27);
+    doc.setFillColor(222,172,92); doc.roundedRect(PW-mg-28,6,28,14,2,2,'F');
+    doc.setTextColor(16,32,51); doc.setFont('helvetica','bold'); doc.setFontSize(8);
+    doc.text('Page '+pg+' of 2', PW-mg-14, 14.5, {align:'center'});
+  }
+
+  function addFooter() {
+    doc.setFillColor(16,32,51); doc.rect(0,268,PW,12,'F');
+    doc.setTextColor(154,205,230); doc.setFont('helvetica','normal'); doc.setFontSize(7.5);
+    doc.text('Taylor Upstate  -  Credit Application for Net 30 Terms  -  800-678-2956  -  taylor-upstate.com', PW/2, 275.5, {align:'center'});
+  }
+
+  function secH(t) {
+    doc.setFillColor(16,32,51); doc.rect(mg,y,PW-mg*2,5.5,'F');
+    doc.setTextColor(41,195,240); doc.setFont('helvetica','bold'); doc.setFontSize(7.5);
+    doc.text(t, mg+2, y+4); y+=7.5; doc.setTextColor(16,32,51);
+  }
+
+  function fld(lbl,val,x,w) {
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(90,122,146);
+    doc.text(lbl.toUpperCase(), x, y);
+    doc.setFont('helvetica','bold'); doc.setFontSize(9);
+    doc.setTextColor(val?16:160,val?32:160,val?51:160);
+    doc.text(val||'', x, y+4.5);
+    doc.setDrawColor(197,220,234); doc.line(x,y+5.8,x+w,y+5.8);
+  }
+
+  function blankFld(lbl,x,w) {
+    doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(90,122,146);
+    doc.text(lbl.toUpperCase(), x, y);
+    doc.setDrawColor(197,220,234); doc.line(x,y+5.8,x+w,y+5.8);
+  }
+
+  // ════ PAGE 1 ════
+  addHeader(1);
+  y = 40;
+
+  // Title
+  doc.setTextColor(16,32,51); doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('CREDIT APPLICATION FOR NET 30 TERMS', PW/2, y, {align:'center'});
+  y+=7;
+
+  // ── Section 1: Business Info ──
+  secH('1. APPLICANT BUSINESS INFORMATION');
+  fld('Legal Business Name',d.legal_name,mg,100); fld('DBA',d.dba||'N/A',mg+104,74); y+=9;
+  fld('Federal Tax ID / EIN',d.ein,mg,70); fld('Business Structure',d.biz_structure,mg+74,100); y+=9;
+  fld('Physical Address',d.phys_address,mg,PW-mg*2); y+=9;
+  fld('City',d.phys_city,mg,60); fld('State',d.phys_state,mg+64,20); fld('ZIP',d.phys_zip,mg+88,30); y+=9;
+  fld('Billing Address',d.bill_address||'Same as physical',mg,PW-mg*2); y+=9;
+  fld('Years in Business',d.years_biz||'',mg,45); fld('Num Employees',d.num_employees||'',mg+49,40); fld('Phone',d.biz_phone,mg+93,55); fld('Email',d.biz_email,mg+152,56); y+=9;
+  fld('Website',d.website||'',mg,90); y+=11;
+
+  doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(90,122,146);
+  doc.text('KEY CONTACT PERSON', mg, y); y+=4;
+  fld('Name',d.contact_name,mg,85); fld('Title',d.contact_title||'',mg+89,55); fld('Phone',d.contact_phone||'',mg+148,55); y+=9;
+  fld('Email',d.contact_email||'',mg,PW-mg*2); y+=12;
+
+  // ── Section 2: Ownership ──
+  secH('2. OWNERSHIP / PRINCIPALS (20%+ OWNERSHIP)');
+
+  var owners = [
+    {n:d.owner1_name,t:d.owner1_title,p:d.owner1_pct,a:d.owner1_address,ph:d.owner1_phone,s:d.owner1_ssn?'***-**-'+d.owner1_ssn.slice(-4):''},
+    {n:d.owner2_name,t:d.owner2_title,p:d.owner2_pct,a:d.owner2_address,ph:d.owner2_phone,s:d.owner2_ssn?'***-**-'+d.owner2_ssn.slice(-4):''},
+    {n:d.owner3_name,t:d.owner3_title,p:d.owner3_pct,a:d.owner3_address,ph:d.owner3_phone,s:d.owner3_ssn?'***-**-'+d.owner3_ssn.slice(-4):''},
+    {n:d.owner4_name,t:d.owner4_title,p:d.owner4_pct,a:d.owner4_address,ph:d.owner4_phone,s:d.owner4_ssn?'***-**-'+d.owner4_ssn.slice(-4):''},
+  ];
+
+  owners.forEach(function(o,i) {
+    if(!o.n) return;
+    var half = i<2 ? mg : mg+(PW-mg*2)/2+3;
+    var w = (PW-mg*2)/2-3;
+    if(i===0||i===2) {
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(16,32,51);
+      doc.text((i+1)+'. '+o.n+' | '+( o.t||'')+' | '+(o.p||'')+'% | SSN: '+(o.s||'N/A'), mg, y);
+      doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(90,122,146);
+      doc.text('Phone: '+(o.ph||'') + '   Address: '+(o.a||''), mg+3, y+4);
+    } else {
+      doc.setFont('helvetica','bold'); doc.setFontSize(6.5); doc.setTextColor(16,32,51);
+      doc.text((i+1)+'. '+o.n+' | '+(o.t||'')+' | '+(o.p||'')+'% | SSN: '+(o.s||'N/A'), mg+(PW-mg*2)/2+3, y-8);
+      doc.setFont('helvetica','normal'); doc.setFontSize(6); doc.setTextColor(90,122,146);
+      doc.text('Phone: '+(o.ph||'')+'   Address: '+(o.a||''), mg+(PW-mg*2)/2+6, y-4);
+      y+=12;
+    }
+    if(i===0) y+=12;
+  });
+  if(y<200) y = Math.max(y, 195);
+
+  addFooter();
+
+  // ════ PAGE 2 ════
+  doc.addPage();
+  addHeader(2);
+  y = 40;
+
+  // ── Section 3: Trade References ──
+  secH('3. TRADE REFERENCES (MINIMUM 3 REQUIRED)');
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(90,122,146);
+  doc.text('Please provide vendors you have current credit accounts with.', mg, y); y+=5;
+
+  var refs = [
+    {co:d.ref1_company,ac:d.ref1_acct,cn:d.ref1_contact,ph:d.ref1_phone,em:d.ref1_email,tr:d.ref1_terms},
+    {co:d.ref2_company,ac:d.ref2_acct,cn:d.ref2_contact,ph:d.ref2_phone,em:d.ref2_email,tr:d.ref2_terms},
+    {co:d.ref3_company,ac:d.ref3_acct,cn:d.ref3_contact,ph:d.ref3_phone,em:d.ref3_email,tr:d.ref3_terms},
+  ];
+
+  refs.forEach(function(r,i) {
+    doc.setFillColor(247,251,255); doc.rect(mg,y-1,PW-mg*2,18,'F');
+    doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(16,32,51);
+    doc.text((i+1)+'. '+( r.co||''), mg+2, y+3);
+    doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(90,122,146);
+    doc.text('Acct: '+(r.ac||'N/A')+'   Contact: '+(r.cn||'')+'   Phone: '+(r.ph||'')+'   Email: '+(r.em||'')+'   Terms: '+(r.tr||''), mg+2, y+8);
+    y+=21;
+  });
+  y+=4;
+
+  // ── Section 4: Bank Reference ──
+  secH('4. BANK REFERENCE');
+  fld('Bank Name',d.bank_name||'',mg,85); fld('Branch Location/City',d.bank_branch||'',mg+89,70); fld('Acct Last 4',d.bank_acct_last4||'',mg+163,30); y+=9;
+  fld('Bank Contact',d.bank_contact||'',mg,85); fld('Bank Phone',d.bank_phone||'',mg+89,80); y+=12;
+
+  // ── Section 5: Authorization ──
+  secH('5. AUTHORIZATION FOR CREDIT INVESTIGATION');
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(16,32,51);
+  doc.text('By signing below, the Applicant authorizes and agrees to all of the following:', mg, y); y+=5;
+
+  var bullets = [
+    'Authorizes Taylor Upstate to obtain credit information from credit reporting agencies, banks, trade references, and other sources.',
+    'Certifies that all information provided is true and complete.',
+    'Agrees to abide by standard terms: net 30 days from invoice date.',
+    'Agrees to pay finance charges of 1.5% per month (18% APR) on past due amounts.',
+    'Agrees all invoices are due regardless of disputes (disputes must be reported in writing within 10 days).',
+    'Acknowledges that credit terms may be modified, suspended, or revoked at the sole discretion of Taylor Upstate.',
+  ];
+  doc.setFontSize(7);
+  bullets.forEach(function(b){
+    doc.setTextColor(90,122,146); doc.text('-', mg+1, y);
+    doc.setTextColor(16,32,51); doc.text(b, mg+5, y, {maxWidth:PW-mg*2-5});
+    y+=5.5;
+  });
+  y+=4;
+
+  // Signature
+  doc.setFont('helvetica','bold'); doc.setFontSize(7); doc.setTextColor(90,122,146);
+  doc.text('AUTHORIZED SIGNATURE:', mg, y); y+=2;
+  if(d.signature){try{doc.addImage(d.signature,'PNG',mg,y,70,16);}catch(e){}}
+  y+=17;
+  doc.setDrawColor(16,32,51); doc.line(mg,y,mg+70,y);
+  doc.setFont('helvetica','normal'); doc.setFontSize(6.5); doc.setTextColor(90,122,146);
+  doc.text(d.auth_printed_name||'',mg,y+3.5);
+  doc.text('Title: '+(d.auth_title||''),mg+75,y+3.5);
+  doc.text('Date: '+(d.auth_date||''),mg+130,y+3.5);
+  y+=10;
+
+  // Submission info
+  doc.setFillColor(247,251,255); doc.setDrawColor(197,220,234);
+  doc.rect(mg,y,PW-mg*2,8,'FD');
+  doc.setFont('helvetica','normal'); doc.setFontSize(7); doc.setTextColor(90,122,146);
+  doc.text('Submitted: '+new Date().toLocaleString('en-US')+'   -   Submitted to: Taylor Upstate, 4291 Slate Hill Rd, Marcellus NY 13108', mg+3, y+5);
+
+  addFooter();
+
+  return doc;
+}
+
+// ── FORM SUBMIT ──
+var savedDoc = null;
+document.getElementById('credit-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  if(!hasSig) {
+    document.getElementById('sig-error').style.display='block';
+    document.getElementById('sig-wrapper').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  document.getElementById('sig-error').style.display='none';
+
+  // Validate business structure selected
+  var structureSelected = document.querySelector('input[name="biz_structure"]:checked');
+  if(!structureSelected) {
+    alert('Please select a Business Structure.');
+    document.getElementById('biz-structure-group').scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  var bizStructure = structureSelected.value;
+  if(bizStructure === 'Other') {
+    bizStructure = 'Other: ' + (document.getElementById('f-biz-other').value || '');
+  }
+
+  var spinner = document.getElementById('spinner-overlay');
+  var spinMsg = document.getElementById('spinner-msg');
+  var btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  spinner.classList.add('active');
+  spinMsg.textContent = 'Generating PDF...';
+
+  var data = {
+    legal_name:       document.getElementById('f-legal-name').value,
+    dba:              document.getElementById('f-dba').value,
+    ein:              document.getElementById('f-ein').value,
+    biz_structure:    bizStructure,
+    phys_address:     document.getElementById('f-phys-address').value,
+    phys_city:        document.getElementById('f-phys-city').value,
+    phys_state:       document.getElementById('f-phys-state').value,
+    phys_zip:         document.getElementById('f-phys-zip').value,
+    bill_address:     document.getElementById('f-bill-address').value,
+    years_biz:        document.getElementById('f-years-biz').value,
+    num_employees:    document.getElementById('f-num-employees').value,
+    biz_phone:        document.getElementById('f-biz-phone').value,
+    biz_email:        document.getElementById('f-biz-email').value,
+    website:          document.getElementById('f-website').value,
+    contact_name:     document.getElementById('f-contact-name').value,
+    contact_title:    document.getElementById('f-contact-title').value,
+    contact_phone:    document.getElementById('f-contact-phone').value,
+    contact_email:    document.getElementById('f-contact-email').value,
+    // Owners
+    owner1_name:      document.getElementById('f-o1-name').value,
+    owner1_title:     document.getElementById('f-o1-title').value,
+    owner1_pct:       document.getElementById('f-o1-pct').value,
+    owner1_address:   document.getElementById('f-o1-address').value,
+    owner1_ssn:       document.getElementById('f-o1-ssn').value,
+    owner1_phone:     document.getElementById('f-o1-phone').value,
+    owner2_name:      document.getElementById('f-o2-name').value,
+    owner2_title:     document.getElementById('f-o2-title').value,
+    owner2_pct:       document.getElementById('f-o2-pct').value,
+    owner2_address:   document.getElementById('f-o2-address').value,
+    owner2_ssn:       document.getElementById('f-o2-ssn').value,
+    owner2_phone:     document.getElementById('f-o2-phone').value,
+    owner3_name:      document.getElementById('f-o3-name').value,
+    owner3_title:     document.getElementById('f-o3-title').value,
+    owner3_pct:       document.getElementById('f-o3-pct').value,
+    owner3_address:   document.getElementById('f-o3-address').value,
+    owner3_ssn:       document.getElementById('f-o3-ssn').value,
+    owner3_phone:     document.getElementById('f-o3-phone').value,
+    owner4_name:      document.getElementById('f-o4-name').value,
+    owner4_title:     document.getElementById('f-o4-title').value,
+    owner4_pct:       document.getElementById('f-o4-pct').value,
+    owner4_address:   document.getElementById('f-o4-address').value,
+    owner4_ssn:       document.getElementById('f-o4-ssn').value,
+    owner4_phone:     document.getElementById('f-o4-phone').value,
+    // Trade Refs
+    ref1_company:     document.getElementById('f-r1-company').value,
+    ref1_acct:        document.getElementById('f-r1-acct').value,
+    ref1_contact:     document.getElementById('f-r1-contact').value,
+    ref1_phone:       document.getElementById('f-r1-phone').value,
+    ref1_email:       document.getElementById('f-r1-email').value,
+    ref1_terms:       document.getElementById('f-r1-terms').value,
+    ref2_company:     document.getElementById('f-r2-company').value,
+    ref2_acct:        document.getElementById('f-r2-acct').value,
+    ref2_contact:     document.getElementById('f-r2-contact').value,
+    ref2_phone:       document.getElementById('f-r2-phone').value,
+    ref2_email:       document.getElementById('f-r2-email').value,
+    ref2_terms:       document.getElementById('f-r2-terms').value,
+    ref3_company:     document.getElementById('f-r3-company').value,
+    ref3_acct:        document.getElementById('f-r3-acct').value,
+    ref3_contact:     document.getElementById('f-r3-contact').value,
+    ref3_phone:       document.getElementById('f-r3-phone').value,
+    ref3_email:       document.getElementById('f-r3-email').value,
+    ref3_terms:       document.getElementById('f-r3-terms').value,
+    // Bank
+    bank_name:        document.getElementById('f-bank-name').value,
+    bank_branch:      document.getElementById('f-bank-branch').value,
+    bank_acct_last4:  document.getElementById('f-bank-acct').value,
+    bank_contact:     document.getElementById('f-bank-contact').value,
+    bank_phone:       document.getElementById('f-bank-phone').value,
+    // Auth
+    auth_printed_name: document.getElementById('f-auth-name').value,
+    auth_title:       document.getElementById('f-auth-title').value,
+    auth_date:        document.getElementById('f-auth-date').value,
+    signature:        canvas.toDataURL('image/png'),
+  };
+
+  try {
+    var doc = generatePDF(data);
+    savedDoc = doc;
+    var pdfBase64 = doc.output('datauristring').split(',')[1];
+    var pdfFilename = 'CreditApplication_'+data.legal_name.replace(/[^a-zA-Z0-9]/g,'_')+'.pdf';
+
+    spinMsg.textContent = 'Sending to Taylor Upstate...';
+
+    var res = await fetch('/.netlify/functions/send-credit-app', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({},data,{pdfBase64:pdfBase64}))
+    });
+    if(!res.ok) throw new Error('Server error '+res.status);
+
+    doc.save(pdfFilename);
+    spinner.classList.remove('active');
+    document.getElementById('form-wrapper').style.display='none';
+    document.getElementById('success-screen').style.display='block';
+    window.scrollTo({top:0,behavior:'smooth'});
+
+    var dlBtn = document.getElementById('dl-again-btn');
+    dlBtn.style.display='inline-block';
+    dlBtn.onclick = function(){ if(savedDoc) savedDoc.save(pdfFilename); };
+
+  } catch(err) {
+    spinner.classList.remove('active');
+    btn.disabled=false;
+    console.error(err);
+    alert('There was an error submitting your application. Please call 800-678-2956.\n\n('+err.message+')');
+  }
+});
+</script>
+</body>
+</html>

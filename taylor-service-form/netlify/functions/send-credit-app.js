@@ -1,8 +1,17 @@
 const { Resend } = require('resend');
 
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
+
 exports.handler = async function(event) {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers: CORS, body: '' };
+  }
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers: CORS, body: 'Method Not Allowed' };
   }
 
   try {
@@ -151,10 +160,10 @@ exports.handler = async function(event) {
       throw new Error(`Airtable error: ${JSON.stringify(err)}`);
     }
 
-    return { statusCode: 200, body: JSON.stringify({ success: true }) };
+    return { statusCode: 200, headers: CORS, body: JSON.stringify({ success: true }) };
 
   } catch(err) {
     console.error('send-credit-app error:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+    return { statusCode: 500, headers: CORS, body: JSON.stringify({ error: err.message }) };
   }
 };

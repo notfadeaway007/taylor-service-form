@@ -718,7 +718,7 @@ document.getElementById('credit-form').addEventListener('submit', async function
 
     spinMsg.textContent = 'Sending to Taylor Upstate...';
 
-    var res = await fetch('/.netlify/functions/send-credit-app', {
+    var res = await fetch('https://taylor-service-form.netlify.app/.netlify/functions/send-credit-app', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(Object.assign({},data,{pdfBase64:pdfBase64}))

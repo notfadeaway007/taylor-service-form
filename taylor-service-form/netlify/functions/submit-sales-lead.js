@@ -73,32 +73,33 @@ exports.handler = async (event) => {
 
     // Destructure all form fields
     const {
-      first_name       = '',
-      last_name        = '',
-      business_name    = '',
-      your_role        = '',
-      phone            = '',
-      email            = '',
-      address          = '',
-      county           = '',
-      best_time        = '',
-      equipment        = '',   // comma-joined string from front-end
-      condition        = '',
-      business_type    = '',
-      timeline         = '',
-      current_equipment= '',
-      financing        = '',
-      message          = '',
-      heard_from       = '',
-      email_optin      = ''
+      first_name        = '',
+      last_name         = '',
+      business_name     = '',
+      your_role         = '',
+      phone             = '',
+      email             = '',
+      address           = '',
+      city_state_zip    = '',   // ← NEW
+      county            = '',
+      best_time         = '',
+      equipment         = '',
+      condition         = '',
+      business_type     = '',
+      timeline          = '',
+      current_equipment = '',
+      financing         = '',
+      message           = '',
+      heard_from        = '',
+      email_optin       = ''
     } = d;
 
-    const fullName = `${first_name} ${last_name}`.trim();
-    const tp       = getTimelineProps(timeline);
-    const routing  = getRouting(county);
+    const fullName  = `${first_name} ${last_name}`.trim();
+    const tp        = getTimelineProps(timeline);
+    const routing   = getRouting(county);
     const fromEmail = process.env.SALES_FROM_EMAIL || 'sales@taylorupstate.com';
 
-    // ── BUILD SUBJECT (emoji lives in JS, never a template variable) ─────────
+    // ── BUILD SUBJECT ────────────────────────────────────────────────────────
     const subject = `${tp.emoji} New Sales Lead — ${fullName || email} | ${routing.region}`;
 
     // ── BUILD HTML EMAIL ─────────────────────────────────────────────────────
@@ -133,14 +134,15 @@ exports.handler = async (event) => {
       </td></tr>
 
       ${section('Contact Information',
-        row('Name',          fullName)       +
-        row('Business',      business_name)  +
-        row('Role/Title',    your_role)      +
-        row('Email',         `<a href="mailto:${email}" style="color:#1A5FA8;">${email}</a>`) +
-        row('Phone',         phone)          +
-        row('Best Time',     best_time)      +
-        row('Address',       address)        +
-        row('County',        county)
+        row('Name',           fullName)       +
+        row('Business',       business_name)  +
+        row('Role/Title',     your_role)      +
+        row('Email',          `<a href="mailto:${email}" style="color:#1A5FA8;">${email}</a>`) +
+        row('Phone',          phone)          +
+        row('Best Time',      best_time)      +
+        row('Address',        address)        +
+        row('City/State/Zip', city_state_zip) +
+        row('County',         county)
       )}
 
       ${section('Equipment Interest',
@@ -192,7 +194,6 @@ exports.handler = async (event) => {
     const baseId = process.env.AIRTABLE_BASE_ID;
 
     if (token && baseId) {
-      // Use table ID directly (more reliable than table name)
       const atRes = await fetch(`https://api.airtable.com/v0/${baseId}/tblEZur8aCmDupauc`, {
         method:  'POST',
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
@@ -205,6 +206,7 @@ exports.handler = async (event) => {
             'Email':             email,
             'Phone':             phone,
             'Address':           address,
+            'City / State / Zip': city_state_zip,  // ← NEW
             'County':            county,
             'Territory':         routing.territory,
             'Best Time':         best_time,

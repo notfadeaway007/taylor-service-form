@@ -1,6 +1,30 @@
 // netlify/functions/submit-sales-lead.js
 const { Resend } = require('resend');
 
+// ── BOT DETECTION ─────────────────────────────────────────────────────────────
+function isBot(d) {
+  // 1. Honeypot: hidden field bots fill, humans never see
+  if (d.hp_website && d.hp_website.trim() !== '') {
+    console.log('Bot blocked: honeypot filled');
+    return true;
+  }
+  // 2. Speed check: submitted in under 3 seconds = bot
+  const loadTime = parseInt(d.load_time || '0');
+  if (loadTime > 0 && (Date.now() - loadTime) < 3000) {
+    console.log('Bot blocked: submitted too fast');
+    return true;
+  }
+  // 3. Gibberish check: long single-word strings in name or business fields
+  function looksLikeGibberish(str) {
+    return str && str.length > 20 && !str.includes(' ') && /^[a-zA-Z]+$/.test(str);
+  }
+  if (looksLikeGibberish(d.first_name) || looksLikeGibberish(d.business_name)) {
+    console.log('Bot blocked: gibberish field content');
+    return true;
+  }
+  return false;
+}
+
 // ── PRIORITY / TIMELINE ───────────────────────────────────────────────────────
 function getTimelineProps(timeline) {
   const t = (timeline || '').toLowerCase();
@@ -71,6 +95,11 @@ exports.handler = async (event) => {
   try {
     const d = JSON.parse(event.body || '{}');
 
+    // ── Bot check: silently return success so bots stop retrying ──
+    if (isBot(d)) {
+      return { statusCode: 200, headers: cors, body: JSON.stringify({ success: true }) };
+    }
+
     // Destructure all form fields
     const {
       first_name        = '',
@@ -80,7 +109,7 @@ exports.handler = async (event) => {
       phone             = '',
       email             = '',
       address           = '',
-      city_state_zip    = '',   // ← NEW
+      city_state_zip    = '',
       county            = '',
       best_time         = '',
       equipment         = '',
@@ -199,28 +228,28 @@ exports.handler = async (event) => {
         headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fields: {
-            'First Name':        first_name,
-            'Last Name':         last_name,
-            'Business Name':     business_name,
-            'Role':              your_role,
-            'Email':             email,
-            'Phone':             phone,
-            'Address':           address,
-            'City / State / Zip': city_state_zip,  // ← NEW
-            'County':            county,
-            'Territory':         routing.territory,
-            'Best Time':         best_time,
-            'Equipment Interest':equipment,
-            'Condition':         condition,
-            'Business Type':     business_type,
-            'Timeline':          timeline,
-            'Current Equipment': current_equipment,
-            'Financing':         financing,
-            'Message':           message,
-            'How Heard':         heard_from,
-            'Email Opt-In':      email_optin,
-            'Status':            'New',
-            'Submitted At':      new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
+            'First Name':         first_name,
+            'Last Name':          last_name,
+            'Business Name':      business_name,
+            'Role':               your_role,
+            'Email':              email,
+            'Phone':              phone,
+            'Address':            address,
+            'City / State / Zip': city_state_zip,
+            'County':             county,
+            'Territory':          routing.territory,
+            'Best Time':          best_time,
+            'Equipment Interest': equipment,
+            'Condition':          condition,
+            'Business Type':      business_type,
+            'Timeline':           timeline,
+            'Current Equipment':  current_equipment,
+            'Financing':          financing,
+            'Message':            message,
+            'How Heard':          heard_from,
+            'Email Opt-In':       email_optin,
+            'Status':             'New',
+            'Submitted At':       new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
           }
         })
       });

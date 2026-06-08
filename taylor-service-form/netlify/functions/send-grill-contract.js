@@ -1,5 +1,26 @@
 const { Resend } = require('resend');
 
+// ── BOT DETECTION ─────────────────────────────────────────────────────────────
+function isBot(d) {
+  if (d.hp_website && d.hp_website.trim() !== '') {
+    console.log('Bot blocked: honeypot filled');
+    return true;
+  }
+  const loadTime = parseInt(d.load_time || '0');
+  if (loadTime > 0 && (Date.now() - loadTime) < 3000) {
+    console.log('Bot blocked: submitted too fast');
+    return true;
+  }
+  function looksLikeGibberish(str) {
+    return str && str.length > 20 && !str.includes(' ') && /^[a-zA-Z]+$/.test(str);
+  }
+  if (looksLikeGibberish(d.business_name) || looksLikeGibberish(d.applicant_name)) {
+    console.log('Bot blocked: gibberish field content');
+    return true;
+  }
+  return false;
+}
+
 exports.handler = async function(event) {
   if (event.httpMethod !== 'POST') {
     return { statusCode: 405, body: 'Method Not Allowed' };
@@ -7,6 +28,12 @@ exports.handler = async function(event) {
 
   try {
     const data = JSON.parse(event.body);
+
+    // ── Bot check: silently return success so bots stop retrying ──
+    if (isBot(data)) {
+      return { statusCode: 200, body: JSON.stringify({ success: true }) };
+    }
+
     const {
       applicant_name, business_name, address, city, state, zip,
       phone, email, model_number, serial_number, install_date,
@@ -63,24 +90,13 @@ exports.handler = async function(event) {
       reply_to: email,
       subject: subject,
       html: htmlBody,
-      attachments: [
-        {
-          filename: pdfFilename,
-          content: pdfBase64,
-        }
-      ]
+      attachments: [{ filename: pdfFilename, content: pdfBase64 }]
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true })
-    };
+    return { statusCode: 200, body: JSON.stringify({ success: true }) };
 
   } catch (err) {
     console.error('send-grill-contract error:', err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message || 'Email failed' })
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message || 'Email failed' }) };
   }
 };

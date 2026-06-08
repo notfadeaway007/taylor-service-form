@@ -2,6 +2,30 @@
 const PDFDocument = require('pdfkit');
 const { Resend } = require('resend');
 
+// ── BOT DETECTION ─────────────────────────────────────────────────────────────
+function isBot(d) {
+  // 1. Honeypot: hidden field bots fill, humans never see
+  if (d.hp_website && d.hp_website.trim() !== '') {
+    console.log('Bot blocked: honeypot filled');
+    return true;
+  }
+  // 2. Speed check: submitted in under 3 seconds = bot
+  const loadTime = parseInt(d.load_time || '0');
+  if (loadTime > 0 && (Date.now() - loadTime) < 3000) {
+    console.log('Bot blocked: submitted too fast');
+    return true;
+  }
+  // 3. Gibberish check: long single-word strings in name or company fields
+  function looksLikeGibberish(str) {
+    return str && str.length > 20 && !str.includes(' ') && /^[a-zA-Z]+$/.test(str);
+  }
+  if (looksLikeGibberish(d.first_name) || looksLikeGibberish(d.company)) {
+    console.log('Bot blocked: gibberish field content');
+    return true;
+  }
+  return false;
+}
+
 // ── PRIORITY HELPERS ──────────────────────────────────────────────────────────
 function getPriorityProps(priority) {
   const p = priority || '';
@@ -149,16 +173,21 @@ function generatePDF(data) {
 
 // ── MAIN HANDLER ──────────────────────────────────────────────────────────────
 exports.handler = async (event) => {
-  if(event.httpMethod!=='POST') return {statusCode:405,body:'Method Not Allowed'};
+  if (event.httpMethod !== 'POST') return { statusCode: 405, body: 'Method Not Allowed' };
 
   let data;
-  try { data=JSON.parse(event.body); }
-  catch { return {statusCode:400,body:JSON.stringify({error:'Invalid request body'})}; }
+  try { data = JSON.parse(event.body); }
+  catch { return { statusCode: 400, body: JSON.stringify({ error: 'Invalid request body' }) }; }
 
-  const required=['first_name','last_name','company','phone','email',
-                  'service_address','county','equipment_brand','priority','issue_type','problem_description'];
-  const missing=required.filter(f=>!data[f]||!String(data[f]).trim());
-  if(missing.length) return {statusCode:400,body:JSON.stringify({error:`Missing: ${missing.join(', ')}`})};
+  // ── Bot check: silently return success so bots stop retrying ──
+  if (isBot(data)) {
+    return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ success: true }) };
+  }
+
+  const required = ['first_name','last_name','company','phone','email',
+                    'service_address','county','equipment_brand','priority','issue_type','problem_description'];
+  const missing = required.filter(f => !data[f] || !String(data[f]).trim());
+  if (missing.length) return { statusCode: 400, body: JSON.stringify({ error: `Missing: ${missing.join(', ')}` }) };
 
   try {
     const pdfBuffer = await generatePDF(data);
@@ -199,9 +228,9 @@ exports.handler = async (event) => {
             <p style="margin-top:16px;font-size:11px;color:#94A0AE;">Single-page PDF attached · Reply-to: ${data.email}</p>
           </div>
         </div>`,
-      attachments:[{
-        filename:`TaylorUpstate-${data.company.replace(/[^a-zA-Z0-9]/g,'-')}.pdf`,
-        content:pdfBuffer.toString('base64')
+      attachments: [{
+        filename: `TaylorUpstate-${data.company.replace(/[^a-zA-Z0-9]/g,'-')}.pdf`,
+        content:  pdfBuffer.toString('base64')
       }]
     });
 
@@ -210,7 +239,7 @@ exports.handler = async (event) => {
     const atBaseId = process.env.AIRTABLE_BASE_ID;
 
     if (atToken && atBaseId) {
-      const EASTERN = new Set([
+      const EASTERN_SVC = new Set([
         'Albany County','Clinton County','Columbia County','Delaware County',
         'Dutchess County','Essex County','Franklin County','Fulton County',
         'Greene County','Hamilton County','Herkimer County','Montgomery County',
@@ -219,36 +248,36 @@ exports.handler = async (event) => {
         'Schoharie County','Sullivan County','Ulster County','Warren County',
         'Washington County'
       ]);
-      const territory = EASTERN.has(data.county) ? 'Eastern' : 'Western';
+      const territory = EASTERN_SVC.has(data.county) ? 'Eastern' : 'Western';
 
       const atRes = await fetch(`https://api.airtable.com/v0/${atBaseId}/tblV2Kc9oZ4UfcLwi`, {
         method:  'POST',
         headers: { 'Authorization': `Bearer ${atToken}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           fields: {
-            'First Name':         data.first_name,
-            'Last Name':          data.last_name,
-            'Business Name':      data.company,
-            'Role':               data.role               || '',
-            'Phone':              data.phone,
-            'Email':              data.email,
-            'Address':            data.service_address,
-            'County':             data.county,
-            'Territory':          territory,
-            'Best Time':          data.best_time          || '',
-            'Equipment Brand':    data.equipment_brand,
-            'Model Number':       data.model_number       || '',
-            'Serial Number':      data.serial_number      || '',
-            'Equipment Age':      data.equipment_age      || '',
-            'Warranty Status':    data.warranty_status    || '',
-            'Last Service Date':  data.last_service_date  || '',
-            'Priority':           data.priority,
-            'Nature of Problem':  data.issue_type,
-            'Preferred Date':     data.preferred_date     || '',
-            'Problem Description':data.problem_description,
-            'Site Access Notes':  data.access_notes       || '',
-            'Status':             'New',
-            'Submitted At':       new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
+            'First Name':          data.first_name,
+            'Last Name':           data.last_name,
+            'Business Name':       data.company,
+            'Role':                data.role               || '',
+            'Phone':               data.phone,
+            'Email':               data.email,
+            'Address':             data.service_address,
+            'County':              data.county,
+            'Territory':           territory,
+            'Best Time':           data.best_time          || '',
+            'Equipment Brand':     data.equipment_brand,
+            'Model Number':        data.model_number       || '',
+            'Serial Number':       data.serial_number      || '',
+            'Equipment Age':       data.equipment_age      || '',
+            'Warranty Status':     data.warranty_status    || '',
+            'Last Service Date':   data.last_service_date  || '',
+            'Priority':            data.priority,
+            'Nature of Problem':   data.issue_type,
+            'Preferred Date':      data.preferred_date     || '',
+            'Problem Description': data.problem_description,
+            'Site Access Notes':   data.access_notes       || '',
+            'Status':              'New',
+            'Submitted At':        new Date().toLocaleString('en-US', { timeZone: 'America/New_York' })
           }
         })
       });
@@ -257,12 +286,12 @@ exports.handler = async (event) => {
         console.error('Airtable error:', JSON.stringify(atErr));
       }
     }
-    // ── END AIRTABLE ────────────────────────────────────────────────────────
 
-    return {statusCode:200,headers:{'Content-Type':'application/json'},body:JSON.stringify({success:true})};
-  } catch(err){
-    console.error('Error:',err);
-    return {statusCode:500,headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({error:'Failed to process request. Please call 800-678-2956.'})};
+    return { statusCode: 200, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ success: true }) };
+
+  } catch (err) {
+    console.error('Error:', err);
+    return { statusCode: 500, headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ error: 'Failed to process request. Please call 800-678-2956.' }) };
   }
 };

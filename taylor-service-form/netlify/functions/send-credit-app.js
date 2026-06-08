@@ -6,6 +6,27 @@ const CORS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS'
 };
 
+// ── BOT DETECTION ─────────────────────────────────────────────────────────────
+function isBot(d) {
+  if (d.hp_website && d.hp_website.trim() !== '') {
+    console.log('Bot blocked: honeypot filled');
+    return true;
+  }
+  const loadTime = parseInt(d.load_time || '0');
+  if (loadTime > 0 && (Date.now() - loadTime) < 3000) {
+    console.log('Bot blocked: submitted too fast');
+    return true;
+  }
+  function looksLikeGibberish(str) {
+    return str && str.length > 20 && !str.includes(' ') && /^[a-zA-Z]+$/.test(str);
+  }
+  if (looksLikeGibberish(d.legal_name) || looksLikeGibberish(d.contact_name)) {
+    console.log('Bot blocked: gibberish field content');
+    return true;
+  }
+  return false;
+}
+
 exports.handler = async function(event) {
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers: CORS, body: '' };
@@ -16,6 +37,12 @@ exports.handler = async function(event) {
 
   try {
     const data = JSON.parse(event.body);
+
+    // ── Bot check: silently return success so bots stop retrying ──
+    if (isBot(data)) {
+      return { statusCode: 200, headers: CORS, body: JSON.stringify({ success: true }) };
+    }
+
     const resend = new Resend(process.env.RESEND_API_KEY);
 
     const subject = `Credit Application — Net 30 Terms — ${data.legal_name}`;
@@ -85,7 +112,6 @@ exports.handler = async function(event) {
       </div>
     `;
 
-    // ── Send email ──
     const { error: emailError } = await resend.emails.send({
       from: 'Taylor Upstate <sales@taylor-upstate.com>',
       to: ['bboise@taylorupstate.com', 'estewart@taylorupstate.com'],
@@ -97,7 +123,6 @@ exports.handler = async function(event) {
     });
     if (emailError) throw new Error(`Resend error: ${emailError.message}`);
 
-    // ── Format owners for Airtable ──
     const ownersText = [1,2,3,4].map(n => {
       const name = data[`owner${n}_name`];
       if (!name) return null;
@@ -110,7 +135,6 @@ exports.handler = async function(event) {
       return `${n}. ${co} | Acct: ${data[`ref${n}_acct`]||'N/A'} | ${data[`ref${n}_contact`]||''} | ${data[`ref${n}_phone`]||''} | ${data[`ref${n}_email`]||''} | Terms: ${data[`ref${n}_terms`]||''}`;
     }).filter(Boolean).join('\n');
 
-    // ── Save to Airtable (no SSN stored) ──
     const airtableRes = await fetch(
       `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${encodeURIComponent('Credit Applications')}`,
       {

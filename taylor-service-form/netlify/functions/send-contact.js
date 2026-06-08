@@ -6,6 +6,28 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Methods': 'POST, OPTIONS',
 };
 
+// ── Bot detection helpers ──────────────────────────
+function isBot(body) {
+  // 1. Honeypot: hidden field bots fill, humans never see
+  if (body.hp_website && body.hp_website.trim() !== '') {
+    console.log('Bot blocked: honeypot filled');
+    return true;
+  }
+  // 2. Speed check: submitted in under 3 seconds = bot
+  const loadTime = parseInt(body.load_time || '0');
+  if (loadTime > 0 && (Date.now() - loadTime) < 3000) {
+    console.log('Bot blocked: submitted too fast');
+    return true;
+  }
+  // 3. Gibberish check: long single-word strings in name field
+  const name = (body.name || '').trim();
+  if (name.length > 20 && !name.includes(' ') && /^[a-zA-Z]+$/.test(name)) {
+    console.log('Bot blocked: gibberish name');
+    return true;
+  }
+  return false;
+}
+
 exports.handler = async function (event) {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
@@ -21,6 +43,11 @@ exports.handler = async function (event) {
     body = JSON.parse(event.body);
   } catch {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: 'Invalid request body' }) };
+  }
+
+  // ── Bot check: silently return success so bots stop retrying ──
+  if (isBot(body)) {
+    return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ success: true }) };
   }
 
   const { name, email, phone, message } = body;
